@@ -186,6 +186,20 @@ const menuGroups = computed<MenuGroup[]>(() => {
     ]
   }
 
+  // Kasir: only show their relevant menu items
+  if (authStore.isKasir) {
+    return [
+      { label: 'Menu', items: [
+        { label: 'Dashboard', icon: '◉', path: '/dashboard' },
+        { label: 'Kasir POS', icon: '⊞', path: '/pos' },
+      ]},
+      { label: 'Laporan', items: [
+        { label: 'Transaksi', icon: '↗', path: '/transaksi' },
+        { label: 'Penjualan', icon: '▤', path: '/laporan/penjualan' },
+      ]},
+    ]
+  }
+
   const items = [
     { label: 'Menu', items: [
       { label: 'Dashboard', icon: '◉', path: '/dashboard' },
