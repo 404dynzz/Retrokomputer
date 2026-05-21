@@ -40,17 +40,6 @@ Sistem ini membagi wewenang pengguna secara ketat demi keamanan data operasional
 
 ---
 
-## 🔑 Akun Demo Pengujian (Kredensial Default)
-Gunakan kredensial berikut untuk masuk ke sistem di halaman Login:
-
-| Role | Email | Password | Fitur Utama |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@retro.com` | `password` | Mengelola Data Master & Pengaturan Sistem |
-| **Owner** | `owner@retro.com` | `password` | Memantau Keuangan & Laporan Laba Rugi |
-| **Kasir** | `kasir@retro.com` | `password` | Transaksi POS & Cetak Nota Cepat |
-
----
-
 ## 🚀 Petunjuk Instalasi & Pengembangan Lokal
 
 ### Prasyarat
