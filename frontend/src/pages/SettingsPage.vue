@@ -261,17 +261,6 @@ const bgFile = ref<File | null>(null)
 const logoPreviewUrl = ref('')
 const bgPreviewUrl = ref('')
 
-const previewBgStyle = computed(() => {
-  if (settings.value.bg_type === 'image' && bgPreviewUrl.value) {
-    return {
-      backgroundImage: `url(${bgPreviewUrl.value})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }
-  }
-  return {}
-})
-
 onMounted(async () => {
   await fetchSettings()
 })
