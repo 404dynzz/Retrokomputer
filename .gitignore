@@ -1,0 +1,48 @@
+# ====================================================================
+# Retro Komputer - Root Exclusion Architecture (.gitignore)
+# ====================================================================
+
+# AI and Agent Memory Files (Strictly Local)
+.claude-memory.md
+.chatgpt-memory.md
+.gemini-memory.md
+plan.txt
+
+# Environment Configuration Files
+.env
+.env.local
+.env.development
+.env.production
+.env.backup
+*.key
+
+# Application Dependency Catalogs
+node_modules/
+vendor/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.eslintcache
+
+# Development IDE Directories
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Docker Data Volumes
+mysql-data/
+db-data/
+backend-storage/
+
+# Compiled Static Assets
+dist/
+dist-ssr/
+build/
+public/storage/settings/*
+public/storage/products/*

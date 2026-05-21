@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base */
+html { font-size: 14px; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #0b0f19 !important;
+  color: #f8fafc !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0b0f19 !important; }
+::-webkit-scrollbar-thumb { background: #ff7a00 !important; border-radius: 3px; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fadeIn { animation: fadeIn 0.15s ease; }
+.animate-slideUp { animation: slideUp 0.2s ease; }
+
+/* ====================================================================
+   PREMIUM RETRO DARK (LOW-WHITE) THEME OVERRIDES
+   Reduces white usage, maps slate shades to deep navy slate, and
+   uses orange-yellow gradients + royal blue accents from the logo.
+   ==================================================================== */
+
+.bg-white, [class*="bg-white"] {
+  background-color: #131926 !important;
+}
+
+.bg-slate-50, [class*="bg-slate-50"] {
+  background-color: #0b0f19 !important;
+}
+
+.bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+.bg-slate-200 {
+  background-color: #334155 !important;
+}
+
+.border-slate-100, .border-slate-200, .border-slate-300 {
+  border-color: rgba(51, 65, 85, 0.4) !important;
+}
+
+.text-slate-800, .text-slate-900, .text-slate-700 {
+  color: #f8fafc !important;
+}
+
+.text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Inputs, Selects, and Textareas */
+input, select, textarea {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ff7a00 !important;
+  box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.2) !important;
+}
+
+input::placeholder {
+  color: #475569 !important;
+}
+
+/* Interactive elements / hover */
+.hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+.hover\:bg-slate-100:hover {
+  background-color: #334155 !important;
+}
+
+.active\:bg-slate-100:active {
+  background-color: #475569 !important;
+}
+
+/* Router links, highlights & sidebar retro borders */
+.router-link-active, .bg-retro-blue\/10 {
+  background-color: rgba(29, 78, 216, 0.15) !important;
+  color: #ff7a00 !important;
+  border-left: 3px solid #ff7a00 !important;
+}
+
+/* Cards & Containers: Glassmorphism / Sleek console style */
+.bg-white.rounded-lg.border.border-slate-200 {
+  background: linear-gradient(135deg, #131926 0%, #172033 100%) !important;
+  border-color: rgba(255, 122, 0, 0.15) !important;
+  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Header & Aside borders */
+header.border-b, aside.border-r {
+  border-color: rgba(51, 65, 85, 0.6) !important;
+}
+
+/* Table Header Styles */
+th {
+  background-color: #1c2538 !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+}
+
+/* Tables rows hover */
+tr:hover td {
+  background-color: #1a2336 !important;
+}
+

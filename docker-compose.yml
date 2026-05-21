@@ -1,0 +1,67 @@
+# ====================================================================
+# Retro Komputer POS System - Production Orchestration Configuration
+# ====================================================================
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: retro_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: retrokomputer_pos
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - retro-network
+
+  # PHP-FPM Laravel Backend Service
+  backend:
+    build:
+      context: ./backend
+    container_name: retro_backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=retrokomputer_pos
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - CACHE_STORE=file
+      - SESSION_DRIVER=file
+    volumes:
+      - backend-storage:/var/www/html/public/storage
+    networks:
+      - retro-network
+
+  # Frontend Nginx Reverse Proxy Service
+  frontend:
+    build:
+      context: ./frontend
+    container_name: retro_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - backend-storage:/var/www/html/public/storage
+    networks:
+      - retro-network
+
+volumes:
+  db-data:
+  backend-storage:
+
+networks:
+  retro-network:
+    driver: bridge
