@@ -5,30 +5,30 @@
 
     <div class="w-full max-w-sm animate-slideUp z-10">
       <!-- Logo Custom Header -->
-      <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center mb-3">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center mb-4">
           <!-- Logo Type: IMAGE -->
           <div v-if="logoType === 'image' && logoUrl" 
-               class="flex items-center justify-center bg-retro-dark px-4 rounded border border-retro-orange/30 shadow-sm animate-fadeIn transition-all duration-150"
-               :style="{ height: (parseInt(logoHeight) + 16) + 'px' }">
-            <img :src="logoUrl" class="object-contain" :style="{ height: logoHeight + 'px' }" alt="Retro Logo" />
+               class="flex items-center justify-center bg-gradient-to-br from-retro-dark to-retro-dark-card px-6 rounded-lg border-2 border-retro-orange/50 shadow-xl animate-fadeIn transition-all duration-150 hover:border-retro-orange hover:shadow-2xl hover:scale-105"
+               :style="{ height: (parseInt(logoHeight) + 24) + 'px' }">
+            <img :src="logoUrl" class="object-contain filter drop-shadow-lg" :style="{ height: logoHeight + 'px' }" alt="Retro Logo" />
           </div>
           <!-- Logo Type: TEXT -->
           <div v-else-if="logoType === 'text'" 
-               class="px-4 bg-retro-dark flex items-center justify-center rounded border border-retro-orange/30 shadow-sm animate-fadeIn transition-all duration-150"
-               :style="{ height: (parseInt(logoHeight) + 16) + 'px' }">
-            <span class="text-retro-orange font-mono font-bold tracking-wide"
-                  :style="{ fontSize: (parseInt(logoHeight) * 0.4) + 'px' }">
-              &gt;_ {{ logoText }}
+               class="px-6 bg-gradient-to-br from-retro-dark to-retro-dark-card flex items-center justify-center rounded-lg border-2 border-retro-orange/50 shadow-xl animate-fadeIn transition-all duration-150 hover:border-retro-orange hover:shadow-2xl hover:scale-105"
+               :style="{ height: (parseInt(logoHeight) + 24) + 'px' }">
+            <span class="text-retro-orange font-mono font-bold tracking-widest drop-shadow-lg"
+                  :style="{ fontSize: (parseInt(logoHeight) * 0.45) + 'px' }">
+              ▌{{ logoText }}▐
             </span>
           </div>
           <!-- Logo Type: DEFAULT -->
-          <div v-else class="w-12 h-12 rounded-lg bg-retro-blue flex items-center justify-center text-white font-bold text-xl shadow-sm">
+          <div v-else class="w-16 h-16 rounded-lg bg-gradient-to-br from-retro-blue to-retro-blue-deep flex items-center justify-center text-white font-bold text-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-150">
             R
           </div>
         </div>
-        <h1 class="text-lg font-bold" :class="isDarkBg ? 'text-white' : 'text-slate-800'">{{ logoText }}</h1>
-        <p :class="isDarkBg ? 'text-slate-400' : 'text-slate-500'" class="text-xs mt-0.5">Point of Sales System</p>
+        <h1 class="text-2xl font-bold font-mono tracking-wider" :class="isDarkBg ? 'text-retro-orange drop-shadow-lg' : 'text-slate-900'">{{ logoText }}</h1>
+        <p :class="isDarkBg ? 'text-slate-300 drop-shadow' : 'text-slate-600'" class="text-xs mt-2 font-medium tracking-wide">📊 Sistem POS Retro Modern</p>
       </div>
 
       <!-- Card Container -->
@@ -67,7 +67,7 @@
             id="login-submit"
             type="submit"
             :disabled="authStore.loading"
-            class="w-full py-2 text-xs font-bold text-white bg-retro-blue hover:bg-blue-700 disabled:opacity-50 rounded-md transition-colors"
+            class="w-full py-2 text-xs font-bold text-white bg-retro-orange hover:bg-retro-orange-dark disabled:opacity-50 rounded-md transition-colors shadow-md hover:shadow-lg"
           >
             {{ authStore.loading ? 'Memproses...' : 'Masuk' }}
           </button>

@@ -55,15 +55,17 @@
 
           <!-- Logo Image File Upload -->
           <div v-else>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Gambar Logo</label>
-            <input
-              @change="onLogoFileChange"
-              type="file"
-              accept="image/*"
-              class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-            />
-            <p class="text-[10px] text-slate-400 mt-1">
-              <strong class="text-retro-orange">Format: PNG (Sangat Direkomendasikan dengan Latar Belakang Transparan)</strong>, JPG, GIF. Maksimal 2MB. Menggunakan latar transparan memastikan logo menyatu sempurna dengan skema warna Retro Dark aplikasi tanpa tepian kotak putih yang mengganggu.
+            <label class="block text-xs font-semibold text-slate-600 mb-2">📤 Pilih Gambar Logo</label>
+            <div class="relative">
+              <input
+                @change="onLogoFileChange"
+                type="file"
+                accept="image/png,image/jpeg,image/gif"
+                class="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-retro-orange file:text-white hover:file:bg-retro-orange-dark cursor-pointer"
+              />
+            </div>
+            <p class="text-[10px] text-slate-500 mt-2 leading-relaxed">
+              <strong class="text-retro-orange">💡 Rekomendasi:</strong> Gunakan format <strong>PNG dengan background transparan</strong> agar logo menyatu sempurna dengan latar gelap tanpa tepian kotak putih. Maksimal 2MB. Ukuran ideal: 256x256px atau lebih besar.
             </p>
           </div>
 
@@ -89,18 +91,29 @@
         </div>
 
         <!-- Preview Logo -->
-        <div class="bg-slate-50 rounded border border-slate-200 p-3 mt-2">
-          <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Preview Logo</p>
-          <div class="flex items-center gap-2">
-            <div class="px-3 bg-retro-dark flex items-center justify-center rounded border border-retro-orange/30 transition-all duration-150"
-                 :style="{ height: (parseInt(settings.logo_height) + 12) + 'px' }">
-              <span v-if="settings.logo_type === 'text'" class="text-retro-orange font-mono font-bold tracking-wide"
-                    :style="{ fontSize: (parseInt(settings.logo_height) * 0.4) + 'px' }">
-                &gt;_ {{ settings.logo_text }}
-              </span>
-              <img v-else-if="logoPreviewUrl" :src="logoPreviewUrl" class="object-contain" 
-                   :style="{ height: settings.logo_height + 'px' }" alt="Logo Preview" />
-              <span v-else class="text-slate-500 text-xs">Belum ada logo gambar</span>
+        <div class="bg-gradient-to-br from-retro-dark to-retro-dark-card rounded-lg border-2 border-retro-orange/30 p-4 mt-2">
+          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-orange drop-shadow mb-3">✨ Preview Logo Retro</p>
+          <div class="bg-retro-dark rounded-md border border-retro-orange/20 p-4 flex items-center justify-center min-h-24">
+            <div class="flex items-center gap-3">
+              <div class="px-4 bg-retro-dark flex items-center justify-center rounded border-2 border-retro-orange/40 shadow-lg transition-all duration-300 hover:border-retro-orange hover:shadow-xl hover:scale-105"
+                   :style="{ height: (parseInt(settings.logo_height) + 12) + 'px' }">
+                <span v-if="settings.logo_type === 'text'" class="text-retro-orange font-mono font-bold tracking-widest drop-shadow-lg transition-all duration-300 hover:scale-110"
+                      :style="{ fontSize: (parseInt(settings.logo_height) * 0.45) + 'px' }">
+                  ▌{{ settings.logo_text || 'Retro Komputer' }}▐
+                </span>
+                <img v-else-if="logoPreviewUrl" :src="logoPreviewUrl" class="object-contain filter drop-shadow-lg transition-all duration-300 hover:scale-110" 
+                     :style="{ height: settings.logo_height + 'px' }" alt="Logo Preview" />
+                <div v-else class="flex flex-col items-center justify-center text-slate-400">
+                  <span class="text-2xl mb-1">📁</span>
+                  <span class="text-xs italic">No image yet</span>
+                </div>
+              </div>
+              <div class="text-xs">
+                <p class="text-retro-orange font-bold">{{ settings.logo_type === 'text' ? 'Text Logo' : 'Image Logo' }}</p>
+                <p class="text-slate-400 text-[10px]">Height: {{ settings.logo_height }}px</p>
+                <p v-if="logoPreviewUrl" class="text-emerald-400 text-[10px] mt-1">✅ Preview ready</p>
+                <p v-else class="text-amber-400 text-[10px] mt-1">⏳ Upload preview</p>
+              </div>
             </div>
           </div>
         </div>
@@ -148,29 +161,52 @@
 
           <!-- Background Image Upload -->
           <div v-if="settings.bg_type === 'image'">
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Gambar Background</label>
-            <input
-              @change="onBgFileChange"
-              type="file"
-              accept="image/*"
-              class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-            />
-            <p class="text-[10px] text-slate-400 mt-1">Format: PNG, JPG. Maksimal 4MB.</p>
+            <label class="block text-xs font-semibold text-slate-600 mb-2">📤 Pilih Gambar Background</label>
+            <div class="relative">
+              <input
+                @change="onBgFileChange"
+                type="file"
+                accept="image/png,image/jpeg"
+                class="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-retro-blue file:text-white hover:file:bg-blue-700 cursor-pointer"
+              />
+            </div>
+            <p class="text-[10px] text-slate-500 mt-2 leading-relaxed">
+              <strong class="text-retro-blue">💡 Rekomendasi:</strong> Gunakan gambar berkualitas tinggi dengan ukuran minimum 1920x1080px. Format: PNG atau JPG. Maksimal 4MB. Gambar akan di-stretch untuk fill layar login secara responsive.
+            </p>
           </div>
         </div>
 
         <!-- Preview Background -->
-        <div class="bg-slate-50 rounded border border-slate-200 p-3 mt-2">
-          <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Preview Tampilan Latar</p>
-          <div class="h-24 rounded border border-slate-300 flex items-center justify-center overflow-hidden relative" :style="previewBgStyle">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg border-2 border-retro-blue/30 p-4 mt-2">
+          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-blue drop-shadow mb-3">✨ Preview Tampilan Latar Login</p>
+          <div class="h-32 rounded-lg border-2 border-retro-blue/40 flex items-center justify-center overflow-hidden relative shadow-lg transition-all duration-300 hover:shadow-xl" :style="previewBgStyle">
             <!-- Grid Effect Overlay -->
             <div v-if="settings.bg_type === 'grid'" class="absolute inset-0 pointer-events-none bg-grid" />
-            <div class="z-10 text-center">
-              <p class="text-xs font-mono font-bold" :class="settings.bg_type === 'grid' || settings.bg_type === 'image' ? 'text-white drop-shadow' : 'text-slate-700'">
-                Demo Latar Belakang Login
+            
+            <!-- Background Image Preview -->
+            <div v-if="settings.bg_type === 'image' && bgPreviewUrl" class="absolute inset-0 bg-cover bg-center opacity-80" :style="{ backgroundImage: `url(${bgPreviewUrl})` }" />
+            
+            <!-- Color Background Preview -->
+            <div v-if="settings.bg_type === 'color'" class="absolute inset-0" :style="{ backgroundColor: settings.bg_color }" />
+            
+            <!-- Default Background Preview -->
+            <div v-if="settings.bg_type === 'default'" class="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100" />
+            
+            <div class="z-10 text-center px-4">
+              <p class="text-sm font-mono font-bold drop-shadow-lg text-white">
+                🖥️ Demo Latar Belakang Login
               </p>
-              <p class="text-[9px]" :class="settings.bg_type === 'grid' || settings.bg_type === 'image' ? 'text-slate-200 drop-shadow' : 'text-slate-400'">
-                Tipe: {{ settings.bg_type.toUpperCase() }}
+              <p class="text-[10px] mt-1 drop-shadow text-slate-200">
+                Tipe: <span class="font-bold text-retro-blue">{{ settings.bg_type.toUpperCase() }}</span>
+              </p>
+              <p v-if="settings.bg_type === 'color'" class="text-[10px] mt-1 drop-shadow text-slate-300 font-mono">
+                {{ settings.bg_color }}
+              </p>
+              <p v-if="settings.bg_type === 'image' && bgPreviewUrl" class="text-[10px] mt-1 drop-shadow text-emerald-300">
+                ✅ Background loaded
+              </p>
+              <p v-if="settings.bg_type === 'image' && !bgPreviewUrl" class="text-[10px] mt-1 drop-shadow text-amber-300">
+                ⏳ Upload background preview
               </p>
             </div>
           </div>
@@ -178,21 +214,22 @@
       </div>
 
       <!-- Action Panel -->
-      <div class="flex items-center justify-end gap-3 pt-2">
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
         <button
           @click="resetToDefault"
           type="button"
-          class="px-4 py-2 text-xs font-semibold border border-slate-300 text-slate-600 rounded bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          class="px-4 py-2.5 text-xs font-bold border-2 border-slate-300 text-slate-700 rounded-lg bg-white hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 transition-all shadow-sm"
         >
-          Reset Default
+          🔄 Reset Default
         </button>
         <button
           :disabled="loading"
           type="submit"
-          class="px-5 py-2 text-xs font-bold text-white bg-retro-blue border border-retro-blue/20 hover:bg-blue-700 rounded transition-all shadow-sm flex items-center gap-1.5"
+          class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-retro-blue to-retro-blue-deep border border-retro-blue/20 rounded-lg hover:shadow-lg active:shadow-md transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
         >
-          <span v-if="loading">Menyimpan...</span>
-          <span v-else>Simpan Pengaturan</span>
+          <span v-if="loading" class="animate-spin">⏳</span>
+          <span v-else>💾</span>
+          {{ loading ? 'Menyimpan...' : 'Simpan Pengaturan' }}
         </button>
       </div>
     </form>
@@ -224,6 +261,17 @@ const bgFile = ref<File | null>(null)
 const logoPreviewUrl = ref('')
 const bgPreviewUrl = ref('')
 
+const previewBgStyle = computed(() => {
+  if (settings.value.bg_type === 'image' && bgPreviewUrl.value) {
+    return {
+      backgroundImage: `url(${bgPreviewUrl.value})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+  }
+  return {}
+})
+
 onMounted(async () => {
   await fetchSettings()
 })
@@ -239,19 +287,67 @@ async function fetchSettings() {
   }
 }
 
-function onLogoFileChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (file) {
+const onLogoFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    const file = target.files[0]
+    
+    // Validasi file
+    if (!file.type.match('image.*')) {
+      errorMsg.value = 'File harus berupa gambar (PNG, JPEG, GIF).'
+      return
+    }
+    
+    if (file.size > 2 * 1024 * 1024) { // 2MB
+      errorMsg.value = 'Ukuran file maksimal 2MB.'
+      return
+    }
+    
     logoFile.value = file
-    logoPreviewUrl.value = URL.createObjectURL(file)
+    
+    // Buat preview URL
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        logoPreviewUrl.value = e.target.result as string
+      }
+    }
+    reader.readAsDataURL(file)
+    
+    // Clear error message
+    errorMsg.value = ''
   }
 }
 
-function onBgFileChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (file) {
+const onBgFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    const file = target.files[0]
+    
+    // Validasi file
+    if (!file.type.match('image.*')) {
+      errorMsg.value = 'File harus berupa gambar (PNG, JPEG, GIF).'
+      return
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      errorMsg.value = 'Ukuran file maksimal 5MB.'
+      return
+    }
+    
     bgFile.value = file
-    bgPreviewUrl.value = URL.createObjectURL(file)
+    
+    // Buat preview URL
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        bgPreviewUrl.value = e.target.result as string
+      }
+    }
+    reader.readAsDataURL(file)
+    
+    // Clear error message
+    errorMsg.value = ''
   }
 }
 
@@ -301,8 +397,9 @@ async function saveSettings() {
     successMsg.value = 'Pengaturan berhasil disimpan!'
     logoFile.value = null
     bgFile.value = null
-  } catch (err: any) {
-    errorMsg.value = err.response?.data?.message || 'Gagal menyimpan pengaturan.'
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Gagal menyimpan pengaturan.'
+    errorMsg.value = errorMessage
   } finally {
     loading.value = false
   }
@@ -331,7 +428,7 @@ async function resetToDefault() {
     window.dispatchEvent(new CustomEvent('settings-updated', { detail: res.data }))
 
     successMsg.value = 'Pengaturan disetel ulang ke default!'
-  } catch (err: any) {
+  } catch {
     errorMsg.value = 'Gagal mengatur ulang ke default.'
   } finally {
     loading.value = false
