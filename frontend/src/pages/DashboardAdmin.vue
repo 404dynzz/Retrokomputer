@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-5">
     <!-- Stats -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div :class="authStore.isKasir ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-4'" class="grid gap-3">
       <div class="bg-white rounded-lg border border-slate-200 p-4">
         <p class="text-xs text-slate-500">Penjualan Bulan Ini</p>
         <p class="text-xl font-bold text-slate-800 mt-1">{{ formatCurrency(stats.penjualan_bulan_ini) }}</p>
@@ -10,11 +10,11 @@
         <p class="text-xs text-slate-500">Total Transaksi</p>
         <p class="text-xl font-bold text-slate-800 mt-1">{{ stats.total_transaksi }}</p>
       </div>
-      <div class="bg-white rounded-lg border border-slate-200 p-4">
+      <div v-if="!authStore.isKasir" class="bg-white rounded-lg border border-slate-200 p-4">
         <p class="text-xs text-slate-500">Pembelian Bulan Ini</p>
         <p class="text-xl font-bold text-slate-800 mt-1">{{ formatCurrency(stats.pembelian_bulan_ini) }}</p>
       </div>
-      <div class="bg-white rounded-lg border border-slate-200 p-4">
+      <div v-if="!authStore.isKasir" class="bg-white rounded-lg border border-slate-200 p-4">
         <p class="text-xs text-slate-500">Laba Bersih</p>
         <p class="text-xl font-bold" :class="stats.laba_bersih >= 0 ? 'text-green-600' : 'text-red-600'">{{ formatCurrency(stats.laba_bersih) }}</p>
       </div>
@@ -55,18 +55,18 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div :class="authStore.isKasir ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-4'" class="grid gap-3">
       <router-link to="/pos" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
         <p class="text-sm font-medium text-slate-700">Buka Kasir</p>
       </router-link>
-      <router-link to="/produk/tambah" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
+      <router-link v-if="!authStore.isKasir" to="/produk/tambah" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
         <p class="text-sm font-medium text-slate-700">Tambah Produk</p>
       </router-link>
-      <router-link to="/pembelian/tambah" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
+      <router-link v-if="!authStore.isKasir" to="/pembelian/tambah" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
         <p class="text-sm font-medium text-slate-700">Input Pembelian</p>
       </router-link>
       <router-link to="/laporan/penjualan" class="bg-white rounded-lg border border-slate-200 p-4 text-center hover:border-blue-300 hover:bg-blue-50 transition-colors">
-        <p class="text-sm font-medium text-slate-700">Laporan</p>
+        <p class="text-sm font-medium text-slate-700">Laporan Penjualan</p>
       </router-link>
     </div>
   </div>
@@ -76,7 +76,9 @@
 import { ref, onMounted } from 'vue'
 import type { DashboardStats, Transaksi } from '@/types'
 import { laporanService, transaksiService } from '@/services'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const loading = ref(true)
 const stats = ref<DashboardStats>({ penjualan_bulan_ini: 0, pembelian_bulan_ini: 0, laba_bersih: 0, total_transaksi: 0, kerugian_inventaris: 0 })
 const recentTrx = ref<Transaksi[]>([])

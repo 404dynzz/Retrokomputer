@@ -44,6 +44,10 @@ Memiliki fokus penuh pada pelayanan pelanggan dan aktivitas penjualan harian sec
 *   Pengurangan stok otomatis setelah transaksi berhasil
 *   Cetak nota / struk penjualan fisik atau PDF
 *   Melihat riwayat transaksi penjualan pribadi
+*   **Privasi Finansial Sensitif:** Informasi keuangan toko seperti total pembelian, laba bersih, dan kerugian inventaris secara otomatis disembunyikan di dashboard. Data penjualan dan transaksi yang ditampilkan pada dashboard kasir juga disaring secara personal (hanya mencakup transaksi kasir itu sendiri).
+
+### D. Keamanan Berlapis (Backend Hardening)
+Untuk mencapai kesiapan produksi 100%, sistem mengimplementasikan **keamanan berlapis (Defense in Depth)** di mana otorisasi role tidak hanya diproteksi pada router guard frontend (Vue.js), melainkan **diwajibkan dan divalidasi ketat pada Controller API Laravel backend** (`ProdukController`, `PembelianController`, `ReturController`, `BarangRusakController`, `LaporanController`, `SettingController`). Akses tidak sah akan langsung menghasilkan response **403 Forbidden**.
 
 ---
 
