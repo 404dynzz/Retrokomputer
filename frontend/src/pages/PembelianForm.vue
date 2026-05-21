@@ -1,50 +1,153 @@
 <template>
-  <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-lg border border-slate-200 p-5">
-      <h2 class="text-sm font-semibold text-slate-800 mb-4">Tambah Pembelian</h2>
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Supplier</label>
-            <input v-model="form.supplier" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">No. Invoice</label>
-            <input v-model="form.invoice" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-          </div>
+  <div class="max-w-3xl mx-auto font-mono">
+    <div class="bg-white rounded-lg border-2 border-retro-blue overflow-hidden shadow-md">
+      <!-- Title bar -->
+      <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
+        <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
+        <div class="flex gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
         </div>
+      </div>
 
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-medium text-slate-600">Item Pembelian</label>
-            <button type="button" @click="addRow" class="text-xs text-blue-600 hover:underline">+ Tambah Item</button>
-          </div>
-          <div v-for="(item, i) in form.items" :key="i" class="flex gap-2 mb-2 items-end">
-            <div class="flex-1">
-              <select v-model="item.produk_id" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <option value="">Pilih Produk</option>
-                <option v-for="p in produkList" :key="p.id" :value="p.id">{{ p.nama_produk }}</option>
+      <div class="p-6 font-sans">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Supplier</label>
+              <select
+                v-model="form.supplier"
+                class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-sans"
+                required
+              >
+                <option value="" disabled>-- Pilih Supplier --</option>
+                <option v-for="s in supplierList" :key="s.id" :value="s.nama">{{ s.nama }}</option>
               </select>
             </div>
-            <div class="w-20">
-              <input v-model.number="item.qty" type="number" min="1" placeholder="Qty" class="w-full px-2 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">No. Invoice / Referensi</label>
+              <input
+                v-model="form.invoice"
+                placeholder="INV-XXXX"
+                class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-mono"
+                required
+              />
             </div>
-            <div class="w-28">
-              <input v-model.number="item.harga_beli" type="number" min="0" placeholder="Harga" class="w-full px-2 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <button v-if="form.items.length > 1" type="button" @click="form.items.splice(i, 1)" class="text-red-400 hover:text-red-600 text-sm pb-2">✕</button>
           </div>
-        </div>
 
-        <div v-if="error" class="p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">{{ error }}</div>
+          <!-- Struk File Uploader -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Struk / Bukti Pembelian (Gambar)</label>
+            <input
+              type="file"
+              accept="image/*"
+              @change="handleFileChange"
+              class="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-2 file:border-retro-blue file:text-xs file:font-bold file:bg-white file:text-retro-blue hover:file:bg-slate-50 cursor-pointer"
+            />
+            <p class="text-[10px] text-slate-400 mt-1">Format: JPG, PNG, WEBP (maks. 2MB)</p>
+          </div>
 
-        <div class="flex justify-end gap-2 pt-2">
-          <router-link to="/pembelian" class="text-xs px-3 py-1.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50">Batal</router-link>
-          <button type="submit" :disabled="saving" class="text-xs px-4 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">
-            {{ saving ? 'Menyimpan...' : 'Simpan' }}
-          </button>
-        </div>
-      </form>
+          <!-- Items Section -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-bold text-slate-700 uppercase">&gt;_ DETAIL BARANG</label>
+              <button
+                type="button"
+                @click="addRow"
+                class="text-xs font-mono font-bold text-retro-blue hover:underline uppercase"
+              >
+                [+ TAMBAH BARANG]
+              </button>
+            </div>
+
+            <!-- Items Table -->
+            <div class="border-2 border-slate-200 rounded-lg overflow-hidden bg-white">
+              <!-- Clear Table Headers -->
+              <div class="grid grid-cols-[1fr_100px_150px_45px] gap-3 px-3 py-2 bg-slate-50 border-b-2 border-slate-200 text-left font-bold text-[10px] uppercase text-slate-600 font-mono">
+                <div>Nama Barang</div>
+                <div>Jumlah (Qty)</div>
+                <div>Harga Beli (Rp)</div>
+                <div class="text-center">Hapus</div>
+              </div>
+
+              <!-- Rows -->
+              <div class="p-3 space-y-3">
+                <div
+                  v-for="(item, i) in form.items"
+                  :key="i"
+                  class="grid grid-cols-[1fr_100px_150px_45px] gap-3 items-center"
+                >
+                  <div>
+                    <select
+                      v-model="item.produk_id"
+                      class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-retro-blue font-sans"
+                      required
+                    >
+                      <option value="" disabled>Pilih Produk</option>
+                      <option v-for="p in produkList" :key="p.id" :value="p.id">
+                        {{ p.nama_produk }} (Stok: {{ p.stok }})
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <input
+                      v-model.number="item.qty"
+                      type="number"
+                      min="1"
+                      placeholder="Qty"
+                      class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-retro-blue font-mono font-bold"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      v-model.number="item.harga_beli"
+                      type="number"
+                      min="0"
+                      placeholder="Harga Satuan"
+                      class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-retro-blue font-mono font-bold"
+                      required
+                    />
+                  </div>
+                  <div class="text-center font-mono">
+                    <button
+                      v-if="form.items.length > 1"
+                      type="button"
+                      @click="form.items.splice(i, 1)"
+                      class="text-red-500 hover:text-red-700 text-xs font-bold font-mono"
+                      title="Hapus baris"
+                    >
+                      [X]
+                    </button>
+                    <span v-else class="text-slate-300 text-xs">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="error" class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono">
+            <strong>ERROR:</strong> {{ error }}
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <router-link
+              to="/pembelian"
+              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+            >
+              [BATAL]
+            </router-link>
+            <button
+              type="submit"
+              :disabled="saving"
+              class="text-xs font-mono font-bold px-4 py-2 rounded bg-retro-blue text-white hover:bg-blue-700 disabled:opacity-50 shadow-sm"
+            >
+              [{{ saving ? 'MENYIMPAN...' : 'SIMPAN' }}]
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -53,31 +156,75 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Produk, PembelianPayload } from '@/types'
-import { produkService, pembelianService } from '@/services'
+import { produkService, pembelianService, supplierService } from '@/services'
 
 const router = useRouter()
 const saving = ref(false)
 const error = ref('')
 const produkList = ref<Produk[]>([])
+const supplierList = ref<any[]>([])
+const selectedFile = ref<File | null>(null)
 
-const form = ref<PembelianPayload>({
-  supplier: '', invoice: '',
-  items: [{ produk_id: 0, qty: 1, harga_beli: 0 }]
+const form = ref<any>({
+  supplier: '',
+  invoice: '',
+  items: [{ produk_id: '', qty: '', harga_beli: '' }]
 })
 
-function addRow() { form.value.items.push({ produk_id: 0, qty: 1, harga_beli: 0 }) }
+function addRow() {
+  form.value.items.push({ produk_id: '', qty: '', harga_beli: '' })
+}
+
+function handleFileChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    selectedFile.value = target.files[0]
+  }
+}
 
 onMounted(async () => {
-  try { const res = await produkService.getAll(); produkList.value = res.data as Produk[] } catch {}
+  try {
+    const pRes = await produkService.getAll()
+    produkList.value = pRes.data as Produk[]
+  } catch (err) {
+    console.error('Gagal mengambil produk', err)
+  }
+
+  try {
+    const sRes = await supplierService.getAll()
+    supplierList.value = sRes.data
+  } catch (err) {
+    console.error('Gagal mengambil supplier', err)
+  }
 })
 
 async function handleSubmit() {
-  saving.value = true; error.value = ''
+  // Validate items
+  if (form.value.items.some((item: any) => !item.produk_id || !item.qty || !item.harga_beli)) {
+    error.value = 'Mohon lengkapi produk, qty, dan harga beli untuk setiap baris.'
+    return
+  }
+
+  saving.value = true
+  error.value = ''
+  
   try {
-    await pembelianService.create(form.value)
+    const formData = new FormData()
+    formData.append('supplier', form.value.supplier)
+    formData.append('invoice', form.value.invoice)
+    formData.append('items', JSON.stringify(form.value.items))
+
+    if (selectedFile.value) {
+      formData.append('struk_file', selectedFile.value)
+    }
+
+    await pembelianService.create(formData)
     router.push('/pembelian')
   } catch (e: any) {
-    error.value = e.response?.data?.message || 'Gagal menyimpan'
-  } finally { saving.value = false }
+    error.value = e.response?.data?.message || 'Gagal menyimpan pembelian'
+  } finally {
+    saving.value = false
+  }
 }
 </script>
+

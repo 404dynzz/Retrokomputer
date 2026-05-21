@@ -17,6 +17,9 @@ import type {
   ActiveSettings,
   BarangRusak,
   BarangRusakPayload,
+  Supplier,
+  SupplierPayload,
+  Notifikasi,
 } from '@/types'
 
 export const authService = {
@@ -26,6 +29,17 @@ export const authService = {
     api.post('/logout'),
   me: () =>
     api.get('/me'),
+}
+
+export const supplierService = {
+  getAll: () =>
+    api.get<Supplier[]>('/suppliers'),
+  create: (payload: SupplierPayload) =>
+    api.post<Supplier>('/suppliers', payload),
+  update: (id: number, payload: Partial<SupplierPayload>) =>
+    api.put<Supplier>(`/suppliers/${id}`, payload),
+  delete: (id: number) =>
+    api.delete(`/suppliers/${id}`),
 }
 
 export const produkService = {
@@ -55,8 +69,12 @@ export const pembelianService = {
     api.get<Pembelian[]>('/pembelian'),
   getById: (id: number) =>
     api.get<Pembelian>(`/pembelian/${id}`),
-  create: (payload: PembelianPayload) =>
-    api.post<Pembelian>('/pembelian', payload),
+  create: (payload: PembelianPayload | FormData) =>
+    api.post<Pembelian>('/pembelian', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
 }
 
 export const returService = {
@@ -91,5 +109,14 @@ export const barangRusakService = {
     api.get<BarangRusak[]>('/barang-rusak'),
   create: (payload: BarangRusakPayload) =>
     api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload),
+}
+
+export const notifikasiService = {
+  getAll: () =>
+    api.get<Notifikasi[]>('/notifikasi'),
+  markRead: (id: number) =>
+    api.put(`/notifikasi/${id}`),
+  markAllRead: () =>
+    api.put('/notifikasi/read-all'),
 }
 

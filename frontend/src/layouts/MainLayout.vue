@@ -67,7 +67,7 @@
             <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">{{ authStore.user?.role }}</p>
           </div>
           <button
-            @click="authStore.logout()"
+            @click="triggerLogout"
             class="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
             title="Logout"
           >
@@ -95,15 +95,62 @@
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1z" clip-rule="evenodd"/></svg>
           </button>
-          <h2 class="text-sm font-semibold text-slate-800">{{ pageTitle }}</h2>
+          <h2 class="text-sm font-semibold text-slate-800 font-sans">{{ pageTitle }}</h2>
         </div>
-        <router-link
-          v-if="authStore.isAdmin || authStore.isKasir"
-          to="/pos"
-          class="text-xs font-bold px-3 py-1.5 bg-retro-blue text-white rounded hover:bg-blue-700 transition-colors hidden sm:inline-flex"
-        >
-          Kasir POS
-        </router-link>
+
+        <div class="flex items-center gap-4">
+          <!-- POS Button (Kasir only) -->
+          <router-link
+            v-if="authStore.isKasir"
+            to="/pos"
+            class="text-xs font-bold px-3 py-1.5 bg-retro-blue text-white rounded hover:bg-blue-700 transition-colors hidden sm:inline-flex items-center gap-1.5"
+          >
+            <span>⊞</span> Kasir POS
+          </router-link>
+
+          <!-- Profile Dropdown -->
+          <div class="relative profile-dropdown-container">
+            <button
+              @click="toggleDropdown"
+              class="flex items-center gap-2 p-1 rounded-md hover:bg-slate-50 border border-slate-100 transition-colors"
+            >
+              <div class="w-8 h-8 rounded bg-retro-blue/10 flex items-center justify-center border border-retro-blue/20">
+                <span class="text-retro-blue font-bold text-xs font-mono">{{ userInitial }}</span>
+              </div>
+              <div class="hidden md:flex flex-col text-left shrink-0 max-w-[120px]">
+                <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{ authStore.userName }}</span>
+                <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">{{ authStore.user?.role }}</span>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <transition name="dropdown">
+              <div
+                v-if="dropdownOpen"
+                class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg py-1.5 z-50 animate-fadeIn font-sans"
+              >
+                <div class="px-3 py-2 border-b border-slate-100">
+                  <p class="text-xs font-semibold text-slate-800 truncate">{{ authStore.userName }}</p>
+                  <p class="text-[10px] text-slate-400 font-mono font-bold uppercase mt-0.5">{{ authStore.user?.role }}</p>
+                </div>
+                <div class="py-1">
+                  <button
+                    @click="triggerLogout"
+                    class="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 text-left transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 00 1 1h5a1 1 0 100-2H4V5h4a1 1 0 100-2H3zm12.293 3.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L16.586 11H8a1 1 0 110-2h8.586l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Keluar Akun</span>
+                  </button>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
       </header>
 
       <!-- Content -->
@@ -114,6 +161,34 @@
           </transition>
         </router-view>
       </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div v-if="showLogoutConfirm" class="fixed inset-0 z-[100] flex items-center justify-center bg-retro-dark/60 backdrop-blur-sm animate-fadeIn">
+      <div class="bg-white border-2 border-retro-blue rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
+        <!-- Title bar -->
+        <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
+          <span class="font-bold text-xs font-mono">&gt;_ KONFIRMASI KELUAR</span>
+          <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
+        </div>
+        <div class="p-6">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded bg-amber-50 border border-amber-300 flex items-center justify-center shrink-0 text-amber-500 text-xl font-bold">!</div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 mb-1">Keluar dari Aplikasi?</h3>
+              <p class="text-xs text-slate-500 leading-relaxed font-sans">Apakah Anda yakin ingin keluar dari sistem Retrokomputer? Sesi Anda akan diakhiri.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-slate-50 px-4 py-3 flex justify-end gap-2 border-t border-slate-100">
+          <button @click="showLogoutConfirm = false" class="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded font-sans transition-colors">
+            Batal
+          </button>
+          <button @click="handleLogout" class="px-3 py-1.5 text-xs bg-red-600 hover:bg-red-700 text-white rounded font-sans font-semibold transition-colors shadow-sm">
+            Ya, Keluar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -135,6 +210,9 @@ const logoText = ref('Retro Komputer')
 const logoUrl = ref('')
 const logoHeight = ref('32')
 
+const dropdownOpen = ref(false)
+const showLogoutConfirm = ref(false)
+
 const userInitial = computed(() => {
   const name = authStore.userName
   return name ? name.charAt(0).toUpperCase() : '?'
@@ -152,6 +230,7 @@ const pageTitle = computed(() => {
     'transaksi-detail': 'Detail Transaksi',
     'pembelian': 'Pembelian',
     'pembelian-tambah': 'Tambah Pembelian',
+    'supplier': 'Supplier',
     'retur': 'Retur',
     'retur-tambah': 'Tambah Retur',
     'stok-riwayat': 'Riwayat Stok',
@@ -200,13 +279,14 @@ const menuGroups = computed<MenuGroup[]>(() => {
     ]
   }
 
+  // Admin items
   const items = [
     { label: 'Menu', items: [
       { label: 'Dashboard', icon: '◉', path: '/dashboard' },
-      { label: 'Kasir POS', icon: '⊞', path: '/pos' },
     ]},
     { label: 'Inventaris', items: [
       { label: 'Produk', icon: '□', path: '/produk' },
+      { label: 'Supplier', icon: '▤', path: '/supplier' },
       { label: 'Pembelian', icon: '↙', path: '/pembelian' },
       { label: 'Retur', icon: '↩', path: '/retur' },
       { label: 'Barang Rusak', icon: '☒', path: '/barang-rusak' },
@@ -253,9 +333,35 @@ async function loadLogo() {
   }
 }
 
+function toggleDropdown() {
+  dropdownOpen.value = !dropdownOpen.value
+}
+
+function closeDropdown() {
+  dropdownOpen.value = false
+}
+
+function triggerLogout() {
+  closeDropdown()
+  showLogoutConfirm.value = true
+}
+
+function handleLogout() {
+  showLogoutConfirm.value = false
+  authStore.logout()
+}
+
+function handleWindowClick(e: MouseEvent) {
+  const target = e.target as HTMLElement
+  if (dropdownOpen.value && !target.closest('.profile-dropdown-container')) {
+    closeDropdown()
+  }
+}
+
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
+  window.addEventListener('click', handleWindowClick)
   loadLogo()
   
   // Listen for the custom event dispatched when Admin updates the settings in SettingsPage
@@ -269,6 +375,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
+  window.removeEventListener('click', handleWindowClick)
 })
 </script>
 
@@ -279,4 +386,13 @@ onUnmounted(() => {
 .page-enter-from, .page-leave-to {
   opacity: 0;
 }
+
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.dropdown-enter-from, .dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
 </style>
+

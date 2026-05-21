@@ -1,75 +1,136 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Form Panel -->
-    <div class="lg:col-span-1 bg-white rounded-lg border border-slate-200 p-5 space-y-4 shadow-sm self-start">
-      <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-        <span class="text-retro-orange text-lg">■</span>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Catat Kerugian Inventaris</h3>
-      </div>
-
-      <form @submit.prevent="submitRecord" class="space-y-4">
-        <!-- Product Dropdown -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Produk</label>
-          <select
-            v-model="form.produk_id"
-            class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
-            required
-          >
-            <option value="" disabled>-- Pilih Produk --</option>
-            <option v-for="p in products" :key="p.id" :value="p.id" :disabled="p.stok <= 0">
-              {{ p.kode_produk }} - {{ p.nama_produk }} (Stok: {{ p.stok }})
-            </option>
-          </select>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono">
+    <!-- LEFT PANEL: Form for Admins, Infographic Analysis for Owner -->
+    <div class="lg:col-span-1 self-start">
+      
+      <!-- OWNER INFOGRAPHIC PANEL -->
+      <div v-if="isOwner" class="bg-white rounded-lg border-2 border-retro-orange overflow-hidden shadow-sm space-y-0">
+        <!-- Title Bar -->
+        <div class="bg-retro-orange text-white px-3 py-1.5 text-xs font-bold flex justify-between">
+          <span>&gt;_ ANALISIS KERUGIAN</span>
+          <span>[LOSS]</span>
         </div>
+        
+        <div class="p-5 space-y-5 font-sans">
+          <!-- Total Financial Loss Callout -->
+          <div class="space-y-1 bg-red-50/50 p-4 border border-red-200 rounded text-center">
+            <span class="block text-[10px] font-bold text-red-500 uppercase tracking-widest font-mono">Total Kerugian Finansial</span>
+            <div class="text-xl font-black text-red-600 font-mono tracking-tight">
+              Rp {{ formatRupiah(totalFinancialLoss) }}
+            </div>
+            <span class="block text-[9px] text-slate-400 italic font-mono">Berdasarkan Harga Beli Terakhir</span>
+          </div>
 
-        <!-- Category -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Laporan</label>
-          <div class="flex gap-4">
-            <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
-              <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
-              Barang Rusak
-            </label>
-            <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
-              <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
-              Barang Hilang
-            </label>
+          <!-- Breakdown metrics -->
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-amber-650 font-bold uppercase">■ BARANG RUSAK</span>
+              <div class="text-right font-mono">
+                <span class="font-bold text-slate-800">{{ rusakQty }} pcs</span>
+                <span class="block text-[10px] text-slate-400">Rp {{ formatRupiah(rusakLoss) }}</span>
+              </div>
+            </div>
+            <div class="flex justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-red-600 font-bold uppercase">■ BARANG HILANG</span>
+              <div class="text-right font-mono">
+                <span class="font-bold text-slate-800">{{ hilangQty }} pcs</span>
+                <span class="block text-[10px] text-slate-400">Rp {{ formatRupiah(hilangLoss) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ratio Visual Bar -->
+          <div class="space-y-2">
+            <div class="flex justify-between text-[10px] font-bold font-mono">
+              <span class="text-amber-600">RUSAK ({{ ratioRusak }}%)</span>
+              <span class="text-red-600">HILANG ({{ ratioHilang }}%)</span>
+            </div>
+            <div class="relative w-full h-3 bg-slate-100 rounded overflow-hidden flex border border-slate-200">
+              <div
+                class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500"
+                :style="{ width: `${ratioRusak}%` }"
+              ></div>
+              <div
+                class="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
+                :style="{ width: `${ratioHilang}%` }"
+              ></div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Quantity -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah (Qty)</label>
-          <input
-            v-model.number="form.qty"
-            type="number"
-            min="1"
-            class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
-            placeholder="1"
-            required
-          />
+      <!-- ADMIN RECORD FORM -->
+      <div v-else class="bg-white rounded-lg border border-slate-200 p-5 space-y-4 shadow-sm">
+        <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+          <span class="text-retro-orange text-lg">■</span>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Catat Kerugian Inventaris</h3>
         </div>
 
-        <!-- Description -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Alasan</label>
-          <textarea
-            v-model="form.keterangan"
-            rows="3"
-            class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
-            placeholder="Tulis alasan atau kronologi detail..."
-          ></textarea>
-        </div>
+        <form @submit.prevent="submitRecord" class="space-y-4">
+          <!-- Product Dropdown -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Produk</label>
+            <select
+              v-model="form.produk_id"
+              class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              required
+            >
+              <option value="" disabled>-- Pilih Produk --</option>
+              <option v-for="p in products" :key="p.id" :value="p.id" :disabled="p.stok <= 0">
+                {{ p.kode_produk }} - {{ p.nama_produk }} (Stok: {{ p.stok }})
+              </option>
+            </select>
+          </div>
 
-        <button
-          :disabled="submitting || products.length === 0"
-          type="submit"
-          class="w-full py-2 text-xs font-bold text-white bg-retro-orange hover:bg-orange-600 rounded transition-colors shadow-sm disabled:opacity-50"
-        >
-          {{ submitting ? 'Memproses...' : 'Catat Kerugian' }}
-        </button>
-      </form>
+          <!-- Category -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Laporan</label>
+            <div class="flex gap-4">
+              <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
+                <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
+                Barang Rusak
+              </label>
+              <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
+                <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
+                Barang Hilang
+              </label>
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah (Qty)</label>
+            <input
+              v-model.number="form.qty"
+              type="number"
+              min="1"
+              class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              placeholder="1"
+              required
+            />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Alasan</label>
+            <textarea
+              v-model="form.keterangan"
+              rows="3"
+              class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              placeholder="Tulis alasan atau kronologi detail..."
+            ></textarea>
+          </div>
+
+          <button
+            :disabled="submitting || products.length === 0"
+            type="submit"
+            class="w-full py-2 text-xs font-bold text-white bg-retro-orange hover:bg-orange-600 rounded transition-colors shadow-sm disabled:opacity-50"
+          >
+            {{ submitting ? 'Memproses...' : 'Catat Kerugian' }}
+          </button>
+        </form>
+      </div>
+
     </div>
 
     <!-- History Panel -->
@@ -110,6 +171,7 @@
                 >
                   Rusak
                 </span>
+
                 <span
                   v-else
                   class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide bg-red-50 text-red-600 rounded border border-red-200"
@@ -128,15 +190,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { produkService, barangRusakService } from '@/services'
 import type { Produk, BarangRusak, BarangRusakPayload } from '@/types'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const products = ref<Produk[]>([])
 const history = ref<BarangRusak[]>([])
 
 const loading = ref(true)
 const submitting = ref(false)
+
+const isOwner = computed(() => authStore.isOwner)
 
 const form = ref<BarangRusakPayload>({
   produk_id: 0,
@@ -147,6 +213,39 @@ const form = ref<BarangRusakPayload>({
 
 onMounted(async () => {
   await Promise.all([fetchProducts(), fetchHistory()])
+})
+
+// Infographic Calculations
+const totalFinancialLoss = computed(() => {
+  return history.value.reduce((acc, item) => acc + (Number(item.qty) * (Number(item.produk?.harga_beli) || 0)), 0)
+})
+
+const rusakQty = computed(() => {
+  return history.value.filter(item => item.kategori === 'rusak').reduce((acc, item) => acc + Number(item.qty), 0)
+})
+
+const hilangQty = computed(() => {
+  return history.value.filter(item => item.kategori === 'hilang').reduce((acc, item) => acc + Number(item.qty), 0)
+})
+
+const rusakLoss = computed(() => {
+  return history.value.filter(item => item.kategori === 'rusak').reduce((acc, item) => acc + (Number(item.qty) * (Number(item.produk?.harga_beli) || 0)), 0)
+})
+
+const hilangLoss = computed(() => {
+  return history.value.filter(item => item.kategori === 'hilang').reduce((acc, item) => acc + (Number(item.qty) * (Number(item.produk?.harga_beli) || 0)), 0)
+})
+
+const totalQty = computed(() => rusakQty.value + hilangQty.value)
+
+const ratioRusak = computed(() => {
+  if (totalQty.value === 0) return 0
+  return Math.round((rusakQty.value / totalQty.value) * 100)
+})
+
+const ratioHilang = computed(() => {
+  if (totalQty.value === 0) return 0
+  return Math.round((hilangQty.value / totalQty.value) * 100)
 })
 
 async function fetchProducts() {
@@ -203,6 +302,11 @@ async function submitRecord() {
   } finally {
     submitting.value = false
   }
+}
+
+function formatRupiah(val: number | string): string {
+  if (val === undefined || val === null) return '0'
+  return new Intl.NumberFormat('id-ID').format(Number(val))
 }
 
 function formatDate(dateStr: string) {

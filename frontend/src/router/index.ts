@@ -50,7 +50,7 @@ const router = createRouter({
           path: 'pos',
           name: 'pos',
           component: () => import('@/pages/POSPage.vue'),
-          meta: { roles: ['admin', 'kasir'] },
+          meta: { roles: ['kasir'] },
         },
         {
           path: 'transaksi',
@@ -77,6 +77,12 @@ const router = createRouter({
           meta: { roles: ['admin'] },
         },
         {
+          path: 'supplier',
+          name: 'supplier',
+          component: () => import('@/pages/SupplierList.vue'),
+          meta: { roles: ['admin'] },
+        },
+        {
           path: 'retur',
           name: 'retur',
           component: () => import('@/pages/ReturList.vue'),
@@ -98,7 +104,7 @@ const router = createRouter({
           path: 'laporan/penjualan',
           name: 'laporan-penjualan',
           component: () => import('@/pages/LaporanPenjualan.vue'),
-          meta: { roles: ['admin', 'owner'] },
+          meta: { roles: ['admin', 'owner', 'kasir'] },
         },
         {
           path: 'laporan/stok',

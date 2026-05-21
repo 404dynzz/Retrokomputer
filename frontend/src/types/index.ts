@@ -80,6 +80,21 @@ export interface TransaksiPayload {
   metode_pembayaran: string
 }
 
+export interface Supplier {
+  id: number
+  nama: string
+  telepon?: string
+  alamat?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface SupplierPayload {
+  nama: string
+  telepon?: string
+  alamat?: string
+}
+
 export interface Pembelian {
   id: number
   user_id: number
@@ -87,6 +102,7 @@ export interface Pembelian {
   supplier: string
   invoice: string
   total: number
+  struk?: string
   details?: PembelianDetail[]
   created_at: string
 }
@@ -109,6 +125,7 @@ export interface PembelianPayload {
     qty: number
     harga_beli: number
   }[]
+  struk_file?: File | null
 }
 
 export interface Retur {
@@ -118,6 +135,7 @@ export interface Retur {
   jenis_retur: 'penjualan' | 'pembelian'
   referensi_id: number
   alasan: string
+  ongkir: number
   details?: ReturDetail[]
   created_at: string
 }
@@ -132,6 +150,7 @@ export interface ReturPayload {
   jenis_retur: 'penjualan' | 'pembelian'
   referensi_id: number
   alasan: string
+  ongkir?: number
   items: {
     produk_id: number
     qty: number
@@ -200,3 +219,10 @@ export interface BarangRusakPayload {
   keterangan?: string
 }
 
+export interface Notifikasi {
+  id: number
+  title: string
+  message: string
+  status_baca: boolean
+  created_at: string
+}

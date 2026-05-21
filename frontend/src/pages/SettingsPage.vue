@@ -92,7 +92,7 @@
 
         <!-- Preview Logo -->
         <div class="bg-gradient-to-br from-retro-dark to-retro-dark-card rounded-lg border-2 border-retro-orange/30 p-4 mt-2">
-          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-orange drop-shadow mb-3">✨ Preview Logo Retro</p>
+          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-orange drop-shadow mb-3">■ Preview Logo Retro</p>
           <div class="bg-retro-dark rounded-md border border-retro-orange/20 p-4 flex items-center justify-center min-h-24">
             <div class="flex items-center gap-3">
               <div class="px-4 bg-retro-dark flex items-center justify-center rounded border-2 border-retro-orange/40 shadow-lg transition-all duration-300 hover:border-retro-orange hover:shadow-xl hover:scale-105"
@@ -178,7 +178,7 @@
 
         <!-- Preview Background -->
         <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg border-2 border-retro-blue/30 p-4 mt-2">
-          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-blue drop-shadow mb-3">✨ Preview Tampilan Latar Login</p>
+          <p class="text-[10px] font-semibold uppercase tracking-wider text-retro-blue drop-shadow mb-3">■ Preview Tampilan Latar Login</p>
           <div class="h-32 rounded-lg border-2 border-retro-blue/40 flex items-center justify-center overflow-hidden relative shadow-lg transition-all duration-300 hover:shadow-xl" :style="previewBgStyle">
             <!-- Grid Effect Overlay -->
             <div v-if="settings.bg_type === 'grid'" class="absolute inset-0 pointer-events-none bg-grid" />
