@@ -9,21 +9,13 @@
     >
       <!-- Logo -->
       <div class="flex items-center px-3 border-b border-slate-200 shrink-0 bg-retro-dark transition-all duration-150"
-           :style="{ height: (parseInt(logoHeight) + 24) + 'px' }">
-        <div v-if="sidebarOpen" class="flex items-center gap-2 overflow-hidden w-full">
-          <!-- Logo Type: Image -->
-          <div v-if="logoType === 'image' && logoUrl" class="w-full flex items-center justify-center py-1 rounded border border-retro-orange/30 animate-fadeIn"
-               :style="{ height: (parseInt(logoHeight) + 8) + 'px' }">
-            <img :src="logoUrl" class="object-contain transition-all duration-150" :style="{ height: logoHeight + 'px' }" alt="Retro Logo" />
+           style="height: 56px;">
+        <div v-if="sidebarOpen" class="flex items-center gap-2 overflow-hidden w-full animate-fadeIn">
+          <div class="w-7 h-7 rounded bg-retro-blue flex items-center justify-center shrink-0">
+            <span class="text-white font-bold text-xs font-mono">R</span>
           </div>
-          <!-- Logo Type: Text -->
-          <div v-else class="flex items-center gap-2 w-full animate-fadeIn">
-            <div class="w-7 h-7 rounded bg-retro-blue flex items-center justify-center shrink-0">
-              <span class="text-white font-bold text-xs font-mono">R</span>
-            </div>
-            <span class="text-xs font-mono font-bold text-retro-orange truncate" :title="logoText"
-                  :style="{ fontSize: (parseInt(logoHeight) * 0.4) + 'px' }">&gt;_ {{ logoText }}</span>
-          </div>
+          <span class="text-xs font-mono font-bold text-retro-orange truncate" title="Retro Komputer"
+                style="font-size: 12.8px;">&gt;_ Retro Komputer</span>
         </div>
         <div v-else class="hidden lg:flex w-full justify-center">
           <div class="w-7 h-7 rounded bg-retro-blue flex items-center justify-center">
@@ -197,18 +189,12 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { settingService } from '@/services'
 
 const route = useRoute()
 const authStore = useAuthStore()
 
 const sidebarOpen = ref(true)
 const isMobile = ref(false)
-
-const logoType = ref('text')
-const logoText = ref('Retro Komputer')
-const logoUrl = ref('')
-const logoHeight = ref('32')
 
 const dropdownOpen = ref(false)
 const showLogoutConfirm = ref(false)
@@ -321,18 +307,6 @@ function checkMobile() {
   if (isMobile.value) sidebarOpen.value = false
 }
 
-async function loadLogo() {
-  try {
-    const res = await settingService.getActive()
-    logoType.value = res.data.logo_type
-    logoText.value = res.data.logo_text
-    logoUrl.value = res.data.logo_url
-    logoHeight.value = res.data.logo_height || '32'
-  } catch (err) {
-    console.error('Gagal mengambil logo:', err)
-  }
-}
-
 function toggleDropdown() {
   dropdownOpen.value = !dropdownOpen.value
 }
@@ -362,15 +336,6 @@ onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
   window.addEventListener('click', handleWindowClick)
-  loadLogo()
-  
-  // Listen for the custom event dispatched when Admin updates the settings in SettingsPage
-  window.addEventListener('settings-updated', ((e: CustomEvent) => {
-    logoType.value = e.detail.logo_type
-    logoText.value = e.detail.logo_text
-    logoUrl.value = e.detail.logo_url
-    logoHeight.value = e.detail.logo_height || '32'
-  }) as EventListener)
 })
 
 onUnmounted(() => {

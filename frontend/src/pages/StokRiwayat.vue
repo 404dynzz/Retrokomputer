@@ -50,16 +50,18 @@
                 <span class="text-[10px] text-slate-400 font-mono">Kode: {{ r.produk?.kode_produk || '-' }}</span>
               </td>
               <td class="px-4 py-3">
-                <!-- Redesigned tipe indicator: no bg, bright text with arrow -->
+                <!-- Redesigned tipe indicator: bright neon colors with glow -->
                 <span
                   v-if="r.tipe === 'masuk'"
-                  class="font-black text-emerald-500 uppercase tracking-wide text-[10px]"
+                  class="font-black text-emerald-400 uppercase tracking-wide text-xs"
+                  style="text-shadow: 0 0 8px rgba(52, 211, 153, 0.6), 0 0 16px rgba(52, 211, 153, 0.3);"
                 >
                   ▲ MASUK
                 </span>
                 <span
                   v-else
-                  class="font-black text-rose-500 uppercase tracking-wide text-[10px]"
+                  class="font-black text-rose-400 uppercase tracking-wide text-xs"
+                  style="text-shadow: 0 0 8px rgba(251, 113, 133, 0.6), 0 0 16px rgba(251, 113, 133, 0.3);"
                 >
                   ▼ KELUAR
                 </span>

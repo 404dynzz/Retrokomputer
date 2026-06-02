@@ -96,8 +96,8 @@
 
     <!-- Quick Actions - Berbeda untuk Admin dan Kasir -->
     <div :class="authStore.isKasir ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-4'" class="grid gap-3">
-      <!-- Buka Kasir (untuk semua) -->
-      <router-link to="/pos" class="group bg-gradient-to-br from-retro-orange/10 to-white rounded-lg border-2 border-retro-orange/30 p-4 text-center hover:border-retro-orange hover:bg-retro-orange/5 hover:shadow-lg transition-all">
+      <!-- Buka Kasir (Kasir Only) -->
+      <router-link v-if="authStore.isKasir" to="/pos" class="group bg-gradient-to-br from-retro-orange/10 to-white rounded-lg border-2 border-retro-orange/30 p-4 text-center hover:border-retro-orange hover:bg-retro-orange/5 hover:shadow-lg transition-all">
         <p class="text-2xl mb-1">🛒</p>
         <p class="text-xs font-bold text-retro-orange group-hover:text-retro-orange-dark transition-colors">Buka Kasir</p>
       </router-link>

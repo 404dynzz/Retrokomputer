@@ -140,14 +140,16 @@ const produkList = ref<Produk[]>([])
 const deleteTarget = ref<Produk | null>(null)
 
 const uniqueCategories = computed(() => {
-  const cats = produkList.value.map(p => p.kategori).filter(Boolean)
-  return Array.from(new Set(cats))
+  const cats = produkList.value
+    .map(p => (p.kategori || '').trim())
+    .filter(c => c.length > 0)
+  return Array.from(new Set(cats)).sort()
 })
 
 const filteredProduk = computed(() => {
   let list = produkList.value
   if (selectedCategory.value) {
-    list = list.filter(p => p.kategori === selectedCategory.value)
+    list = list.filter(p => (p.kategori || '').trim() === selectedCategory.value)
   }
   if (search.value) {
     const q = search.value.toLowerCase()
