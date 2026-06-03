@@ -4,26 +4,16 @@
     <div class="absolute inset-0 pointer-events-none bg-grid z-0 animate-fadeIn" />
 
     <div class="w-full max-w-sm animate-slideUp z-10">
-      <!-- Logo Custom Header -->
+      <!-- Text Custom Header (No Logo) -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center mb-4">
-          <!-- Logo Type: TEXT (default fixed) -->
-          <div class="px-6 bg-gradient-to-br from-retro-dark to-retro-dark-card flex items-center justify-center rounded-lg border-2 border-retro-orange/50 shadow-xl animate-fadeIn transition-all duration-150 hover:border-retro-orange hover:shadow-2xl hover:scale-105"
-               style="height: 56px;">
-            <span class="text-retro-orange font-mono font-bold tracking-widest drop-shadow-lg"
-                  style="font-size: 14.4px;">
-              ▌Retro Komputer▐
-            </span>
-          </div>
-        </div>
         <h1 class="text-2xl font-bold font-mono tracking-wider text-retro-orange drop-shadow-lg">Retro Komputer</h1>
-        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS Retro Modern</p>
+        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
       </div>
 
       <!-- Card Container -->
       <div class="bg-white rounded-lg border border-slate-200 p-6 shadow-md">
         <h2 class="text-sm font-semibold text-slate-800 mb-1">Masuk</h2>
-        <p class="text-xs text-slate-500 mb-5">Masukkan email dan password</p>
+        <p class="text-xs text-slate-500 mb-5">Masukkan username dan password</p>
 
         <div v-if="authStore.error" class="mb-4 p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">
           {{ authStore.error }}
@@ -31,13 +21,13 @@
 
         <form @submit.prevent="handleLogin" class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Email</label>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Username</label>
             <input
-              id="login-email"
-              v-model="email"
-              type="email"
+              id="login-username"
+              v-model="username"
+              type="text"
               class="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-retro-blue focus:border-retro-blue"
-              placeholder="email@contoh.com"
+              placeholder="admin"
               required
             />
           </div>
@@ -62,14 +52,6 @@
           </button>
         </form>
 
-        <div class="mt-5 pt-4 border-t border-slate-200">
-          <p class="text-[10px] text-slate-400 text-center mb-2 uppercase tracking-wider">Demo Akses</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button @click="fillDemo('admin@retro.com')" class="text-[10px] py-1.5 font-semibold rounded border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Admin</button>
-            <button @click="fillDemo('kasir@retro.com')" class="text-[10px] py-1.5 font-semibold rounded border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Kasir</button>
-            <button @click="fillDemo('owner@retro.com')" class="text-[10px] py-1.5 font-semibold rounded border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Owner</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -80,20 +62,15 @@ import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
-const email = ref('')
+const username = ref('')
 const password = ref('')
 
 async function handleLogin() {
   try {
-    await authStore.login(email.value, password.value)
+    await authStore.login(username.value, password.value)
   } catch {
     // handled by store
   }
-}
-
-function fillDemo(demoEmail: string) {
-  email.value = demoEmail
-  password.value = 'password'
 }
 </script>
 

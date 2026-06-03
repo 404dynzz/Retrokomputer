@@ -120,11 +120,6 @@
         <p class="text-xs font-bold text-purple-700 group-hover:text-purple-800 transition-colors">Laporan</p>
       </router-link>
 
-      <!-- Pengaturan (Admin Only) -->
-      <router-link v-if="!authStore.isKasir" to="/settings" class="group bg-gradient-to-br from-slate-100/50 to-white rounded-lg border-2 border-slate-300 p-4 text-center hover:border-slate-400 hover:bg-slate-100 hover:shadow-lg transition-all">
-        <p class="text-2xl mb-1">⚙️</p>
-        <p class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">Pengaturan</p>
-      </router-link>
     </div>
   </div>
 </template>
