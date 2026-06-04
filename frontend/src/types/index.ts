@@ -3,14 +3,14 @@
 export interface User {
   id: number
   name: string
-  email: string
+  username: string
   role: 'admin' | 'owner' | 'kasir'
   created_at?: string
   updated_at?: string
 }
 
 export interface LoginPayload {
-  email: string
+  username: string
   password: string
 }
 
