@@ -22,9 +22,9 @@ Sistem POS Retro Komputer dirancang untuk melayani **tiga kelompok pengguna** de
 Memiliki wewenang penuh atas konfigurasi operasional dan data master sistem.
 *   Autentikasi & Pengaturan Akun
 *   Kelola Data Produk (CRUD, kategori, kode produk unik)
-*   Kelola Pembelian Barang (Supplier & Stok Masuk)
-*   Kelola Transaksi Penjualan & Cetak Nota
-*   Kelola Retur (Penjualan & Pembelian)
+*   Kelola Pembelian Barang & Supplier (CRUD Supplier dengan pembatasan: nama tanpa karakter spesial, telepon hanya angka maks 13 digit, alamat maks 255 karakter, serta fitur pencarian produk secara dinamis/searchable dropdown dan pemisah ribuan/jutaan pada input harga beli di form pembelian, serta upload bukti fisik struk pembelian/restok)
+*   Kelola Transaksi Penjualan, Cetak Nota, dan **Hapus Transaksi** (khusus Admin dapat membatalkan transaksi, otomatis mengembalikan jumlah stok dan saldo keuangan, serta dicatat di log riwayat stok sebagai pembatalan oleh admin)
+*   Kelola Retur (Penjualan & Pembelian) - Menampilkan nama supplier asal barang pada daftar retur dan detail pop-up jika jenis returnya adalah retur pembelian.
 *   Melihat Laporan Penjualan dasar dan pergerakan stok
 *   **Akses Pengaturan Sistem:** Kustomisasi logo retro (teks/gambar), ukuran tinggi logo yang fleksibel, dan konfigurasi latar belakang login.
 
@@ -32,7 +32,7 @@ Memiliki wewenang penuh atas konfigurasi operasional dan data master sistem.
 Memiliki wewenang analitis penuh untuk memantau performa toko dan mengelola inventaris kritis.
 *   Autentikasi & Pemantauan Dashboard Utama
 *   Monitoring Transaksi Penjualan secara Real-time
-*   Kelola Barang Hilang / Rusak (Inventaris bermasalah)
+*   Kelola Barang Hilang / Rusak (Inventaris bermasalah, mendukung unggah file/foto bukti fisik kerusakan barang)
 *   Melihat Laporan Laba Rugi Toko komprehensif (Pendapatan, HPP, Kerugian Inventaris, Laba Bersih)
 *   Monitoring Riwayat Pergerakan Stok masuk-keluar secara mendalam
 

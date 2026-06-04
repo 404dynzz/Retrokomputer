@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::post('/transaksi', [TransaksiController::class, 'store']);
     Route::get('/transaksi/{id}', [TransaksiController::class, 'show']);
+    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
 
     // Pembelian (Restock)
     Route::get('/pembelian', [PembelianController::class, 'index']);

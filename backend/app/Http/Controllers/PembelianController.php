@@ -45,7 +45,7 @@ class PembelianController extends Controller
         $strukPath = null;
         if ($request->hasFile('struk_file')) {
             $path = $request->file('struk_file')->store('pembelians', 'public');
-            $strukPath = asset('storage/' . $path);
+            $strukPath = '/storage/' . $path;
         }
 
         DB::beginTransaction();

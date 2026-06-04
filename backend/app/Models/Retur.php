@@ -20,4 +20,9 @@ class Retur extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function pembelian()
+    {
+        return $this->belongsTo(Pembelian::class, 'referensi_id');
+    }
 }

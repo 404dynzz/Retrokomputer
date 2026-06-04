@@ -15,7 +15,7 @@ class ReturController extends Controller
             return response()->json(['message' => 'Hanya admin yang dapat mengelola retur.'], 403);
         }
 
-        $returs = Retur::with(['user:id,name', 'details.produk'])->orderBy('created_at', 'desc')->get();
+        $returs = Retur::with(['user:id,name', 'details.produk', 'pembelian:id,supplier'])->orderBy('created_at', 'desc')->get();
         return response()->json($returs);
     }
 

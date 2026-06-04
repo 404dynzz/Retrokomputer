@@ -134,6 +134,7 @@ export interface Retur {
   user?: { id: number; name: string }
   jenis_retur: 'penjualan' | 'pembelian'
   referensi_id: number
+  pembelian?: { id: number; supplier: string }
   alasan: string
   ongkir: number
   details?: ReturDetail[]
@@ -209,6 +210,7 @@ export interface BarangRusak {
   qty: number
   kategori: 'rusak' | 'hilang'
   keterangan?: string
+  bukti_foto?: string
   created_at: string
 }
 
@@ -217,6 +219,7 @@ export interface BarangRusakPayload {
   qty: number
   kategori: 'rusak' | 'hilang'
   keterangan?: string
+  bukti_foto?: string
 }
 
 export interface Notifikasi {

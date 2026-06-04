@@ -183,13 +183,20 @@
               <td class="px-4 py-3 font-bold text-slate-800 text-right">
                 Rp {{ formatRupiah(t.total) }}
               </td>
-              <td class="px-4 py-3 text-center">
+              <td class="px-4 py-3 text-center flex items-center justify-center gap-1.5">
                 <router-link
                   :to="`/transaksi/${t.id}`"
                   class="px-2 py-1 text-[10px] font-bold border-2 border-retro-blue text-retro-blue rounded hover:bg-retro-blue hover:text-white transition-colors"
                 >
                   [DETAIL]
                 </router-link>
+                <button
+                  v-if="isAdmin"
+                  @click="deleteTransaction(t)"
+                  class="px-2 py-1 text-[10px] font-bold border-2 border-red-500 text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors"
+                >
+                  [HAPUS]
+                </button>
               </td>
             </tr>
             <tr v-if="transaksiList.length === 0">
@@ -215,8 +222,10 @@ const loading = ref(true)
 const transaksiList = ref<Transaksi[]>([])
 
 const isOwner = computed(() => authStore.isOwner)
+const isAdmin = computed(() => authStore.isAdmin)
 
-onMounted(async () => {
+async function fetchTransactions() {
+  loading.value = true
   try {
     const res = await transaksiService.getAll()
     transaksiList.value = res.data as Transaksi[]
@@ -225,7 +234,26 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+}
+
+onMounted(async () => {
+  await fetchTransactions()
 })
+
+async function deleteTransaction(t: Transaksi) {
+  if (!confirm(`Apakah Anda yakin ingin menghapus transaksi ${t.kode_transaksi}? Tindakan ini akan mengembalikan stok produk dan membatalkan catatan keuangan!`)) {
+    return
+  }
+
+  try {
+    await transaksiService.delete(t.id)
+    alert('Transaksi berhasil dihapus.')
+    await fetchTransactions()
+  } catch (err: any) {
+    const msg = err.response?.data?.message || 'Gagal menghapus transaksi.'
+    alert(msg)
+  }
+}
 
 // KPI Calculations
 const totalRevenue = computed(() => {
