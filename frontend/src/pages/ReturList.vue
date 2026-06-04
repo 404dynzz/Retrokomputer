@@ -49,6 +49,9 @@
               </td>
               <td class="px-4 py-3 font-bold text-slate-800">
                 #{{ r.referensi_id }}
+                <div v-if="r.jenis_retur === 'pembelian' && r.pembelian" class="text-[10px] text-slate-500 font-sans font-normal mt-0.5">
+                  Supplier: <span class="font-semibold text-slate-700">{{ r.pembelian.supplier }}</span>
+                </div>
               </td>
               <td class="px-4 py-3 text-right font-bold text-slate-800">
                 Rp {{ formatRupiah(r.ongkir) }}
@@ -105,6 +108,10 @@
             <div class="space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Referensi ID</span>
               <span class="font-bold text-slate-800 font-mono">#{{ activeRetur.referensi_id }}</span>
+            </div>
+            <div v-if="activeRetur.jenis_retur === 'pembelian' && activeRetur.pembelian" class="col-span-2 space-y-1 bg-blue-50/50 p-2.5 border border-blue-100 rounded">
+              <span class="block font-bold text-retro-blue uppercase text-[10px] tracking-wider">Supplier</span>
+              <span class="font-bold text-slate-800 text-xs">{{ activeRetur.pembelian.supplier }}</span>
             </div>
             <div class="space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Ongkos Kirim</span>

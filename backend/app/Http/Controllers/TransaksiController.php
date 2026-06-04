@@ -83,4 +83,45 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::with(['details.produk', 'kasir:id,name'])->findOrFail($id);
         return response()->json($transaksi);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Hanya admin yang dapat menghapus transaksi.'], 403);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $transaksi = Transaksi::with('details')->findOrFail($id);
+
+            foreach ($transaksi->details as $detail) {
+                $produk = Produk::find($detail->produk_id);
+                if ($produk) {
+                    // Restore stock
+                    $produk->increment('stok', $detail->qty);
+
+                    // Record to stok history as cancellation
+                    $produk->riwayatStok()->create([
+                        'tipe' => 'masuk',
+                        'qty' => $detail->qty,
+                        'sumber' => 'Pembatalan Transaksi oleh Admin',
+                        'referensi_id' => $transaksi->id
+                    ]);
+                }
+            }
+
+            // Delete transaction (cascades to details)
+            $transaksi->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Transaksi berhasil dihapus, stok dan keuangan telah dikembalikan.'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
 }

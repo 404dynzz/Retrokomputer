@@ -32,14 +32,29 @@ class BarangRusakController extends Controller
             return response()->json(['message' => 'Hanya admin atau owner yang dapat mencatat barang rusak/hilang.'], 403);
         }
 
+        // Support form-data type conversions
+        if ($request->has('produk_id')) {
+            $request->merge([
+                'produk_id' => (int) $request->input('produk_id'),
+                'qty' => (int) $request->input('qty'),
+            ]);
+        }
+
         $request->validate([
             'produk_id' => 'required|exists:produks,id',
             'qty' => 'required|integer|min:1',
             'kategori' => 'required|string|in:rusak,hilang',
             'keterangan' => 'nullable|string',
+            'bukti_file' => 'nullable|image|max:4096',
         ]);
 
-        $result = DB::transaction(function () use ($request) {
+        $buktiPath = null;
+        if ($request->hasFile('bukti_file')) {
+            $path = $request->file('bukti_file')->store('barang_rusak', 'public');
+            $buktiPath = '/storage/' . $path;
+        }
+
+        $result = DB::transaction(function () use ($request, $buktiPath) {
             $produk = Produk::findOrFail($request->produk_id);
 
             if ($produk->stok < $request->qty) {
@@ -55,6 +70,7 @@ class BarangRusakController extends Controller
                 'qty' => $request->qty,
                 'kategori' => $request->kategori,
                 'keterangan' => $request->keterangan,
+                'bukti_foto' => $buktiPath,
             ]);
 
             // Save stok history record to reflect in Laba Rugi loss calculations

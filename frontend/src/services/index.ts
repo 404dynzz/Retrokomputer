@@ -62,6 +62,8 @@ export const transaksiService = {
     api.get<Transaksi>(`/transaksi/${id}`),
   create: (payload: TransaksiPayload) =>
     api.post<Transaksi>('/transaksi', payload),
+  delete: (id: number) =>
+    api.delete(`/transaksi/${id}`),
 }
 
 export const pembelianService = {
@@ -107,8 +109,16 @@ export const settingService = {
 export const barangRusakService = {
   getAll: () =>
     api.get<BarangRusak[]>('/barang-rusak'),
-  create: (payload: BarangRusakPayload) =>
-    api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload),
+  create: (payload: BarangRusakPayload | FormData) => {
+    if (payload instanceof FormData) {
+      return api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+    }
+    return api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload)
+  },
 }
 
 export const notifikasiService = {
