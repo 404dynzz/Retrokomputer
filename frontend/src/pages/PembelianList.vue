@@ -61,6 +61,35 @@
         </table>
       </div>
     </div>
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+    <!-- Receipt Lightbox Modal -->
+    <div v-if="activeStruk" class="fixed inset-0 bg-retro-dark/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" @click="activeStruk = null">
+      <div class="bg-white border-2 border-retro-blue rounded-lg max-w-lg w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
+        <!-- Title bar -->
+        <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
+          <span class="font-bold text-xs">BUKTI NOTA / STRUK</span>
+          <button @click="activeStruk = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+        </div>
+        <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
+          <img :src="activeStruk" class="max-h-[70vh] object-contain rounded border-2 border-retro-orange shadow-lg" alt="Bukti Struk" />
+        </div>
+        <div class="bg-slate-50 px-4 py-2.5 flex justify-end">
+          <button
+            @click="activeStruk = null"
+            class="text-xs font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
+          >
+            TUTUP
+          </button>
+        </div>
+      </div>
+    </div>
+
+=======
+>>>>>>> 9dae7b0b55f4896754e1fc5711610062a4e2adee
+>>>>>>> f20ae1b (debug fitur main)
     <!-- Purchase Detail Modal -->
     <div v-if="detailItem" class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 1000;" @click="detailItem = null">
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-xl w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>

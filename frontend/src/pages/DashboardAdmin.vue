@@ -261,6 +261,10 @@
         <p class="text-2xl mb-1"></p>
         <p class="text-xs font-bold text-purple-700 group-hover:text-purple-800 transition-colors">Laporan</p>
       </router-link>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9dae7b0b55f4896754e1fc5711610062a4e2adee
     </div>
   </div>
 </template>
