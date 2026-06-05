@@ -20,6 +20,8 @@ import type {
   Supplier,
   SupplierPayload,
   Notifikasi,
+  ProfilKasir,
+  ProfilKasirPayload,
 } from '@/types'
 
 export const authService = {
@@ -128,5 +130,24 @@ export const notifikasiService = {
     api.put(`/notifikasi/${id}`),
   markAllRead: () =>
     api.put('/notifikasi/read-all'),
+}
+
+export const profilKasirService = {
+  getAll: () =>
+    api.get<ProfilKasir[]>('/profil-kasir'),
+  create: (payload: ProfilKasirPayload) =>
+    api.post<ProfilKasir>('/profil-kasir', payload),
+  update: (id: number, payload: { nama: string; kode_khusus?: string }) =>
+    api.put<ProfilKasir>(`/profil-kasir/${id}`, payload),
+  delete: (id: number) =>
+    api.delete(`/profil-kasir/${id}`),
+  aktifkan: (id: number, kode_khusus: string) =>
+    api.post<ProfilKasir>('/profil-kasir/aktifkan', { id, kode_khusus }),
+  nonaktifkan: () =>
+    api.post('/profil-kasir/nonaktifkan'),
+  getAktif: () =>
+    api.get<ProfilKasir | null>('/profil-kasir/aktif'),
+  getKasirUsers: () =>
+    api.get<{ id: number; name: string; username: string }[]>('/kasir-users'),
 }
 

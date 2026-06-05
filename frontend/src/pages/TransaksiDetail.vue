@@ -4,13 +4,23 @@
     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
       <div v-if="loading" class="p-8 text-center text-sm text-slate-400">Memuat...</div>
       <template v-else-if="trx">
-        <div class="p-4 border-b border-slate-200">
+        <div class="p-4 border-b border-slate-200 space-y-2">
           <div class="flex justify-between items-start">
             <div>
               <h2 class="text-sm font-semibold text-slate-800">{{ trx.kode_transaksi }}</h2>
               <p class="text-xs text-slate-500 mt-0.5">{{ formatDate(trx.created_at) }}</p>
             </div>
             <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{{ trx.metode_pembayaran }}</span>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-slate-100">
+            <div>
+              <span class="text-slate-400 font-bold">KASIR:</span>
+              <span class="ml-1 font-bold text-slate-750">{{ trx.nama_kasir || trx.kasir?.name || '-' }}</span>
+            </div>
+            <div>
+              <span class="text-slate-400 font-bold">PEMBELI:</span>
+              <span class="ml-1 font-bold text-slate-750">{{ trx.nama_pembeli || '-' }}</span>
+            </div>
           </div>
         </div>
         <table class="w-full">

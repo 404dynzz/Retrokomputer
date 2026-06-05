@@ -48,7 +48,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        if ($user && $user->role === 'kasir') {
+            \App\Models\ProfilKasir::where('user_id', $user->id)->update(['is_active' => false]);
+        }
+
+        $user->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Berhasil logout'
