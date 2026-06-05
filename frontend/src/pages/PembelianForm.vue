@@ -51,7 +51,7 @@
           <!-- Items Section -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-bold text-slate-700 uppercase">&gt;_ DETAIL BARANG</label>
+              <label class="text-xs font-bold text-slate-700 uppercase">DETAIL BARANG</label>
               <button
                 type="button"
                 @click="addRow"

@@ -4,7 +4,7 @@
     <div class="lg:w-[55%] flex flex-col gap-4">
       <div class="bg-white rounded-lg border-2 border-retro-blue p-4 shadow-sm">
         <div class="flex items-center justify-between mb-2">
-          <label class="text-xs font-bold text-slate-700 uppercase">&gt;_ CARI BARANG</label>
+          <label class="text-xs font-bold text-slate-700 uppercase">CARI BARANG</label>
           <span class="text-[10px] text-slate-400 font-sans">Tekan nama barang untuk memasukkan ke keranjang</span>
         </div>
         <input
@@ -18,7 +18,7 @@
 
       <div class="flex-1 overflow-y-auto min-h-[350px]">
         <div v-if="loadingProducts" class="py-12 text-center text-sm text-slate-400 font-mono">
-          &gt;_ MEMUAT PRODUK...
+          MEMUAT PRODUK...
         </div>
         <div v-else class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <button
@@ -48,7 +48,7 @@
           </button>
         </div>
         <div v-if="!loadingProducts && filteredProducts.length === 0" class="py-12 text-center text-sm text-slate-400 font-mono">
-          &gt;_ BARANG TIDAK DITEMUKAN
+          BARANG TIDAK DITEMUKAN
         </div>
       </div>
     </div>
@@ -141,7 +141,7 @@
           </div>
           
           <div v-if="cart.items.length === 0" class="py-12 text-center text-sm text-slate-400 font-mono">
-            &gt;_ KERANJANG KOSONG
+            KERANJANG KOSONG
           </div>
         </div>
 
@@ -200,7 +200,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-xs overflow-hidden shadow-2xl animate-slideUp font-mono">
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ TRANSAKSI BERHASIL</span>
+          <span class="font-bold text-xs">TRANSAKSI BERHASIL</span>
           <button @click="showSuccess = false" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 text-center">

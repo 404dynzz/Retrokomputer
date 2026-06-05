@@ -196,6 +196,12 @@ export interface FilterParams {
   per_page?: number
 }
 
+export interface DashboardFilterParams {
+  filter_mode?: 'harian' | 'mingguan' | 'bulanan' | 'tanggal'
+  filter_value?: string
+  filter_year?: number
+}
+
 export interface ActiveSettings {
   logo_type: 'text' | 'image'
   logo_text: string

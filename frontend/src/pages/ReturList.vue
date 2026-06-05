@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-retro-blue">&gt;_</span>
+        <span class="text-xl font-bold text-retro-blue"></span>
         <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">RETUR BARANG</h2>
       </div>
       <router-link
@@ -92,7 +92,7 @@
       <div class="bg-white rounded-lg border-2 border-retro-blue overflow-hidden shadow-2xl max-w-xl w-full">
         <!-- Title Bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ DETAIL RETUR #{{ activeRetur.id }}</span>
+          <span class="font-bold text-xs">DETAIL RETUR #{{ activeRetur.id }}</span>
           <button @click="activeRetur = null" class="text-white hover:text-red-300 font-bold text-sm">
             ✕
           </button>

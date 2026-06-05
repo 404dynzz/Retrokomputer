@@ -7,7 +7,7 @@
       <div v-if="isOwner" class="bg-white rounded-lg border-2 border-retro-orange overflow-hidden shadow-sm space-y-0">
         <!-- Title Bar -->
         <div class="bg-retro-orange text-white px-3 py-1.5 text-xs font-bold flex justify-between">
-          <span>&gt;_ ANALISIS KERUGIAN</span>
+          <span>ANALISIS KERUGIAN</span>
           <span>[LOSS]</span>
         </div>
         

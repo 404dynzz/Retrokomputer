@@ -160,7 +160,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs font-mono">&gt;_ KONFIRMASI KELUAR</span>
+          <span class="font-bold text-xs font-mono">KONFIRMASI KELUAR</span>
           <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6">

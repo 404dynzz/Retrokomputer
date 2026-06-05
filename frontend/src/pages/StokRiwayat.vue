@@ -3,7 +3,7 @@
     <!-- Header with Filters -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-retro-blue">&gt;_</span>
+        <span class="text-xl font-bold text-retro-blue"></span>
         <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">RIWAYAT MUTASI STOK</h2>
       </div>
 
