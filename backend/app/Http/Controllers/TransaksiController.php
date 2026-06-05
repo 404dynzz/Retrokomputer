@@ -104,8 +104,19 @@ class TransaksiController extends Controller
             'metode_pembayaran' => 'required|in:tunai,debit,transfer',
             'items' => 'required|array|min:1',
             'items.*.produk_id' => 'required|exists:produks,id',
-            'items.*.qty' => 'required|integer|min:1'
+            'items.*.qty' => 'required|integer|min:1',
+            'nama_pembeli' => 'nullable|string|max:255'
         ]);
+
+        $activeProfile = \App\Models\ProfilKasir::where('user_id', $request->user()->id)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$activeProfile) {
+            return response()->json([
+                'message' => 'Profil kasir aktif tidak ditemukan. Silakan pilih dan aktifkan profil kasir terlebih dahulu.'
+            ], 400);
+        }
 
         DB::beginTransaction();
 
@@ -117,7 +128,9 @@ class TransaksiController extends Controller
                 'user_id' => $request->user()->id,
                 'kode_transaksi' => $kode,
                 'total' => 0,
-                'metode_pembayaran' => $validated['metode_pembayaran']
+                'metode_pembayaran' => $validated['metode_pembayaran'],
+                'nama_kasir' => $activeProfile->nama,
+                'nama_pembeli' => $validated['nama_pembeli'] ?? null
             ]);
 
             foreach ($validated['items'] as $item) {
@@ -165,5 +178,46 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::with(['details.produk', 'kasir:id,name'])->findOrFail($id);
         return response()->json($transaksi);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Hanya admin yang dapat menghapus transaksi.'], 403);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $transaksi = Transaksi::with('details')->findOrFail($id);
+
+            foreach ($transaksi->details as $detail) {
+                $produk = Produk::find($detail->produk_id);
+                if ($produk) {
+                    // Restore stock
+                    $produk->increment('stok', $detail->qty);
+
+                    // Record to stok history as cancellation
+                    $produk->riwayatStok()->create([
+                        'tipe' => 'masuk',
+                        'qty' => $detail->qty,
+                        'sumber' => 'Pembatalan Transaksi oleh Admin',
+                        'referensi_id' => $transaksi->id
+                    ]);
+                }
+            }
+
+            // Delete transaction (cascades to details)
+            $transaksi->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Transaksi berhasil dihapus, stok dan keuangan telah dikembalikan.'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

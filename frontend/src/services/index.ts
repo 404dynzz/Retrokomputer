@@ -21,6 +21,8 @@ import type {
   Supplier,
   SupplierPayload,
   Notifikasi,
+  ProfilKasir,
+  ProfilKasirPayload,
 } from '@/types'
 
 export const authService = {
@@ -63,6 +65,8 @@ export const transaksiService = {
     api.get<Transaksi>(`/transaksi/${id}`),
   create: (payload: TransaksiPayload) =>
     api.post<Transaksi>('/transaksi', payload),
+  delete: (id: number) =>
+    api.delete(`/transaksi/${id}`),
 }
 
 export const pembelianService = {
@@ -108,8 +112,16 @@ export const settingService = {
 export const barangRusakService = {
   getAll: () =>
     api.get<BarangRusak[]>('/barang-rusak'),
-  create: (payload: BarangRusakPayload) =>
-    api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload),
+  create: (payload: BarangRusakPayload | FormData) => {
+    if (payload instanceof FormData) {
+      return api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+    }
+    return api.post<{ message: string; data: BarangRusak }>('/barang-rusak', payload)
+  },
 }
 
 export const notifikasiService = {
@@ -119,5 +131,24 @@ export const notifikasiService = {
     api.put(`/notifikasi/${id}`),
   markAllRead: () =>
     api.put('/notifikasi/read-all'),
+}
+
+export const profilKasirService = {
+  getAll: () =>
+    api.get<ProfilKasir[]>('/profil-kasir'),
+  create: (payload: ProfilKasirPayload) =>
+    api.post<ProfilKasir>('/profil-kasir', payload),
+  update: (id: number, payload: { nama: string; kode_khusus?: string }) =>
+    api.put<ProfilKasir>(`/profil-kasir/${id}`, payload),
+  delete: (id: number) =>
+    api.delete(`/profil-kasir/${id}`),
+  aktifkan: (id: number, kode_khusus: string) =>
+    api.post<ProfilKasir>('/profil-kasir/aktifkan', { id, kode_khusus }),
+  nonaktifkan: () =>
+    api.post('/profil-kasir/nonaktifkan'),
+  getAktif: () =>
+    api.get<ProfilKasir | null>('/profil-kasir/aktif'),
+  getKasirUsers: () =>
+    api.get<{ id: number; name: string; username: string }[]>('/kasir-users'),
 }
 

@@ -5,24 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Retur extends Model
+class ProfilKasir extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function details()
-    {
-        return $this->hasMany(ReturDetail::class);
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function pembelian()
-    {
-        return $this->belongsTo(Pembelian::class, 'referensi_id');
     }
 }

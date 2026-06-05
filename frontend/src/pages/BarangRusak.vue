@@ -121,6 +121,17 @@
             ></textarea>
           </div>
 
+          <!-- Bukti Fisik File Upload (Damaged goods only) -->
+          <div v-if="form.kategori === 'rusak'">
+            <label class="block text-xs font-semibold text-slate-650 mb-1">Bukti Fisik Kerusakan (Foto)</label>
+            <input
+              type="file"
+              accept="image/*"
+              @change="handleFileChange"
+              class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-retro-orange/10 file:text-retro-orange hover:file:bg-retro-orange/20 cursor-pointer"
+            />
+          </div>
+
           <button
             :disabled="submitting || products.length === 0"
             type="submit"
@@ -152,11 +163,12 @@
               <th class="py-2.5 px-3 font-semibold text-center">Kategori</th>
               <th class="py-2.5 px-3 font-semibold text-center">Qty</th>
               <th class="py-2.5 px-3 font-semibold">Keterangan</th>
+              <th class="py-2.5 px-3 font-semibold text-center">Bukti</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 text-slate-700">
             <tr v-if="history.length === 0">
-              <td colspan="5" class="py-8 text-center text-slate-400 font-medium">Belum ada catatan kerugian barang.</td>
+              <td colspan="6" class="py-8 text-center text-slate-400 font-medium">Belum ada catatan kerugian barang.</td>
             </tr>
             <tr v-for="item in history" :key="item.id" class="hover:bg-slate-50/50 transition-colors">
               <td class="py-3 px-3 text-slate-500 font-mono whitespace-nowrap">{{ formatDate(item.created_at) }}</td>
@@ -181,9 +193,40 @@
               </td>
               <td class="py-3 px-3 text-center font-bold text-slate-800">{{ item.qty }}</td>
               <td class="py-3 px-3 text-slate-500 italic max-w-[200px] truncate" :title="item.keterangan">{{ item.keterangan || '-' }}</td>
+              <td class="py-3 px-3 text-center whitespace-nowrap font-mono">
+                <button
+                  v-if="item.bukti_foto"
+                  @click="openLightbox(item.bukti_foto)"
+                  class="text-[10px] font-bold px-2 py-0.5 bg-retro-orange/10 text-retro-orange-dark border border-retro-orange/20 rounded hover:bg-retro-orange/20 transition-colors animate-pulse"
+                >
+                  [LIHAT FOTO]
+                </button>
+                <span v-else class="text-slate-350">-</span>
+              </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div v-if="activeBukti" class="fixed inset-0 bg-retro-dark/80 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 3000;" @click="activeBukti = null">
+      <div class="bg-white border-2 border-retro-orange rounded-lg max-w-lg w-full overflow-hidden shadow-2xl font-mono animate-slideUp" @click.stop>
+        <div class="bg-retro-orange text-white px-4 py-2 flex items-center justify-between">
+          <span class="font-bold text-xs">&gt;_ BUKTI FISIK KERUSAKAN</span>
+          <button @click="activeBukti = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+        </div>
+        <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
+          <img :src="getCleanUrl(activeBukti)" class="max-h-[70vh] object-contain rounded border-2 border-retro-orange shadow-lg" alt="Bukti Fisik" />
+        </div>
+        <div class="bg-slate-50 px-4 py-2.5 flex justify-end">
+          <button
+            @click="activeBukti = null"
+            class="text-xs font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
+          >
+            TUTUP
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -203,6 +246,8 @@ const loading = ref(true)
 const submitting = ref(false)
 
 const isOwner = computed(() => authStore.isOwner)
+const selectedFile = ref<File | null>(null)
+const activeBukti = ref<string | null>(null)
 
 const form = ref<BarangRusakPayload>({
   produk_id: 0,
@@ -283,7 +328,16 @@ async function submitRecord() {
 
   submitting.value = true
   try {
-    await barangRusakService.create(form.value)
+    const formData = new FormData()
+    formData.append('produk_id', form.value.produk_id.toString())
+    formData.append('qty', form.value.qty.toString())
+    formData.append('kategori', form.value.kategori)
+    formData.append('keterangan', form.value.keterangan || '')
+    if (form.value.kategori === 'rusak' && selectedFile.value) {
+      formData.append('bukti_file', selectedFile.value)
+    }
+
+    await barangRusakService.create(formData)
     alert('Kerugian inventaris berhasil dicatat!')
     
     // Reset Form
@@ -293,6 +347,11 @@ async function submitRecord() {
       kategori: 'rusak',
       keterangan: '',
     }
+    selectedFile.value = null
+    
+    // Reset file input element if found
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+    if (fileInput) fileInput.value = ''
 
     // Refresh Data
     await Promise.all([fetchProducts(), fetchHistory()])
@@ -302,6 +361,25 @@ async function submitRecord() {
   } finally {
     submitting.value = false
   }
+}
+
+function handleFileChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    selectedFile.value = target.files[0]
+  }
+}
+
+function openLightbox(url: string) {
+  activeBukti.value = url
+}
+
+function getCleanUrl(url: string | null) {
+  if (!url) return ''
+  if (url.startsWith('http://localhost/')) {
+    return url.replace('http://localhost/', '/')
+  }
+  return url
 }
 
 function formatRupiah(val: number | string): string {

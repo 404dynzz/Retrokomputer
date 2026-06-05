@@ -248,13 +248,13 @@ onMounted(async () => {
         kode_produk: p.kode_produk,
         nama_produk: p.nama_produk,
         kategori: p.kategori,
-        harga_beli: p.harga_beli,
-        harga_jual: p.harga_jual,
+        harga_beli: Math.round(Number(p.harga_beli)),
+        harga_jual: Math.round(Number(p.harga_jual)),
         stok: p.stok,
         stok_minimum: p.stok_minimum
       }
-      hargaBeliInput.value = formatRupiah(p.harga_beli)
-      hargaJualInput.value = formatRupiah(p.harga_jual)
+      hargaBeliInput.value = formatRupiah(Math.round(Number(p.harga_beli)))
+      hargaJualInput.value = formatRupiah(Math.round(Number(p.harga_jual)))
       
       // select category if it exists, otherwise open input
       if (uniqueCategories.value.includes(p.kategori)) {

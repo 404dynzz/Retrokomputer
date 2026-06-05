@@ -22,8 +22,8 @@ class SupplierController extends Controller
 
         $validated = $request->validate([
             'nama' => 'required|string|unique:suppliers,nama',
-            'telepon' => 'nullable|string',
-            'alamat' => 'nullable|string',
+            'telepon' => 'nullable|regex:/^[0-9]+$/|max:13',
+            'alamat' => 'nullable|string|max:255',
         ]);
 
         $supplier = Supplier::create($validated);
@@ -40,8 +40,8 @@ class SupplierController extends Controller
 
         $validated = $request->validate([
             'nama' => 'required|string|unique:suppliers,nama,' . $supplier->id,
-            'telepon' => 'nullable|string',
-            'alamat' => 'nullable|string',
+            'telepon' => 'nullable|regex:/^[0-9]+$/|max:13',
+            'alamat' => 'nullable|string|max:255',
         ]);
 
         $supplier->update($validated);

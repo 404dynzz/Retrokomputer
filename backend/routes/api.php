@@ -11,6 +11,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\BarangRusakController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ProfilKasirController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/settings/active', [SettingController::class, 'active']);
@@ -18,6 +19,16 @@ Route::get('/settings/active', [SettingController::class, 'active']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    // Profil Kasir
+    Route::get('/profil-kasir', [ProfilKasirController::class, 'index']);
+    Route::post('/profil-kasir', [ProfilKasirController::class, 'store']);
+    Route::put('/profil-kasir/{id}', [ProfilKasirController::class, 'update']);
+    Route::delete('/profil-kasir/{id}', [ProfilKasirController::class, 'destroy']);
+    Route::post('/profil-kasir/aktifkan', [ProfilKasirController::class, 'aktifkan']);
+    Route::post('/profil-kasir/nonaktifkan', [ProfilKasirController::class, 'nonaktifkan']);
+    Route::get('/profil-kasir/aktif', [ProfilKasirController::class, 'getAktif']);
+    Route::get('/kasir-users', [ProfilKasirController::class, 'getKasirUsers']);
 
     // Supplier
     Route::apiResource('suppliers', SupplierController::class);
@@ -29,6 +40,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::post('/transaksi', [TransaksiController::class, 'store']);
     Route::get('/transaksi/{id}', [TransaksiController::class, 'show']);
+    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
 
     // Pembelian (Restock)
     Route::get('/pembelian', [PembelianController::class, 'index']);
