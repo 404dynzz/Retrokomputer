@@ -14,28 +14,28 @@ class LaporanController extends Controller
 {
     public function dashboard(Request $request)
     {
-        $bulanIni = Carbon::now()->month;
-        $tahunIni = Carbon::now()->year;
         $role = $request->user()->role;
 
-        $penjualanBulanIni = Transaksi::whereMonth('created_at', $bulanIni)
-                                      ->whereYear('created_at', $tahunIni);
-        
-        // Jika kasir, filter penjualan miliknya sendiri agar kasir tidak memantau penjualan kasir lain
-        if ($role === 'kasir') {
-            $penjualanBulanIni = $penjualanBulanIni->where('user_id', $request->user()->id);
-        }
-        
-        $penjualanBulanIni = $penjualanBulanIni->sum('total');
+        // Build date filter based on filter_mode
+        $filterMode = $request->query('filter_mode');
+        $filterValue = $request->query('filter_value');
+        $filterYear = $request->query('filter_year', Carbon::now()->year);
 
-        $totalTransaksi = Transaksi::whereMonth('created_at', $bulanIni)
-                                   ->whereYear('created_at', $tahunIni);
-                                   
+        $penjualanQuery = Transaksi::query();
+        $totalTransaksiQuery = Transaksi::query();
+
+        // Apply role-based filter for kasir
         if ($role === 'kasir') {
-            $totalTransaksi = $totalTransaksi->where('user_id', $request->user()->id);
+            $penjualanQuery = $penjualanQuery->where('user_id', $request->user()->id);
+            $totalTransaksiQuery = $totalTransaksiQuery->where('user_id', $request->user()->id);
         }
-        
-        $totalTransaksi = $totalTransaksi->count();
+
+        // Apply date filters
+        $this->applyDateFilter($penjualanQuery, $filterMode, $filterValue, $filterYear);
+        $this->applyDateFilter($totalTransaksiQuery, $filterMode, $filterValue, $filterYear);
+
+        $penjualanBulanIni = $penjualanQuery->sum('total');
+        $totalTransaksi = $totalTransaksiQuery->count();
 
         // Kasir tidak boleh melihat Pembelian, Laba Bersih, dan Kerugian Inventaris
         if ($role === 'kasir') {
@@ -48,19 +48,18 @@ class LaporanController extends Controller
             ]);
         }
 
-        $pembelianBulanIni = Pembelian::whereMonth('created_at', $bulanIni)
-                                      ->whereYear('created_at', $tahunIni)
-                                      ->sum('total');
+        $pembelianQuery = Pembelian::query();
+        $this->applyDateFilter($pembelianQuery, $filterMode, $filterValue, $filterYear);
+        $pembelianBulanIni = $pembelianQuery->sum('total');
 
-        // Riwayat stok rusak/hilang (asumsi sumber "Barang Rusak" atau "Barang Hilang")
-        $kerugianInventaris = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
-                                         ->whereMonth('created_at', $bulanIni)
-                                         ->whereYear('created_at', $tahunIni)
-                                         ->with('produk')
-                                         ->get()
-                                         ->sum(function ($item) {
-                                             return $item->qty * $item->produk->harga_beli;
-                                         });
+        // Riwayat stok rusak/hilang
+        $kerugianQuery = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang']);
+        $this->applyDateFilter($kerugianQuery, $filterMode, $filterValue, $filterYear);
+        $kerugianInventaris = $kerugianQuery->with('produk')
+                                            ->get()
+                                            ->sum(function ($item) {
+                                                return $item->qty * $item->produk->harga_beli;
+                                            });
 
         $labaBersih = $penjualanBulanIni - $pembelianBulanIni - $kerugianInventaris;
 
@@ -71,6 +70,86 @@ class LaporanController extends Controller
             'total_transaksi' => $totalTransaksi,
             'kerugian_inventaris' => $kerugianInventaris
         ]);
+    }
+
+    /**
+     * Apply date filter to a query based on filter_mode and filter_value.
+     * If no filter_mode is provided, defaults to current month.
+     */
+    private function applyDateFilter($query, $filterMode, $filterValue, $filterYear)
+    {
+        switch ($filterMode) {
+            case 'harian':
+                // filter_value = day name in Indonesian: senin, selasa, rabu, kamis, jumat, sabtu, minggu
+                $dayMap = [
+                    'senin' => Carbon::MONDAY,
+                    'selasa' => Carbon::TUESDAY,
+                    'rabu' => Carbon::WEDNESDAY,
+                    'kamis' => Carbon::THURSDAY,
+                    'jumat' => Carbon::FRIDAY,
+                    'sabtu' => Carbon::SATURDAY,
+                    'minggu' => Carbon::SUNDAY,
+                ];
+                $dayOfWeek = $dayMap[strtolower($filterValue ?? '')] ?? null;
+                if ($dayOfWeek !== null) {
+                    $query->whereRaw('DAYOFWEEK(created_at) = ?', [$dayOfWeek % 7 + 1]);
+                }
+                // Also scope to current month by default
+                $query->whereMonth('created_at', Carbon::now()->month)
+                      ->whereYear('created_at', $filterYear);
+                break;
+
+            case 'mingguan':
+                // filter_value = 1, 2, 3, 4 (week number in current month)
+                $weekNum = intval($filterValue ?? 1);
+                $now = Carbon::now();
+                $startOfMonth = Carbon::create($filterYear, $now->month, 1)->startOfDay();
+
+                $weekStart = $startOfMonth->copy()->addWeeks($weekNum - 1);
+                $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
+
+                // Clamp to month boundaries
+                if ($weekStart->lt($startOfMonth)) {
+                    $weekStart = $startOfMonth->copy();
+                }
+                $endOfMonth = $startOfMonth->copy()->endOfMonth()->endOfDay();
+                if ($weekEnd->gt($endOfMonth)) {
+                    $weekEnd = $endOfMonth->copy();
+                }
+
+                $query->whereBetween('created_at', [$weekStart, $weekEnd]);
+                break;
+
+            case 'bulanan':
+                // filter_value = 1-12 (month number)
+                $month = intval($filterValue ?? Carbon::now()->month);
+                $query->whereMonth('created_at', $month)
+                      ->whereYear('created_at', $filterYear);
+                break;
+
+            case 'tanggal':
+                // filter_value = YYYY-MM-DD (exact date)
+                if ($filterValue) {
+                    try {
+                        $date = Carbon::parse($filterValue);
+                        $query->whereDate('created_at', $date->toDateString());
+                    } catch (\Exception $e) {
+                        // Invalid date, default to today
+                        $query->whereDate('created_at', Carbon::today()->toDateString());
+                    }
+                } else {
+                    $query->whereDate('created_at', Carbon::today()->toDateString());
+                }
+                break;
+
+            default:
+                // Default: current month
+                $query->whereMonth('created_at', Carbon::now()->month)
+                      ->whereYear('created_at', Carbon::now()->year);
+                break;
+        }
+
+        return $query;
     }
 
     public function stok(Request $request)

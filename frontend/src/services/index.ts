@@ -14,6 +14,7 @@ import type {
   DashboardStats,
   StokStats,
   FilterParams,
+  DashboardFilterParams,
   ActiveSettings,
   BarangRusak,
   BarangRusakPayload,
@@ -56,8 +57,8 @@ export const produkService = {
 }
 
 export const transaksiService = {
-  getAll: () =>
-    api.get<Transaksi[]>('/transaksi'),
+  getAll: (params?: DashboardFilterParams) =>
+    api.get<Transaksi[]>('/transaksi', { params }),
   getById: (id: number) =>
     api.get<Transaksi>(`/transaksi/${id}`),
   create: (payload: TransaksiPayload) =>
@@ -85,8 +86,8 @@ export const returService = {
 }
 
 export const laporanService = {
-  getDashboard: () =>
-    api.get<DashboardStats>('/laporan/dashboard'),
+  getDashboard: (params?: DashboardFilterParams) =>
+    api.get<DashboardStats>('/laporan/dashboard', { params }),
   getStok: () =>
     api.get<StokStats>('/laporan/stok'),
   getRiwayatStok: (params?: FilterParams) =>

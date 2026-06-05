@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 border-2 border-retro-blue rounded-lg shadow-sm">
       <div>
-        <h2 class="text-sm font-bold text-slate-800">&gt;_ INVENTARIS BARANG</h2>
+        <h2 class="text-sm font-bold text-slate-800">INVENTARIS BARANG</h2>
         <p class="text-[10px] text-slate-400 font-sans mt-0.5">Kelola seluruh produk, stok, dan kategori barang.</p>
       </div>
       <router-link to="/produk/tambah" class="text-xs font-bold px-4 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors shadow-sm self-start sm:self-auto">
@@ -88,7 +88,7 @@
             </tr>
             <tr v-if="filteredProduk.length === 0">
               <td colspan="6" class="px-4 py-12 text-center text-sm text-slate-400 font-mono">
-                &gt;_ TIDAK ADA PRODUK YANG COCOK
+                TIDAK ADA PRODUK YANG COCOK
               </td>
             </tr>
           </tbody>
@@ -101,7 +101,7 @@
       <div class="bg-white border-2 border-red-600 rounded-lg max-w-sm w-full overflow-hidden shadow-2xl animate-slideUp">
         <!-- Title bar -->
         <div class="bg-red-600 text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ HAPUS BARANG</span>
+          <span class="font-bold text-xs">HAPUS BARANG</span>
           <button @click="deleteTarget = null" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 font-sans">

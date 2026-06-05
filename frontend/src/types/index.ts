@@ -3,14 +3,14 @@
 export interface User {
   id: number
   name: string
-  email: string
+  username: string
   role: 'admin' | 'owner' | 'kasir'
   created_at?: string
   updated_at?: string
 }
 
 export interface LoginPayload {
-  email: string
+  username: string
   password: string
 }
 
@@ -190,6 +190,12 @@ export interface FilterParams {
   tipe?: string
   page?: number
   per_page?: number
+}
+
+export interface DashboardFilterParams {
+  filter_mode?: 'harian' | 'mingguan' | 'bulanan' | 'tanggal'
+  filter_value?: string
+  filter_year?: number
 }
 
 export interface ActiveSettings {

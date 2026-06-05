@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-retro-blue">&gt;_</span>
+        <span class="text-xl font-bold text-retro-blue"></span>
         <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">
           {{ isOwner ? 'DASBOR ANALISIS PENJUALAN' : 'RIWAYAT TRANSAKSI' }}
         </h2>
@@ -20,7 +20,7 @@
         <!-- Card 1: Total Omzet -->
         <div class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-blue text-white px-3 py-1.5 text-xs font-bold flex justify-between">
-            <span>&gt;_ TOTAL OMZET</span>
+            <span>TOTAL OMZET</span>
             <span>[Rp]</span>
           </div>
           <div class="p-4 space-y-1">
@@ -34,7 +34,7 @@
         <!-- Card 2: Total Transaksi -->
         <div class="bg-white border-2 border-retro-orange rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-orange text-white px-3 py-1.5 text-xs font-bold flex justify-between">
-            <span>&gt;_ TRANSAKSI</span>
+            <span>TRANSAKSI</span>
             <span>[Qy]</span>
           </div>
           <div class="p-4 space-y-1">
@@ -48,7 +48,7 @@
         <!-- Card 3: Rata-Rata Transaksi -->
         <div class="bg-white border-2 border-retro-yellow rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-yellow text-slate-900 px-3 py-1.5 text-xs font-bold flex justify-between">
-            <span>&gt;_ RATA-RATA TRX</span>
+            <span>RATA-RATA TRX</span>
             <span>[Avg]</span>
           </div>
           <div class="p-4 space-y-1">
@@ -65,7 +65,7 @@
         <!-- SVG Daily Revenue Trend -->
         <div class="bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm flex flex-col">
           <div class="bg-slate-100 border-b border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 flex justify-between items-center">
-            <span>&gt;_ TREN PENJUALAN HARIAN</span>
+            <span>TREN PENJUALAN HARIAN</span>
             <span class="text-[10px] text-retro-blue font-normal">[Chart: SVG Neon Bar]</span>
           </div>
           <div class="p-4 flex-1 flex flex-col justify-between min-h-[250px]">
@@ -109,7 +109,7 @@
         <!-- Payment Method Breakdowns -->
         <div class="bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm flex flex-col">
           <div class="bg-slate-100 border-b border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 flex justify-between items-center">
-            <span>&gt;_ METODE PEMBAYARAN POPULER</span>
+            <span>METODE PEMBAYARAN POPULER</span>
             <span class="text-[10px] text-retro-orange font-normal">[Breakdown: CSS Gauge]</span>
           </div>
           <div class="p-6 flex-1 flex flex-col justify-center space-y-4">

@@ -3,7 +3,7 @@
     <div class="bg-white rounded-lg border-2 border-retro-blue overflow-hidden shadow-md">
       <!-- Title bar -->
       <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-        <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
+        <span class="font-bold text-xs">TAMBAH PEMBELIAN BARANG</span>
         <div class="flex gap-1">
           <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
           <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
@@ -51,7 +51,7 @@
           <!-- Items Section -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-bold text-slate-700 uppercase">&gt;_ DETAIL BARANG</label>
+              <label class="text-xs font-bold text-slate-700 uppercase">DETAIL BARANG</label>
               <button
                 type="button"
                 @click="addRow"

@@ -6,13 +6,96 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Produk;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $transaksis = Transaksi::with('kasir:id,name')->orderBy('created_at', 'desc')->get();
+        $query = Transaksi::with('kasir:id,name')->orderBy('created_at', 'desc');
+
+        // Kasir only sees own transactions
+        if ($request->user()->role === 'kasir') {
+            $query->where('user_id', $request->user()->id);
+        }
+
+        // Apply date filters if provided
+        $filterMode = $request->query('filter_mode');
+        $filterValue = $request->query('filter_value');
+        $filterYear = $request->query('filter_year', Carbon::now()->year);
+
+        if ($filterMode) {
+            $this->applyDateFilter($query, $filterMode, $filterValue, $filterYear);
+        }
+
+        $transaksis = $query->get();
         return response()->json($transaksis);
+    }
+
+    /**
+     * Apply date filter to a query based on filter_mode and filter_value.
+     */
+    private function applyDateFilter($query, $filterMode, $filterValue, $filterYear)
+    {
+        switch ($filterMode) {
+            case 'harian':
+                $dayMap = [
+                    'senin' => Carbon::MONDAY,
+                    'selasa' => Carbon::TUESDAY,
+                    'rabu' => Carbon::WEDNESDAY,
+                    'kamis' => Carbon::THURSDAY,
+                    'jumat' => Carbon::FRIDAY,
+                    'sabtu' => Carbon::SATURDAY,
+                    'minggu' => Carbon::SUNDAY,
+                ];
+                $dayOfWeek = $dayMap[strtolower($filterValue ?? '')] ?? null;
+                if ($dayOfWeek !== null) {
+                    $query->whereRaw('DAYOFWEEK(created_at) = ?', [$dayOfWeek % 7 + 1]);
+                }
+                $query->whereMonth('created_at', Carbon::now()->month)
+                      ->whereYear('created_at', $filterYear);
+                break;
+
+            case 'mingguan':
+                $weekNum = intval($filterValue ?? 1);
+                $now = Carbon::now();
+                $startOfMonth = Carbon::create($filterYear, $now->month, 1)->startOfDay();
+
+                $weekStart = $startOfMonth->copy()->addWeeks($weekNum - 1);
+                $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
+
+                if ($weekStart->lt($startOfMonth)) {
+                    $weekStart = $startOfMonth->copy();
+                }
+                $endOfMonth = $startOfMonth->copy()->endOfMonth()->endOfDay();
+                if ($weekEnd->gt($endOfMonth)) {
+                    $weekEnd = $endOfMonth->copy();
+                }
+
+                $query->whereBetween('created_at', [$weekStart, $weekEnd]);
+                break;
+
+            case 'bulanan':
+                $month = intval($filterValue ?? Carbon::now()->month);
+                $query->whereMonth('created_at', $month)
+                      ->whereYear('created_at', $filterYear);
+                break;
+
+            case 'tanggal':
+                if ($filterValue) {
+                    try {
+                        $date = Carbon::parse($filterValue);
+                        $query->whereDate('created_at', $date->toDateString());
+                    } catch (\Exception $e) {
+                        $query->whereDate('created_at', Carbon::today()->toDateString());
+                    }
+                } else {
+                    $query->whereDate('created_at', Carbon::today()->toDateString());
+                }
+                break;
+        }
+
+        return $query;
     }
 
     public function store(Request $request)

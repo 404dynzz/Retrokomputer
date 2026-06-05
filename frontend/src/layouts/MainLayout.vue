@@ -8,20 +8,10 @@
       ]"
     >
       <!-- Logo -->
-      <div class="flex items-center px-3 border-b border-slate-200 shrink-0 bg-retro-dark transition-all duration-150"
+      <div class="flex items-center px-3 border-b border-slate-200 shrink-0 bg-retro-dark transition-all duration-150 justify-center"
            style="height: 56px;">
-        <div v-if="sidebarOpen" class="flex items-center gap-2 overflow-hidden w-full animate-fadeIn">
-          <div class="w-7 h-7 rounded bg-retro-blue flex items-center justify-center shrink-0">
-            <span class="text-white font-bold text-xs font-mono">R</span>
-          </div>
-          <span class="text-xs font-mono font-bold text-retro-orange truncate" title="Retro Komputer"
-                style="font-size: 12.8px;">&gt;_ Retro Komputer</span>
-        </div>
-        <div v-else class="hidden lg:flex w-full justify-center">
-          <div class="w-7 h-7 rounded bg-retro-blue flex items-center justify-center">
-            <span class="text-white font-bold text-xs font-mono">R</span>
-          </div>
-        </div>
+        <span v-if="sidebarOpen" class="text-xs font-mono font-bold text-white truncate" title="Sistem POS">SISTEM POS</span>
+        <span v-else class="text-white font-bold text-xs font-mono">POS</span>
       </div>
 
       <!-- Nav -->
@@ -160,7 +150,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs font-mono">&gt;_ KONFIRMASI KELUAR</span>
+          <span class="font-bold text-xs font-mono">KONFIRMASI KELUAR</span>
           <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6">
@@ -285,15 +275,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
     ]},
   ]
 
-  // Add system administration menu for Admin
-  if (authStore.isAdmin) {
-    items.push({
-      label: 'Sistem',
-      items: [
-        { label: 'Pengaturan', icon: '⚙', path: '/settings' }
-      ]
-    })
-  }
+  // (Removed system administration menu)
 
   return items
 })

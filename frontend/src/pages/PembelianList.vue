@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 border-2 border-retro-blue rounded-lg shadow-sm">
       <div>
-        <h2 class="text-sm font-bold text-slate-800">&gt;_ PEMBELIAN INVENTARIS</h2>
+        <h2 class="text-sm font-bold text-slate-800">PEMBELIAN INVENTARIS</h2>
         <p class="text-[10px] text-slate-400 font-sans mt-0.5">Kelola riwayat pembelian barang dari supplier pihak ketiga.</p>
       </div>
       <router-link to="/pembelian/tambah" class="text-xs font-bold px-4 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors shadow-sm self-start sm:self-auto">
@@ -54,7 +54,7 @@
             </tr>
             <tr v-if="list.length === 0">
               <td colspan="6" class="px-4 py-12 text-center text-sm text-slate-400 font-mono">
-                &gt;_ BELUM ADA RIWAYAT PEMBELIAN
+                BELUM ADA RIWAYAT PEMBELIAN
               </td>
             </tr>
           </tbody>
@@ -67,7 +67,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-lg w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ BUKTI NOTA / STRUK</span>
+          <span class="font-bold text-xs">BUKTI NOTA / STRUK</span>
           <button @click="activeStruk = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
@@ -89,7 +89,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-xl w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ DETAIL NOTA PEMBELIAN</span>
+          <span class="font-bold text-xs">DETAIL NOTA PEMBELIAN</span>
           <button @click="detailItem = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         
@@ -116,7 +116,7 @@
 
           <!-- Items Table -->
           <div>
-            <p class="text-xs font-bold text-slate-700 uppercase font-mono mb-2">&gt;_ ITEM YANG DIBELI</p>
+            <p class="text-xs font-bold text-slate-700 uppercase font-mono mb-2">ITEM YANG DIBELI</p>
             <div class="border-2 border-slate-200 rounded overflow-hidden">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
