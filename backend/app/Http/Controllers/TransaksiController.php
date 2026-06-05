@@ -21,8 +21,19 @@ class TransaksiController extends Controller
             'metode_pembayaran' => 'required|in:tunai,debit,transfer',
             'items' => 'required|array|min:1',
             'items.*.produk_id' => 'required|exists:produks,id',
-            'items.*.qty' => 'required|integer|min:1'
+            'items.*.qty' => 'required|integer|min:1',
+            'nama_pembeli' => 'nullable|string|max:255'
         ]);
+
+        $activeProfile = \App\Models\ProfilKasir::where('user_id', $request->user()->id)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$activeProfile) {
+            return response()->json([
+                'message' => 'Profil kasir aktif tidak ditemukan. Silakan pilih dan aktifkan profil kasir terlebih dahulu.'
+            ], 400);
+        }
 
         DB::beginTransaction();
 
@@ -34,7 +45,9 @@ class TransaksiController extends Controller
                 'user_id' => $request->user()->id,
                 'kode_transaksi' => $kode,
                 'total' => 0,
-                'metode_pembayaran' => $validated['metode_pembayaran']
+                'metode_pembayaran' => $validated['metode_pembayaran'],
+                'nama_kasir' => $activeProfile->nama,
+                'nama_pembeli' => $validated['nama_pembeli'] ?? null
             ]);
 
             foreach ($validated['items'] as $item) {

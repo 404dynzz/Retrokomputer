@@ -28,8 +28,10 @@
           <input
             v-model="form.telepon"
             type="text"
+            @input="form.telepon = (form.telepon || '').replace(/\D/g, '').slice(0, 13)"
             class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-blue focus:border-retro-blue"
             placeholder="08123456789"
+            maxlength="13"
           />
         </div>
 
@@ -39,9 +41,13 @@
           <textarea
             v-model="form.alamat"
             rows="3"
+            maxlength="255"
             class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-blue focus:border-retro-blue"
             placeholder="Jl. Komputer Kuno No. 8..."
           ></textarea>
+          <div class="text-[10px] text-slate-400 text-right mt-0.5">
+            {{ form.alamat ? form.alamat.length : 0 }}/255 karakter
+          </div>
         </div>
 
         <div v-if="error" class="p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">{{ error }}</div>
@@ -190,6 +196,18 @@ async function handleSubmit() {
   // Validate alphanumeric / no special chars in name
   if (/[^a-zA-Z0-9\s\.\,\-]/.test(form.value.nama)) {
     error.value = 'Nama supplier tidak boleh menggunakan karakter spesial!'
+    return
+  }
+
+  // Validate telepon: only digits and max 13 digits
+  if (form.value.telepon && (!/^\d+$/.test(form.value.telepon) || form.value.telepon.length > 13)) {
+    error.value = 'Nomor telepon harus berupa angka dengan maksimal 13 digit!'
+    return
+  }
+
+  // Validate alamat: max 255 chars
+  if (form.value.alamat && form.value.alamat.length > 255) {
+    error.value = 'Alamat maksimal hanya 255 karakter!'
     return
   }
 

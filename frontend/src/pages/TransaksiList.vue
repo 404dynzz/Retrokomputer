@@ -173,7 +173,7 @@
                 {{ formatDate(t.created_at) }}
               </td>
               <td class="px-4 py-3 text-slate-700 font-bold">
-                {{ t.kasir?.name || '-' }}
+                {{ t.nama_kasir || t.kasir?.name || '-' }}
               </td>
               <td class="px-4 py-3">
                 <span class="px-2 py-0.5 rounded font-bold uppercase text-[10px] bg-slate-100 border border-slate-350 text-slate-700">

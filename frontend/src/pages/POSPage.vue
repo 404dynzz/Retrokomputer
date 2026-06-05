@@ -147,6 +147,17 @@
 
         <!-- Checkout Section -->
         <div class="border-t-2 border-slate-200 p-4 space-y-4 bg-slate-50">
+          <!-- Nama Pembeli Input -->
+          <div class="space-y-1.5">
+            <label class="text-[10px] font-bold text-slate-500 uppercase block">NAMA PEMBELI</label>
+            <input
+              v-model="namaPembeli"
+              type="text"
+              class="w-full px-3 py-2 text-xs border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-sans bg-white font-bold"
+              placeholder="Masukkan nama pembeli..."
+            />
+          </div>
+
           <div class="flex items-center justify-between border-b border-slate-200 pb-2">
             <span class="text-xs font-bold text-slate-600 uppercase">TOTAL PEMBAYARAN</span>
             <span class="text-lg font-bold text-retro-blue font-mono">{{ formatCurrency(cart.grandTotal) }}</span>
@@ -211,11 +222,16 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
+import { useAuthStore } from '@/stores/auth'
 import type { Produk } from '@/types'
 import { produkService, transaksiService } from '@/services'
 
 const cart = useCartStore()
+const authStore = useAuthStore()
+const router = useRouter()
+
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement>()
 const showSuccess = ref(false)
@@ -224,6 +240,7 @@ const lastCode = ref('')
 const lastTotal = ref(0)
 const loadingProducts = ref(true)
 const products = ref<Produk[]>([])
+const namaPembeli = ref('')
 
 const editingItemId = ref<number | null>(null)
 const editQtyValue = ref<number>(0)
@@ -235,6 +252,19 @@ const methods = [
 ]
 
 onMounted(async () => {
+  if (authStore.isKasir) {
+    try {
+      await authStore.fetchActiveKasirProfile()
+      if (!authStore.activeKasirProfile) {
+        alert('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
+        router.push('/profil-kasir')
+        return
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   try {
     const res = await produkService.getAll()
     products.value = (res.data as Produk[]).filter(p => p.status === 'aktif')
@@ -300,7 +330,10 @@ async function processPayment() {
   if (cart.items.length === 0) return
   processing.value = true
   try {
-    const res = await transaksiService.create(cart.getPayload())
+    const res = await transaksiService.create({
+      ...cart.getPayload(),
+      nama_pembeli: namaPembeli.value.trim() || undefined
+    })
     lastCode.value = res.data.kode_transaksi
     lastTotal.value = res.data.total
     // Update local stock
@@ -309,6 +342,7 @@ async function processPayment() {
       if (prod) prod.stok -= item.qty
     })
     cart.clearCart()
+    namaPembeli.value = ''
     showSuccess.value = true
   } catch (e: any) {
     alert(e.response?.data?.message || 'Gagal memproses transaksi')

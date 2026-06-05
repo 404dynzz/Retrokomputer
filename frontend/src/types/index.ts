@@ -56,6 +56,8 @@ export interface Transaksi {
   kode_transaksi: string
   user_id: number
   kasir?: { id: number; name: string }
+  nama_kasir?: string
+  nama_pembeli?: string
   total: number
   metode_pembayaran: string
   details?: TransaksiDetail[]
@@ -78,6 +80,7 @@ export interface TransaksiPayload {
     qty: number
   }[]
   metode_pembayaran: string
+  nama_pembeli?: string
 }
 
 export interface Supplier {
@@ -228,4 +231,21 @@ export interface Notifikasi {
   message: string
   status_baca: boolean
   created_at: string
+}
+
+export interface ProfilKasir {
+  id: number
+  user_id: number
+  nama: string
+  kode_khusus: string
+  is_active: boolean
+  user?: { id: number; name: string; username: string }
+  created_at?: string
+  updated_at?: string
+}
+
+export interface ProfilKasirPayload {
+  user_id?: number
+  nama: string
+  kode_khusus: string
 }

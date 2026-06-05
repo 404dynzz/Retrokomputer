@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User } from '@/types'
-import { authService } from '@/services'
+import type { User, ProfilKasir } from '@/types'
+import { authService, profilKasirService } from '@/services'
 import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -15,6 +15,17 @@ export const useAuthStore = defineStore('auth', () => {
   const isOwner = computed(() => user.value?.role === 'owner')
   const isKasir = computed(() => user.value?.role === 'kasir')
   const userName = computed(() => user.value?.name || '')
+  const activeKasirProfile = ref<ProfilKasir | null>(null)
+
+  async function fetchActiveKasirProfile() {
+    if (!isKasir.value) return
+    try {
+      const res = await profilKasirService.getAktif()
+      activeKasirProfile.value = res.data
+    } catch {
+      activeKasirProfile.value = null
+    }
+  }
 
   function init() {
     const savedToken = localStorage.getItem('auth_token')
@@ -23,6 +34,9 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = savedToken
       try {
         user.value = JSON.parse(savedUser)
+        if (user.value?.role === 'kasir') {
+          fetchActiveKasirProfile()
+        }
       } catch {
         logout()
       }
@@ -43,6 +57,9 @@ export const useAuthStore = defineStore('auth', () => {
       if (data.user.role === 'owner') {
         router.push('/dashboard/owner')
       } else {
+        if (data.user.role === 'kasir') {
+          await fetchActiveKasirProfile()
+        }
         router.push('/dashboard')
       }
     } catch (err: any) {
@@ -63,6 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       token.value = null
       user.value = null
+      activeKasirProfile.value = null
       localStorage.removeItem('auth_token')
       localStorage.removeItem('auth_user')
       router.push('/login')
@@ -80,8 +98,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    user, token, loading, error,
+    user, token, loading, error, activeKasirProfile,
     isAuthenticated, isAdmin, isOwner, isKasir, userName,
-    init, login, logout, fetchUser,
+    init, login, logout, fetchUser, fetchActiveKasirProfile,
   }
 })

@@ -46,7 +46,12 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-xs font-medium text-slate-800 truncate">{{ authStore.userName }}</p>
-            <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">{{ authStore.user?.role }}</p>
+            <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">
+              {{ authStore.user?.role }}
+              <span v-if="authStore.activeKasirProfile" class="text-retro-blue font-bold font-sans lowercase text-[9px] block">
+                kasir: {{ authStore.activeKasirProfile.nama }}
+              </span>
+            </p>
           </div>
           <button
             @click="triggerLogout"
@@ -101,7 +106,12 @@
               </div>
               <div class="hidden md:flex flex-col text-left shrink-0 max-w-[120px]">
                 <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{ authStore.userName }}</span>
-                <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">{{ authStore.user?.role }}</span>
+                <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">
+                  {{ authStore.user?.role }}
+                  <span v-if="authStore.activeKasirProfile" class="text-retro-blue font-bold">
+                    ({{ authStore.activeKasirProfile.nama }})
+                  </span>
+                </span>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -214,6 +224,7 @@ const pageTitle = computed(() => {
     'laporan-stok': 'Laporan Stok',
     'laporan-laba-rugi': 'Laba Rugi',
     'barang-rusak': 'Barang Rusak / Hilang',
+    'profil-kasir': 'Profil Kasir',
     'settings': 'Pengaturan Sistem',
   }
   return titles[route.name as string] || 'Retro Komputer'
@@ -246,6 +257,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
     return [
       { label: 'Menu', items: [
         { label: 'Dashboard', icon: '◉', path: '/dashboard' },
+        { label: 'Profil Kasir', icon: '👤', path: '/profil-kasir' },
         { label: 'Kasir POS', icon: '⊞', path: '/pos' },
       ]},
       { label: 'Laporan', items: [
@@ -272,6 +284,9 @@ const menuGroups = computed<MenuGroup[]>(() => {
       { label: 'Transaksi', icon: '↗', path: '/transaksi' },
       { label: 'Penjualan', icon: '▤', path: '/laporan/penjualan' },
       { label: 'Stok', icon: '▥', path: '/laporan/stok' },
+    ]},
+    { label: 'Pengelolaan', items: [
+      { label: 'Profil Kasir', icon: '👤', path: '/profil-kasir' },
     ]},
   ]
 
