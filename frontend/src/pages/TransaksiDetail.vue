@@ -1,6 +1,15 @@
 <template>
   <div class="max-w-2xl mx-auto space-y-4">
-    <router-link to="/transaksi" class="text-xs text-blue-600 hover:underline">← Kembali</router-link>
+    <div class="flex items-center justify-between">
+      <router-link to="/transaksi" class="text-xs text-blue-600 hover:underline">← Kembali</router-link>
+      <button
+        v-if="trx"
+        @click="printThisReceipt"
+        class="px-2.5 py-1 text-xs font-bold border-2 border-retro-orange text-retro-orange-dark rounded hover:bg-retro-orange hover:text-white transition-all font-mono"
+      >
+        ⎙ CETAK NOTA
+      </button>
+    </div>
     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
       <div v-if="loading" class="p-8 text-center text-sm text-slate-400">Memuat...</div>
       <template v-else-if="trx">
@@ -54,19 +63,37 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Transaksi } from '@/types'
-import { transaksiService } from '@/services'
+import { transaksiService, settingService } from '@/services'
+import { printReceipt } from '@/utils/printReceipt'
 
 const route = useRoute()
 const loading = ref(true)
 const trx = ref<Transaksi | null>(null)
+const logoText = ref('Retro Komputer')
 
 onMounted(async () => {
   try {
     const res = await transaksiService.getById(Number(route.params.id))
     trx.value = res.data
   } catch { /* silent */ }
-  finally { loading.value = false }
+
+  try {
+    const settingRes = await settingService.getActive()
+    if (settingRes.data && settingRes.data.logo_text) {
+      logoText.value = settingRes.data.logo_text
+    }
+  } catch {
+    // silent
+  } finally {
+    loading.value = false
+  }
 })
+
+function printThisReceipt() {
+  if (trx.value) {
+    printReceipt(trx.value, null, logoText.value)
+  }
+}
 
 function formatCurrency(v: number) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v) }
 function formatDate(d: string) { return new Date(d).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }

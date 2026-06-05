@@ -2,18 +2,8 @@
   <div class="max-w-3xl mx-auto font-mono">
     <div class="bg-white rounded-lg border-2 border-retro-blue shadow-md">
       <!-- Title bar -->
-<<<<<<< HEAD
       <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md">
         <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
-=======
-<<<<<<< HEAD
-      <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-        <span class="font-bold text-xs">TAMBAH PEMBELIAN BARANG</span>
-=======
-      <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md">
-        <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
->>>>>>> 9dae7b0b55f4896754e1fc5711610062a4e2adee
->>>>>>> f20ae1b (debug fitur main)
         <div class="flex gap-1">
           <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
           <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
