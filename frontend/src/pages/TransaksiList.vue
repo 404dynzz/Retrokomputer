@@ -191,6 +191,13 @@
                   [DETAIL]
                 </router-link>
                 <button
+                  @click="printTransaction(t.id)"
+                  :disabled="printingId === t.id"
+                  class="px-2 py-1 text-[10px] font-bold border-2 border-retro-orange text-retro-orange-dark rounded hover:bg-retro-orange hover:text-white transition-colors disabled:opacity-50"
+                >
+                  {{ printingId === t.id ? '[LOADING...]' : '[CETAK]' }}
+                </button>
+                <button
                   v-if="isAdmin"
                   @click="deleteTransaction(t)"
                   class="px-2 py-1 text-[10px] font-bold border-2 border-red-500 text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors"
@@ -214,12 +221,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { Transaksi } from '@/types'
-import { transaksiService } from '@/services'
+import { transaksiService, settingService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
+import { printReceipt } from '@/utils/printReceipt'
 
 const authStore = useAuthStore()
 const loading = ref(true)
 const transaksiList = ref<Transaksi[]>([])
+const printingId = ref<number | null>(null)
+const logoText = ref('Retro Komputer')
 
 const isOwner = computed(() => authStore.isOwner)
 const isAdmin = computed(() => authStore.isAdmin)
@@ -238,7 +248,29 @@ async function fetchTransactions() {
 
 onMounted(async () => {
   await fetchTransactions()
+  try {
+    const settingRes = await settingService.getActive()
+    if (settingRes.data && settingRes.data.logo_text) {
+      logoText.value = settingRes.data.logo_text
+    }
+  } catch {
+    // silent
+  }
 })
+
+async function printTransaction(id: number) {
+  printingId.value = id
+  try {
+    const res = await transaksiService.getById(id)
+    if (res.data) {
+      printReceipt(res.data, null, logoText.value)
+    }
+  } catch (err) {
+    alert('Gagal mengambil detail transaksi untuk dicetak.')
+  } finally {
+    printingId.value = null
+  }
+}
 
 async function deleteTransaction(t: Transaksi) {
   if (!confirm(`Apakah Anda yakin ingin menghapus transaksi ${t.kode_transaksi}? Tindakan ini akan mengembalikan stok produk dan membatalkan catatan keuangan!`)) {

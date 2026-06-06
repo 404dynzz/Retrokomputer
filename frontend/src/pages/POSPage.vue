@@ -183,6 +183,29 @@
             </div>
           </div>
 
+          <!-- Uang Diterima & Kembalian (Only for Tunai) -->
+          <div v-if="cart.metode_pembayaran === 'tunai'" class="space-y-2 bg-white p-3 rounded border-2 border-slate-200">
+            <div class="flex justify-between items-center">
+              <label class="text-[10px] font-bold text-slate-500 uppercase">UANG DITERIMA</label>
+              <span class="text-[9px] text-slate-400 font-sans">Nominal uang tunai</span>
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-1.5 text-xs font-bold text-slate-400">Rp</span>
+              <input
+                v-model="displayUangDiterima"
+                type="text"
+                class="w-full pl-8 pr-3 py-1.5 text-xs border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-mono bg-white font-bold"
+                placeholder="0"
+              />
+            </div>
+            <div v-if="uangDiterima !== null && (uangDiterima as any) !== ''" class="flex justify-between items-center text-xs font-bold font-mono pt-1">
+              <span class="text-slate-500">KEMBALIAN:</span>
+              <span :class="uangDiterima >= cart.grandTotal ? 'text-emerald-600' : 'text-red-500'">
+                {{ formatCurrency(kembalian) }}
+              </span>
+            </div>
+          </div>
+
           <!-- Checkout Button -->
           <button
             @click="processPayment"
@@ -201,19 +224,27 @@
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs">TRANSAKSI BERHASIL</span>
-          <button @click="showSuccess = false" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+          <button @click="closeSuccessModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 text-center">
           <div class="w-12 h-12 rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center mx-auto mb-3 text-emerald-500 text-2xl font-bold">✓</div>
           <h3 class="text-sm font-bold text-slate-800 mb-1">Pembayaran Sukses!</h3>
           <p class="text-[10px] text-slate-400 font-bold uppercase font-mono mb-2">{{ lastCode }}</p>
           <p class="text-lg font-bold text-retro-orange-dark font-mono mb-4">{{ formatCurrency(lastTotal) }}</p>
-          <button
-            @click="showSuccess = false"
-            class="text-xs font-bold px-5 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors uppercase shadow-sm"
-          >
-            [Selesai]
-          </button>
+          <div class="flex flex-col gap-2">
+            <button
+              @click="printLastReceipt"
+              class="text-xs font-bold px-5 py-2 bg-retro-orange hover:bg-orange-600 text-white rounded transition-colors uppercase shadow-sm flex items-center justify-center gap-1.5"
+            >
+              <span>⎙</span> CETAK NOTA
+            </button>
+            <button
+              @click="closeSuccessModal"
+              class="text-xs font-bold px-5 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors uppercase shadow-sm"
+            >
+              [Selesai]
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -221,12 +252,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import type { Produk } from '@/types'
-import { produkService, transaksiService } from '@/services'
+import { produkService, transaksiService, settingService } from '@/services'
+import { printReceipt } from '@/utils/printReceipt'
 
 const cart = useCartStore()
 const authStore = useAuthStore()
@@ -244,6 +276,33 @@ const namaPembeli = ref('')
 
 const editingItemId = ref<number | null>(null)
 const editQtyValue = ref<number>(0)
+
+// Cash printing states
+const uangDiterima = ref<number | null>(null)
+const lastTransaksi = ref<any | null>(null)
+const logoText = ref('Retro Komputer')
+
+const kembalian = computed(() => {
+  if (!uangDiterima.value) return 0
+  return Math.max(0, uangDiterima.value - cart.grandTotal)
+})
+
+const displayUangDiterima = computed({
+  get() {
+    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') return ''
+    return new Intl.NumberFormat('id-ID').format(uangDiterima.value)
+  },
+  set(val: string) {
+    const clean = val.replace(/\D/g, '')
+    uangDiterima.value = clean ? parseInt(clean, 10) : null
+  }
+})
+
+watch(() => cart.metode_pembayaran, (newVal) => {
+  if (newVal !== 'tunai') {
+    uangDiterima.value = null
+  }
+})
 
 const methods = [
   { value: 'tunai', label: 'Tunai' },
@@ -263,6 +322,16 @@ onMounted(async () => {
     } catch {
       // ignore
     }
+  }
+
+  // Fetch active store settings to get logo_text for receipt
+  try {
+    const settingRes = await settingService.getActive()
+    if (settingRes.data && settingRes.data.logo_text) {
+      logoText.value = settingRes.data.logo_text
+    }
+  } catch {
+    // ignore
   }
 
   try {
@@ -328,6 +397,19 @@ function saveQty(item: any) {
 
 async function processPayment() {
   if (cart.items.length === 0) return
+
+  // Validate cash amount if payment method is Tunai
+  if (cart.metode_pembayaran === 'tunai') {
+    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') {
+      alert('Harap masukkan nominal uang yang diterima!')
+      return
+    }
+    if (uangDiterima.value < cart.grandTotal) {
+      alert('Nominal uang diterima kurang dari total pembayaran!')
+      return
+    }
+  }
+
   processing.value = true
   try {
     const res = await transaksiService.create({
@@ -336,6 +418,8 @@ async function processPayment() {
     })
     lastCode.value = res.data.kode_transaksi
     lastTotal.value = res.data.total
+    lastTransaksi.value = res.data
+
     // Update local stock
     cart.items.forEach(item => {
       const prod = products.value.find(p => p.id === item.produk.id)
@@ -349,6 +433,18 @@ async function processPayment() {
   } finally {
     processing.value = false
   }
+}
+
+function printLastReceipt() {
+  if (lastTransaksi.value) {
+    printReceipt(lastTransaksi.value, uangDiterima.value, logoText.value)
+  }
+}
+
+function closeSuccessModal() {
+  showSuccess.value = false
+  uangDiterima.value = null
+  lastTransaksi.value = null
 }
 
 function formatCurrency(v: number) {
