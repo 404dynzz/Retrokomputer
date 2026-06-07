@@ -5,7 +5,7 @@
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
         <h2 class="text-sm font-semibold tracking-wide uppercase" style="color: #e2e8f0; letter-spacing: 0.08em;">
-          Laporan Laba Rugi
+          Laporan Laba Kotor
         </h2>
       </div>
     </div>

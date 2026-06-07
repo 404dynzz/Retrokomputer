@@ -277,7 +277,7 @@ const pageTitle = computed(() => {
     'stok-riwayat': 'Riwayat Stok',
     'laporan-penjualan': 'Laporan Penjualan',
     'laporan-stok': 'Laporan Stok',
-    'laporan-laba-rugi': 'Laba Rugi',
+    'laporan-laba-rugi': 'Laba Kotor',
     'barang-rusak': 'Barang Rusak / Hilang',
     'profil-kasir': 'Profil Kasir',
     'settings': 'Pengaturan Sistem',
@@ -302,7 +302,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
       { label: 'Laporan', items: [
         { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
         { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
-        { label: 'Laba Rugi', icon: 'laba-rugi', path: '/laporan/laba-rugi' },
+        { label: 'Laba Kotor', icon: 'laba-rugi', path: '/laporan/laba-rugi' },
       ]},
     ]
   }

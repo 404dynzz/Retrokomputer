@@ -60,7 +60,7 @@
       <div class="empty-icon-wrapper">
         <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
       </div>
-      <p class="text-xs text-slate-500 font-mono">Belum ada data laba rugi</p>
+      <p class="text-xs text-slate-500 font-mono">Belum ada data laba kotor</p>
     </div>
   </div>
 </template>
@@ -220,7 +220,7 @@ async function exportExcel() {
     const res = await fetch(url.toString())
     const disposition = res.headers.get('Content-Disposition') ?? ''
     const match = disposition.match(/filename="?([^"]+)"?/)
-    const filename = match?.[1] ?? `Laporan_Laba_Rugi_Bulanan.xlsx`
+    const filename = match?.[1] ?? `Laporan_Laba_Kotor_Bulanan.xlsx`
     const blob = await res.blob()
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
