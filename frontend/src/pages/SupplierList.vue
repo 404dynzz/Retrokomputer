@@ -117,13 +117,31 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="deleteTarget" class="fixed inset-0 bg-black/20 z-50 flex items-center justify-center p-4" @click.self="deleteTarget = null">
-      <div class="bg-white rounded-lg border border-slate-200 w-full max-w-sm p-5 animate-slideUp">
-        <h3 class="text-sm font-semibold text-slate-800 mb-2">Hapus Supplier?</h3>
-        <p class="text-xs text-slate-500 mb-4">Supplier "{{ deleteTarget.nama }}" akan dihapus permanen dari sistem.</p>
-        <div class="flex justify-end gap-2">
-          <button @click="deleteTarget = null" class="text-xs px-3 py-1.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50">Batal</button>
-          <button @click="doDelete" class="text-xs px-3 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700">Hapus</button>
+    <div v-if="deleteTarget" class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" @click.self="deleteTarget = null">
+      <div class="bg-white border-2 border-red-600 rounded-lg max-w-sm w-full overflow-hidden shadow-2xl animate-slideUp font-mono">
+        <!-- Title bar -->
+        <div class="bg-red-600 text-white px-4 py-2 flex items-center justify-between">
+          <span class="font-bold text-xs">HAPUS SUPPLIER</span>
+          <button @click="deleteTarget = null" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
+        </div>
+        <div class="p-6 font-sans">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded bg-red-50 border border-red-200 flex items-center justify-center shrink-0 text-red-500 text-xl font-bold">!</div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 mb-1">Konfirmasi Hapus</h3>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                Apakah Anda yakin ingin menghapus supplier <strong class="text-slate-800">{{ deleteTarget.nama }}</strong>? Tindakan ini akan menghapusnya secara permanen dari sistem.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-slate-50 px-4 py-3 flex justify-end gap-2 border-t border-slate-100">
+          <button @click="deleteTarget = null" class="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded font-sans transition-colors">
+            Batal
+          </button>
+          <button @click="doDelete" class="px-3 py-1.5 text-xs bg-red-600 hover:bg-red-700 text-white rounded font-sans font-semibold transition-colors shadow-sm">
+            Ya, Hapus
+          </button>
         </div>
       </div>
     </div>
@@ -134,6 +152,7 @@
 import { ref, onMounted } from 'vue'
 import type { Supplier, SupplierPayload } from '@/types'
 import { supplierService } from '@/services'
+import { customDialog } from '@/utils/dialog'
 
 const list = ref<Supplier[]>([])
 const loading = ref(true)
@@ -240,7 +259,7 @@ async function doDelete() {
     await supplierService.delete(deleteTarget.value.id)
     await fetchSuppliers()
   } catch {
-    alert('Gagal menghapus supplier.')
+    customDialog.error('Gagal menghapus supplier.')
   } finally {
     deleteTarget.value = null
   }

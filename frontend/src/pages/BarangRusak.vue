@@ -213,7 +213,7 @@
     <div v-if="activeBukti" class="fixed inset-0 bg-retro-dark/80 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 3000;" @click="activeBukti = null">
       <div class="bg-white border-2 border-retro-orange rounded-lg max-w-lg w-full overflow-hidden shadow-2xl font-mono animate-slideUp" @click.stop>
         <div class="bg-retro-orange text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ BUKTI FISIK KERUSAKAN</span>
+          <span class="font-bold text-xs">■ BUKTI FISIK KERUSAKAN</span>
           <button @click="activeBukti = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
@@ -237,6 +237,7 @@ import { ref, computed, onMounted } from 'vue'
 import { produkService, barangRusakService } from '@/services'
 import type { Produk, BarangRusak, BarangRusakPayload } from '@/types'
 import { useAuthStore } from '@/stores/auth'
+import { customDialog } from '@/utils/dialog'
 
 const authStore = useAuthStore()
 const products = ref<Produk[]>([])
@@ -316,13 +317,13 @@ async function fetchHistory() {
 
 async function submitRecord() {
   if (form.value.produk_id === 0) {
-    alert('Silakan pilih produk terlebih dahulu!')
+    customDialog.warning('Silakan pilih produk terlebih dahulu!')
     return
   }
 
   const selectedProduct = products.value.find(p => p.id === form.value.produk_id)
   if (selectedProduct && selectedProduct.stok < form.value.qty) {
-    alert(`Stok produk tidak mencukupi! Stok saat ini: ${selectedProduct.stok}`)
+    customDialog.warning(`Stok produk tidak mencukupi! Stok saat ini: ${selectedProduct.stok}`)
     return
   }
 
@@ -338,7 +339,7 @@ async function submitRecord() {
     }
 
     await barangRusakService.create(formData)
-    alert('Kerugian inventaris berhasil dicatat!')
+    customDialog.success('Kerugian inventaris berhasil dicatat!')
     
     // Reset Form
     form.value = {
@@ -357,7 +358,7 @@ async function submitRecord() {
     await Promise.all([fetchProducts(), fetchHistory()])
   } catch (err: any) {
     const msg = err.response?.data?.message || 'Gagal menyimpan catatan kerugian.'
-    alert(msg)
+    customDialog.error(msg)
   } finally {
     submitting.value = false
   }
@@ -376,6 +377,9 @@ function openLightbox(url: string) {
 
 function getCleanUrl(url: string | null) {
   if (!url) return ''
+  if (url.startsWith('http://localhost:8000/')) {
+    return url.replace('http://localhost:8000/', '/')
+  }
   if (url.startsWith('http://localhost/')) {
     return url.replace('http://localhost/', '/')
   }

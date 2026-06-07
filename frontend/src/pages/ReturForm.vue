@@ -4,11 +4,6 @@
       <!-- Title Bar -->
       <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
         <span class="font-bold text-xs">TAMBAH RETUR BARANG</span>
-        <div class="flex gap-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-        </div>
       </div>
 
       <div class="p-6 font-sans">
@@ -38,7 +33,7 @@
             <div class="flex gap-2">
               <div class="relative flex-1">
                 <input
-                  v-model="searchQuery"
+                  v-model="tempSearchQuery"
                   @focus="showDropdown = true"
                   @input="showDropdown = true"
                   :placeholder="selectedRefLabel ? selectedRefLabel : 'Cari kode transaksi / invoice...'"
@@ -187,8 +182,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce'
 import { transaksiService, pembelianService, returService } from '@/services'
 import type { ReturPayload } from '@/types'
 
@@ -200,9 +196,18 @@ const loadingItems = ref(false)
 // State lists for searchable dropdowns
 const transactions = ref<any[]>([])
 const purchases = ref<any[]>([])
+const tempSearchQuery = ref('')
 const searchQuery = ref('')
 const showDropdown = ref(false)
 const selectedRefLabel = ref('')
+
+const updateSearchQuery = debounce((val: string) => {
+  searchQuery.value = val
+}, 300)
+
+watch(tempSearchQuery, (newVal) => {
+  updateSearchQuery(newVal)
+})
 
 // Form state - initialized fully empty as requested!
 const form = ref<any>({
@@ -272,6 +277,7 @@ function handleJenisReturChange() {
 
 function clearSelectedRef() {
   form.value.referensi_id = ''
+  tempSearchQuery.value = ''
   searchQuery.value = ''
   selectedRefLabel.value = ''
   availableItems.value = []
@@ -288,6 +294,7 @@ function formatDate(d: string) {
 
 async function selectRef(item: any) {
   form.value.referensi_id = item.id
+  tempSearchQuery.value = ''
   searchQuery.value = ''
   showDropdown.value = false
   loadingItems.value = true

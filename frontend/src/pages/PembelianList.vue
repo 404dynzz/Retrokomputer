@@ -150,7 +150,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-lg w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ BUKTI NOTA / STRUK</span>
+          <span class="font-bold text-xs">■ BUKTI NOTA / STRUK</span>
           <button @click="activeStruk = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
@@ -173,6 +173,7 @@
 import { ref, onMounted } from 'vue'
 import type { Pembelian } from '@/types'
 import { pembelianService } from '@/services'
+import { customDialog } from '@/utils/dialog'
 
 const loading = ref(true)
 const list = ref<Pembelian[]>([])
@@ -199,7 +200,7 @@ async function viewDetail(id: number) {
     const res = await pembelianService.getById(id)
     detailItem.value = res.data
   } catch (err) {
-    alert('Gagal mengambil detail pembelian')
+    customDialog.error('Gagal mengambil detail pembelian')
   }
 }
 
@@ -209,6 +210,9 @@ function formatCurrency(v: number) {
 
 function getStrukUrl(url: string | null) {
   if (!url) return ''
+  if (url.startsWith('http://localhost:8000/')) {
+    return url.replace('http://localhost:8000/', '/')
+  }
   if (url.startsWith('http://localhost/')) {
     return url.replace('http://localhost/', '/')
   }

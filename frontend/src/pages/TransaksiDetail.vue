@@ -5,9 +5,10 @@
       <button
         v-if="trx"
         @click="printThisReceipt"
-        class="px-2.5 py-1 text-xs font-bold border-2 border-retro-orange text-retro-orange-dark rounded hover:bg-retro-orange hover:text-white transition-all font-mono"
+        class="px-2.5 py-1 text-xs font-bold border-2 border-retro-orange text-retro-orange-dark rounded hover:bg-retro-orange hover:text-white transition-all font-mono flex items-center gap-1.5"
       >
-        ⎙ CETAK NOTA
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.115-.465-1.12-1.08L6 18m11.66 0H6.34m.665-4.171V6.375c0-.621.504-1.125 1.125-1.125h8.25c.621 0 1.125.504 1.125 1.125v7.454M16.5 7.5h.008v.008H16.5V7.5z"/></svg>
+        CETAK NOTA
       </button>
     </div>
     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
