@@ -88,7 +88,7 @@
             <p class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">{{ authStore.userName }}</p>
             <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">
               {{ authStore.user?.role }}
-              <span v-if="authStore.activeKasirProfile" class="text-retro-blue font-bold font-sans lowercase text-[9px] block">
+              <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-blue font-bold font-sans lowercase text-[9px] block">
                 kasir: {{ authStore.activeKasirProfile.nama }}
               </span>
             </p>
@@ -186,7 +186,7 @@
                 <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{ authStore.userName }}</span>
                 <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">
                   {{ authStore.user?.role }}
-                  <span v-if="authStore.activeKasirProfile" class="text-retro-blue font-bold">
+                  <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-blue font-bold">
                     ({{ authStore.activeKasirProfile.nama }})
                   </span>
                 </span>

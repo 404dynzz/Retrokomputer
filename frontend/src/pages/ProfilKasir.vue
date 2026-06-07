@@ -2,9 +2,9 @@
   <div class="space-y-6 font-mono">
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-retro-blue">■</span>
-        <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">
+      <div class="flex items-center gap-3">
+        <div class="w-1 h-8 bg-gradient-to-b from-retro-orange to-retro-orange/50 rounded-full"></div>
+        <h2 class="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wider">
           PENGELOLAAN PROFIL KASIR
         </h2>
       </div>
@@ -19,7 +19,7 @@
       <div class="lg:col-span-1 space-y-4">
         <div class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-blue text-white px-4 py-2.5 text-xs font-bold uppercase">
-            ■ {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
+        {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
           </div>
 
           <form @submit.prevent="handleSubmit" class="p-4 space-y-4">
@@ -99,8 +99,11 @@
 
       <!-- Admin List Panel (2 columns) -->
       <div class="lg:col-span-2 bg-white rounded-lg border-2 border-slate-200 overflow-hidden shadow-sm flex flex-col">
-        <div class="p-4 border-b-2 border-slate-200 flex justify-between items-center bg-slate-50">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">■ DAFTAR SEMUA PROFIL KASIR</h3>
+        <div class="p-4 border-b-2 border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
+            DAFTAR SEMUA PROFIL KASIR
+          </h3>
           <span class="text-[10px] text-slate-400 font-mono">Total: {{ profiles.length }} profil</span>
         </div>
 
@@ -204,9 +207,12 @@
 
       <!-- Profiles List -->
       <div class="bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm">
-        <div class="bg-slate-100 border-b-2 border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 flex justify-between items-center">
-          <span>■ DAFTAR PROFIL KASIR SAYA</span>
-          <span class="text-[10px] text-slate-400 font-sans">Pilih dan aktifkan profil untuk mulai bekerja</span>
+        <div class="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 flex justify-between items-center">
+          <span class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
+            DAFTAR PROFIL KASIR SAYA
+          </span>
+          <span class="text-[10px] text-slate-400 dark:text-slate-400 font-sans">Pilih dan aktifkan profil untuk mulai bekerja</span>
         </div>
 
         <div class="p-4">
