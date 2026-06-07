@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative bg-[#111827] dark:bg-[#111827]"
-       :class="{ 'bg-slate-100': !isDark, '!bg-[#111827]': isDark }">
+  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative"
+       :class="isDark ? 'bg-[#111827]' : 'bg-slate-100'">
     <!-- Grid Overlay -->
     <div class="absolute inset-0 pointer-events-none bg-grid z-0 animate-fadeIn" />
 
