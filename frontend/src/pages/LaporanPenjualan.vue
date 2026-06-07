@@ -4,61 +4,58 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
-        <h2 class="text-sm font-semibold tracking-wide uppercase" style="color: #e2e8f0; letter-spacing: 0.08em;">
+        <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           Laporan Penjualan
         </h2>
       </div>
     </div>
 
     <!-- Table Container -->
-    <div style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-      <div v-if="loading" class="p-8 text-center text-sm" style="color: #475569;">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div v-if="loading" class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
         Memuat data laporan...
       </div>
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Kode</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Tanggal</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Metode</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color: #64748b; background: rgba(0,0,0,0.15);">Total</th>
+            <tr class="border-b border-slate-100 dark:border-slate-800">
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Kode</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Tanggal</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Metode</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-right text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Total</th>
             </tr>
           </thead>
           <tbody class="text-xs">
             <tr
               v-for="t in list"
               :key="t.id"
-              class="transition-colors duration-200"
-              style="border-bottom: 1px solid rgba(255,255,255,0.03);"
-              @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.04)'"
-              @mouseleave="($event.currentTarget as HTMLElement).style.background = 'transparent'"
+              class="transition-colors duration-200 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50"
             >
-              <td class="px-4 py-3 font-mono font-bold" style="color: #818cf8;">
+              <td class="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                 {{ t.kode_transaksi }}
               </td>
-              <td class="px-4 py-3" style="color: #64748b;">
+              <td class="px-4 py-3 text-slate-500 dark:text-slate-400">
                 {{ formatDate(t.created_at) }}
               </td>
               <td class="px-4 py-3">
-                <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase" style="background: rgba(255,255,255,0.04); color: #94a3b8; border: 1px solid rgba(255,255,255,0.06);">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   {{ t.metode_pembayaran }}
                 </span>
               </td>
-              <td class="px-4 py-3 font-bold text-right" style="color: #e2e8f0;">
+              <td class="px-4 py-3 font-bold text-right text-slate-800 dark:text-slate-100">
                 {{ formatCurrency(t.total) }}
               </td>
             </tr>
             <tr v-if="list.length === 0">
-              <td colspan="4" class="px-4 py-8 text-center text-sm" style="color: #475569;">
+              <td colspan="4" class="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">
                 Belum ada data
               </td>
             </tr>
           </tbody>
           <tfoot v-if="list.length > 0">
-            <tr style="background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.08);">
-              <td colspan="3" class="px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color: #cbd5e1;">Total</td>
-              <td class="px-4 py-3 text-xs font-bold text-right font-mono" style="color: #5eead4;">{{ formatCurrency(grandTotal) }}</td>
+            <tr class="bg-slate-50/80 dark:bg-slate-950/40 border-t border-slate-200 dark:border-slate-800">
+              <td colspan="3" class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Total</td>
+              <td class="px-4 py-3 text-xs font-bold text-right font-mono text-teal-600 dark:text-teal-400">{{ formatCurrency(grandTotal) }}</td>
             </tr>
           </tfoot>
         </table>

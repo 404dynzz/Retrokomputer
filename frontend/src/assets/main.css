@@ -147,10 +147,9 @@ body {
 }
 
 /* Router links, highlights & sidebar retro borders */
-.dark .router-link-active, .dark .bg-retro-blue\/10 {
+.dark .router-link-active {
   background-color: rgba(99, 102, 241, 0.08) !important;
   color: #ffffff !important;
-  border-left: 3px solid var(--color-accent) !important;
   font-weight: bold;
 }
 
@@ -290,3 +289,342 @@ body {
 .dark .fixed.inset-0 button:active {
   transform: translateY(1px);
 }
+
+/* ====================================================================
+   GLOBAL INNER CHART & COMPONENT THEME OVERRIDES
+   ==================================================================== */
+
+/* --- Select Year & View Toggle filters --- */
+html:not(.dark) .year-select,
+html:not(.dark) .view-toggle {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+html:not(.dark) .year-select:hover,
+html:not(.dark) .year-select:focus,
+html:not(.dark) .view-toggle:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+.dark .year-select,
+.dark .view-toggle {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+}
+.dark .year-select:hover,
+.dark .year-select:focus,
+.dark .view-toggle:hover {
+  border-color: #ff7a00 !important;
+  color: #ff7a00 !important;
+}
+
+/* --- Filter Tabs --- */
+html:not(.dark) .filter-tabs {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+.dark .filter-tabs {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* --- Filter Tab Buttons --- */
+html:not(.dark) .filter-tab {
+  color: #64748b !important;
+}
+html:not(.dark) .filter-tab:hover:not(.active) {
+  color: #1e293b !important;
+}
+html:not(.dark) .filter-tab.active {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.dark .filter-tab {
+  color: var(--text-muted) !important;
+}
+.dark .filter-tab:hover:not(.active) {
+  color: var(--text-primary) !important;
+}
+.dark .filter-tab.active {
+  background: #1e293b !important;
+  color: #ff7a00 !important; /* Gold/Accent for Monthly Sales & Top Products */
+}
+/* Indigo override for active tabs on SalesLineChart active filters */
+.dark .chart-card:has(.active[class*="indigo"]) .filter-tab.active,
+.dark .chart-card:has(.active:hover) .filter-tab.active {
+  color: var(--color-primary) !important;
+}
+
+/* --- Stats Pills, Comparison Items, Metrics --- */
+html:not(.dark) .stat-pill,
+html:not(.dark) .comp-item,
+html:not(.dark) .metric {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+}
+html:not(.dark) .stat-pill:hover,
+html:not(.dark) .comp-item:hover,
+html:not(.dark) .metric:hover {
+  background: #ffffff !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.06) !important;
+}
+
+.dark .stat-pill,
+.dark .comp-item,
+.dark .metric {
+  background: var(--bg-deep) !important;
+  border: 1.5px solid var(--border-color) !important;
+}
+.dark .stat-pill:hover,
+.dark .comp-item:hover,
+.dark .metric:hover {
+  background: var(--bg-card) !important;
+  border-color: #ff7a00 !important;
+  box-shadow: 0 8px 20px rgba(255, 122, 0, 0.15) !important;
+}
+
+/* --- Labels in Pills/Metrics --- */
+html:not(.dark) .stat-label,
+html:not(.dark) .comp-label,
+html:not(.dark) .metric-label {
+  color: #64748b !important;
+}
+html:not(.dark) .stat-pill:hover .stat-label,
+html:not(.dark) .comp-item:hover .comp-label,
+html:not(.dark) .metric:hover .metric-label {
+  color: var(--color-primary-hover) !important;
+}
+
+.dark .stat-label,
+.dark .comp-label,
+.dark .metric-label {
+  color: var(--text-secondary) !important;
+}
+.dark .stat-pill:hover .stat-label {
+  color: #fdba74 !important;
+}
+.dark .comp-item:hover .comp-label {
+  color: #a5b4fc !important;
+}
+
+/* --- Values in Pills/Metrics --- */
+html:not(.dark) .stat-value,
+html:not(.dark) .comp-val {
+  color: #1e293b !important;
+}
+html:not(.dark) .stat-pill:hover .stat-value,
+html:not(.dark) .comp-item:hover .comp-val {
+  color: #000000 !important;
+}
+html:not(.dark) .stat-value.highlight {
+  color: var(--color-primary) !important;
+}
+
+.dark .stat-value,
+.dark .comp-val {
+  color: var(--text-primary) !important;
+}
+.dark .stat-pill:hover .stat-value,
+.dark .comp-item:hover .comp-val {
+  color: #ffffff !important;
+}
+.dark .stat-value.highlight {
+  color: #ff7a00 !important;
+}
+
+/* --- Legend Buttons --- */
+html:not(.dark) .legend-btn {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+html:not(.dark) .legend-btn:hover {
+  background: color-mix(in srgb, var(--series-color) 8%, #ffffff) !important;
+  border-color: var(--series-color) !important;
+}
+
+.dark .legend-btn {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.dark .legend-btn:hover {
+  background: color-mix(in srgb, var(--series-color) 10%, var(--bg-deep)) !important;
+  border-color: var(--series-color) !important;
+}
+
+/* --- Table Rows, Comparison Items List & Details --- */
+html:not(.dark) .payment-item,
+html:not(.dark) .table-row,
+html:not(.dark) .comparison-item {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+html:not(.dark) .payment-item:hover,
+html:not(.dark) .table-row:hover,
+html:not(.dark) .comparison-item:hover {
+  border-color: #cbd5e1 !important;
+  background: #ffffff !important;
+}
+
+.dark .payment-item,
+.dark .table-row,
+.dark .comparison-item {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.dark .payment-item:hover,
+.dark .table-row:hover,
+.dark .comparison-item:hover {
+  border-color: #334155 !important;
+}
+
+/* --- Card Details Text Colors --- */
+html:not(.dark) .payment-label,
+html:not(.dark) .row-name,
+html:not(.dark) .item-name {
+  color: #334155 !important;
+}
+.dark .payment-label,
+.dark .row-name,
+.dark .item-name {
+  color: var(--text-primary) !important;
+}
+
+html:not(.dark) .payment-value,
+html:not(.dark) .row-unit,
+html:not(.dark) .item-qty {
+  color: #0f172a !important;
+}
+.dark .payment-value,
+.dark .row-unit,
+.dark .item-qty {
+  color: var(--text-primary) !important;
+}
+
+html:not(.dark) .comp-sub,
+html:not(.dark) .qty-label,
+html:not(.dark) .payment-count,
+html:not(.dark) .payment-pct,
+html:not(.dark) .row-revenue {
+  color: #64748b !important;
+}
+.dark .comp-sub,
+.dark .qty-label,
+.dark .payment-count,
+.dark .payment-pct,
+.dark .row-revenue {
+  color: var(--text-muted) !important;
+}
+
+/* --- Badges and Lists --- */
+html:not(.dark) .rank-badge,
+html:not(.dark) .item-rank {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+}
+.dark .rank-badge,
+.dark .item-rank {
+  background: #1e293b !important;
+  color: var(--text-secondary) !important;
+}
+
+html:not(.dark) .row-bar-wrap {
+  background: #e2e8f0 !important;
+}
+.dark .row-bar-wrap {
+  background: #1e293b !important;
+}
+
+html:not(.dark) .products-comparison-list {
+  border-top-color: #e2e8f0 !important;
+}
+.dark .products-comparison-list {
+  border-top-color: var(--border-color) !important;
+}
+
+/* ====================================================================
+   APEXCHARTS SVG GLOBAL SELECTOR THEME OVERRIDES
+   ==================================================================== */
+
+/* --- Gridlines --- */
+html:not(.dark) .apexcharts-gridline,
+html:not(.dark) .apexcharts-grid-borders line,
+html:not(.dark) .apexcharts-grid line {
+  stroke: #e2e8f0 !important;
+  opacity: 0.8 !important;
+}
+.dark .apexcharts-gridline,
+.dark .apexcharts-grid-borders line,
+.dark .apexcharts-grid line {
+  stroke: var(--border-color) !important;
+  opacity: 0.8 !important;
+}
+
+/* --- Axis & Legend Labels --- */
+html:not(.dark) .apexcharts-xaxis-label,
+html:not(.dark) .apexcharts-yaxis-label,
+html:not(.dark) .apexcharts-text,
+html:not(.dark) .apexcharts-legend-text {
+  fill: #64748b !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+.dark .apexcharts-xaxis-label,
+.dark .apexcharts-yaxis-label,
+.dark .apexcharts-text,
+.dark .apexcharts-legend-text {
+  fill: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* --- Donut Chart Inner Text Labels --- */
+html:not(.dark) .apexcharts-datalabel-label {
+  fill: #64748b !important;
+}
+.dark .apexcharts-datalabel-label {
+  fill: var(--text-muted) !important;
+}
+
+html:not(.dark) .apexcharts-datalabel-value {
+  fill: #0f172a !important;
+}
+.dark .apexcharts-datalabel-value {
+  fill: #ffffff !important;
+}
+
+/* --- Global Tooltips --- */
+html:not(.dark) .apexcharts-tooltip {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;
+}
+html:not(.dark) .apexcharts-tooltip-title {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+}
+html:not(.dark) .apexcharts-tooltip-series-group {
+  color: #334155 !important;
+}
+
+.dark .apexcharts-tooltip {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important;
+}
+.dark .apexcharts-tooltip-title {
+  background: var(--bg-deep) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+.dark .apexcharts-tooltip-series-group {
+  color: var(--text-primary) !important;
+}
+

@@ -3,15 +3,14 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out lg:relative overflow-hidden',
+        'fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 ease-in-out lg:relative overflow-hidden',
         isMobile
           ? (sidebarOpen ? 'w-56 translate-x-0' : 'w-56 -translate-x-full')
           : (sidebarOpen ? 'w-56 translate-x-0' : 'w-16 translate-x-0')
       ]"
     >
       <!-- Logo & Header -->
-      <div class="flex items-center border-b border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 transition-all duration-150 justify-between select-none"
-           style="height: 56px;">
+      <div class="flex items-center border-b border-slate-200 dark:border-slate-800 shrink-0 transition-all duration-150 justify-between select-none h-14">
         <div v-if="sidebarOpen" class="flex items-center justify-between w-full px-4">
           <div class="flex items-center gap-2.5">
             <!-- Logo Image -->
@@ -77,16 +76,16 @@
       <!-- User Info -->
       <div 
         :class="[
-          'p-2 border-t border-slate-200 shrink-0 transition-all duration-300 ease-in-out',
-          sidebarOpen ? 'opacity-100 max-h-24' : 'opacity-0 max-h-0 py-0 border-t-0 overflow-hidden pointer-events-none'
+          'border-t border-slate-200 dark:border-slate-800 shrink-0 transition-all duration-300 ease-in-out h-14 flex items-center px-4',
+          sidebarOpen ? 'opacity-100' : 'opacity-0 overflow-hidden pointer-events-none'
         ]"
       >
-        <div class="flex items-center gap-2 p-2 rounded-md">
-          <div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
-            <span class="text-slate-600 text-xs font-semibold">{{ userInitial }}</span>
+        <div class="flex items-center gap-2.5 w-full">
+          <div class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+            <span class="text-slate-600 dark:text-slate-300 text-xs font-semibold">{{ userInitial }}</span>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-xs font-medium text-slate-800 truncate">{{ authStore.userName }}</p>
+            <p class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">{{ authStore.userName }}</p>
             <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">
               {{ authStore.user?.role }}
               <span v-if="authStore.activeKasirProfile" class="text-retro-blue font-bold font-sans lowercase text-[9px] block">
@@ -96,7 +95,7 @@
           </div>
           <button
             @click="triggerLogout"
-            class="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
+            class="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition-colors"
             title="Logout"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h5a1 1 0 1 0 0-2H4V5h4a1 1 0 1 0 0-2H3zm12.293 3.293a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414L16.586 11H8a1 1 0 1 1 0-2h8.586l-1.293-1.293a1 1 0 0 1 0-1.414z" clip-rule="evenodd"/></svg>
@@ -115,7 +114,7 @@
     <!-- Main -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Header -->
-      <header class="h-14 flex items-center justify-between px-4 lg:px-6 bg-white border-b border-slate-200 shrink-0">
+      <header class="h-14 flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">
         <div class="flex items-center gap-3">
           <button
             @click="sidebarOpen = !sidebarOpen"
@@ -136,21 +135,43 @@
             <span>⊞</span> Kasir POS
           </router-link>
 
-          <!-- Theme Toggle Button -->
+          <!-- Theme Toggle Switch -->
           <button
             @click="toggleTheme"
-            class="p-2 rounded-md bg-slate-50/50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-retro-blue dark:hover:text-retro-yellow border border-slate-200/60 dark:border-slate-800/80 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center shadow-sm"
-            title="Toggle Theme"
+            class="relative flex items-center justify-between w-14 h-7 p-1 rounded-full bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300/60 dark:border-slate-700/80 transition-all duration-300 focus:outline-none hover:scale-105 active:scale-95 shadow-inner"
+            role="switch"
+            :aria-checked="isDark"
+            title="Ganti Tema"
           >
-            <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
-            <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-retro-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-            </svg>
-            <!-- Moon Icon (shows in Light Mode to switch to Dark) -->
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
+            <!-- Background Icons -->
+            <span class="w-full flex justify-between px-1 pointer-events-none select-none">
+              <!-- Moon Icon (Light Mode indicator on right) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400/80" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+              <!-- Sun Icon (Dark Mode indicator on left) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-retro-yellow/50" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.636a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 5.636a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM9 17a1 1 0 100-2v1a1 1 0 102 0v-1a1 1 0 10-2 0v1zm-4-5a1 1 0 100-2H4a1 1 0 100 2h1zm1.464-5.636a1 1 0 011.414 0l.707-.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </span>
+            <!-- Sliding Knob -->
+            <span
+              :class="[
+                'absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-md flex items-center justify-center transition-transform duration-300 ease-out',
+                isDark ? 'translate-x-7' : 'translate-x-0'
+              ]"
+            >
+              <!-- Sun (shown in Dark Mode) -->
+              <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-retro-yellow" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.636a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 5.636a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM9 17a1 1 0 100-2v1a1 1 0 102 0v-1a1 1 0 10-2 0v1zm-4-5a1 1 0 100-2H4a1 1 0 100 2h1zm1.464-5.636a1 1 0 011.414 0l.707-.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <!-- Moon (shown in Light Mode) -->
+              <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-slate-600" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            </span>
           </button>
+
 
           <!-- Profile Dropdown -->
           <div class="relative profile-dropdown-container">
@@ -158,7 +179,7 @@
               @click="toggleDropdown"
               class="flex items-center gap-2 p-1 rounded-md hover:bg-slate-50 border border-slate-100 transition-colors"
             >
-              <div class="w-8 h-8 rounded bg-retro-blue/10 flex items-center justify-center border border-retro-blue/20">
+              <div class="w-8 h-8 rounded bg-retro-blue/10 flex items-center justify-center">
                 <span class="text-retro-blue font-bold text-xs font-mono">{{ userInitial }}</span>
               </div>
               <div class="hidden md:flex flex-col text-left shrink-0 max-w-[120px]">
