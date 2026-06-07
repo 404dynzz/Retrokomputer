@@ -54,11 +54,12 @@
             {{ authStore.loading ? 'Memproses...' : 'Masuk' }}
           </button>
         </form>
-        <div class="text-center text-slate-400 text-[10px] mt-3 font-mono">v1.0</div>
+        <div class="flex items-center justify-center mt-5 pt-3 border-t border-slate-100">
+          <span class="px-2 py-0.5 text-[9px] font-semibold font-mono tracking-wider bg-slate-50 text-slate-400/80 rounded border border-slate-200/60">
+            v1.0
+          </span>
+        </div>
       </div>
-
-      <!-- Version Footer -->
-      <p class="text-center text-slate-500 text-[10px] mt-4 tracking-wider font-mono">Retro Komputer POS &middot; v1.0.0</p>
     </div>
   </div>
 </template>
