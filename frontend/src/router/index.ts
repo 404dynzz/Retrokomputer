@@ -59,6 +59,12 @@ const router = createRouter({
           meta: { roles: ['kasir', 'admin'] },
         },
         {
+          path: 'profil',
+          name: 'profil',
+          component: () => import('@/pages/ProfilUser.vue'),
+          meta: { roles: ['admin', 'owner'] },
+        },
+        {
           path: 'transaksi',
           name: 'transaksi',
           component: () => import('@/pages/TransaksiList.vue'),

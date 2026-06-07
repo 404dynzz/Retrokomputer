@@ -169,6 +169,16 @@
                   <p class="text-xs font-semibold text-slate-800 truncate">{{ authStore.userName }}</p>
                   <p class="text-[10px] text-slate-400 font-mono font-bold uppercase mt-0.5">{{ authStore.user?.role }}</p>
                 </div>
+                <div class="py-1 border-b border-slate-100" v-if="authStore.isAdmin || authStore.isOwner">
+                  <router-link
+                    to="/profil"
+                    @click="closeDropdown"
+                    class="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 text-left transition-colors font-medium"
+                  >
+                    <span>⚙️</span>
+                    <span>Profil Saya</span>
+                  </router-link>
+                </div>
                 <div class="py-1">
                   <button
                     @click="triggerLogout"
@@ -266,6 +276,7 @@ const pageTitle = computed(() => {
     'laporan-laba-rugi': 'Laba Kotor',
     'barang-rusak': 'Barang Rusak / Hilang',
     'profil-kasir': 'Profil Kasir',
+    'profil': 'Profil Saya',
     'settings': 'Pengaturan Sistem',
   }
   return titles[route.name as string] || 'Retro Komputer'

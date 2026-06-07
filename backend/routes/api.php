@@ -12,6 +12,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\BarangRusakController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProfilKasirController;
+use App\Http\Controllers\ProfileController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/settings/active', [SettingController::class, 'active']);
@@ -20,6 +21,13 @@ Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    // Profile Management
+    Route::get('/profile', [ProfileController::class, 'getProfile']);
+    Route::post('/profile/verify-password', [ProfileController::class, 'verifyPassword']);
+    Route::post('/profile/send-otp', [ProfileController::class, 'sendOtp']);
+    Route::post('/profile/verify-otp', [ProfileController::class, 'verifyOtp']);
+    Route::put('/profile', [ProfileController::class, 'updateProfile']);
 
     // Profil Kasir
     Route::get('/profil-kasir', [ProfilKasirController::class, 'index']);

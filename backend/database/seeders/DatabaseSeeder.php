@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Owner',
             'username' => 'owner',
+            'email' => 'owner@retrokomputer.com',
             'password' => bcrypt('owner123'),
             'role' => 'owner'
         ]);
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin',
             'username' => 'admin',
+            'email' => 'admin@retrokomputer.com',
             'password' => bcrypt('admin123'),
             'role' => 'admin'
         ]);
@@ -34,6 +36,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Kasir',
             'username' => 'kasir',
+            'email' => 'kasir@retrokomputer.com',
             'password' => bcrypt('kasir123'),
             'role' => 'kasir'
         ]);
