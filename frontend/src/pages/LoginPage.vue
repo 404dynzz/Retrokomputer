@@ -54,7 +54,7 @@
             {{ authStore.loading ? 'Memproses...' : 'Masuk' }}
           </button>
         </form>
-
+        <div class="text-center text-slate-400 text-[10px] mt-3 font-mono">v1.0</div>
       </div>
 
       <!-- Version Footer -->
