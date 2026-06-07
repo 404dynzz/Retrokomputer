@@ -1,4 +1,5 @@
 import type { Transaksi } from '@/types'
+import { customDialog } from '@/utils/dialog'
 
 export function printReceipt(transaksi: Transaksi, uangDiterima?: number | null, logoText: string = 'RETRO KOMPUTER') {
   if (!transaksi) return
@@ -196,6 +197,6 @@ export function printReceipt(transaksi: Transaksi, uangDiterima?: number | null,
     printWindow.document.write(htmlContent)
     printWindow.document.close()
   } else {
-    alert('Pop-up printer diblokir oleh browser. Harap izinkan pop-up untuk mencetak nota.')
+    customDialog.warning('Pop-up printer diblokir oleh browser. Harap izinkan pop-up untuk mencetak nota.')
   }
 }

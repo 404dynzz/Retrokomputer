@@ -9,7 +9,7 @@
         </div>
         <input
           ref="searchInput"
-          v-model="searchQuery"
+          v-model="tempSearchQuery"
           type="text"
           class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-sans"
           placeholder="Cari berdasarkan nama atau kode barang..."
@@ -227,7 +227,9 @@
           <button @click="closeSuccessModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 text-center">
-          <div class="w-12 h-12 rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center mx-auto mb-3 text-emerald-500 text-2xl font-bold">✓</div>
+          <div class="w-12 h-12 rounded-full bg-emerald-950 border-2 border-emerald-500 flex items-center justify-center mx-auto mb-3 text-emerald-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </div>
           <h3 class="text-sm font-bold text-slate-800 mb-1">Pembayaran Sukses!</h3>
           <p class="text-[10px] text-slate-400 font-bold uppercase font-mono mb-2">{{ lastCode }}</p>
           <p class="text-lg font-bold text-retro-orange-dark font-mono mb-4">{{ formatCurrency(lastTotal) }}</p>
@@ -236,7 +238,8 @@
               @click="printLastReceipt"
               class="text-xs font-bold px-5 py-2 bg-retro-orange hover:bg-orange-600 text-white rounded transition-colors uppercase shadow-sm flex items-center justify-center gap-1.5"
             >
-              <span>⎙</span> CETAK NOTA
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.115-.465-1.12-1.08L6 18m11.66 0H6.34m.665-4.171V6.375c0-.621.504-1.125 1.125-1.125h8.25c.621 0 1.125.504 1.125 1.125v7.454M16.5 7.5h.008v.008H16.5V7.5z"/></svg>
+              CETAK NOTA
             </button>
             <button
               @click="closeSuccessModal"
@@ -254,18 +257,29 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import type { Produk } from '@/types'
 import { produkService, transaksiService, settingService } from '@/services'
 import { printReceipt } from '@/utils/printReceipt'
+import { customDialog } from '@/utils/dialog'
 
 const cart = useCartStore()
 const authStore = useAuthStore()
 const router = useRouter()
 
+const tempSearchQuery = ref('')
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement>()
+
+const updateSearchQuery = debounce((val: string) => {
+  searchQuery.value = val
+}, 300)
+
+watch(tempSearchQuery, (newVal) => {
+  updateSearchQuery(newVal)
+})
 const showSuccess = ref(false)
 const processing = ref(false)
 const lastCode = ref('')
@@ -315,7 +329,7 @@ onMounted(async () => {
     try {
       await authStore.fetchActiveKasirProfile()
       if (!authStore.activeKasirProfile) {
-        alert('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
+        customDialog.warning('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
         router.push('/profil-kasir')
         return
       }
@@ -351,7 +365,7 @@ function addToCart(p: Produk) {
   try {
     cart.addItem(p)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   }
 }
 
@@ -359,7 +373,7 @@ function updateCartQty(produkId: number, qty: number) {
   try {
     cart.updateQty(produkId, qty)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   }
 }
 
@@ -381,7 +395,7 @@ function saveQty(item: any) {
 
   const val = Number(editQtyValue.value)
   if (isNaN(val) || val <= 0) {
-    alert('Jumlah barang harus minimal 1.')
+    customDialog.warning('Jumlah barang harus minimal 1.')
     editingItemId.value = null
     return
   }
@@ -389,7 +403,7 @@ function saveQty(item: any) {
   try {
     cart.updateQty(item.produk.id, val)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   } finally {
     editingItemId.value = null
   }
@@ -401,11 +415,11 @@ async function processPayment() {
   // Validate cash amount if payment method is Tunai
   if (cart.metode_pembayaran === 'tunai') {
     if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') {
-      alert('Harap masukkan nominal uang yang diterima!')
+      customDialog.warning('Harap masukkan nominal uang yang diterima!')
       return
     }
     if (uangDiterima.value < cart.grandTotal) {
-      alert('Nominal uang diterima kurang dari total pembayaran!')
+      customDialog.warning('Nominal uang diterima kurang dari total pembayaran!')
       return
     }
   }
@@ -429,7 +443,7 @@ async function processPayment() {
     namaPembeli.value = ''
     showSuccess.value = true
   } catch (e: any) {
-    alert(e.response?.data?.message || 'Gagal memproses transaksi')
+    customDialog.error(e.response?.data?.message || 'Gagal memproses transaksi')
   } finally {
     processing.value = false
   }

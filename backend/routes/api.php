@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfilKasirController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/settings/active', [SettingController::class, 'active']);
+Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -55,6 +56,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/laporan/dashboard', [LaporanController::class, 'dashboard']);
     Route::get('/laporan/stok', [LaporanController::class, 'stok']);
     Route::get('/riwayat-stok', [LaporanController::class, 'riwayatStok']);
+
+    // Chart Analytics (Owner & Admin)
+    Route::get('/laporan/chart/penjualan-harian', [LaporanController::class, 'chartPenjualanHarian']);
+    Route::get('/laporan/chart/penjualan-bulanan', [LaporanController::class, 'chartPenjualanBulanan']);
+    Route::get('/laporan/chart/metode-pembayaran', [LaporanController::class, 'chartMetodePembayaran']);
+    Route::get('/laporan/chart/produk-terlaris', [LaporanController::class, 'chartProdukTerlaris']);
 
     // Settings (CRUD)
     Route::post('/settings', [SettingController::class, 'update']);

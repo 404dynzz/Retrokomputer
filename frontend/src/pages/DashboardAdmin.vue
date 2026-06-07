@@ -223,7 +223,7 @@
                 <td class="px-4 py-3 text-xs text-slate-600">{{ formatTime(trx.created_at) }}</td>
                 <td class="px-4 py-3">
                   <span class="text-[11px] px-2.5 py-1 rounded-full font-semibold" :class="trx.metode_pembayaran === 'tunai' ? 'bg-green-100 text-green-700' : trx.metode_pembayaran === 'transfer' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'">
-                    {{ trx.metode_pembayaran === 'tunai' ? ' Tunai' : trx.metode_pembayaran === 'transfer' ? '💳 Transfer' : '💳 Debit' }}
+                    {{ trx.metode_pembayaran === 'tunai' ? 'Tunai' : trx.metode_pembayaran === 'transfer' ? 'Transfer' : 'Debit' }}
                   </span>
                 </td>
                 <td class="px-4 py-3 text-xs font-bold text-slate-900 text-right">{{ formatCurrency(trx.total) }}</td>

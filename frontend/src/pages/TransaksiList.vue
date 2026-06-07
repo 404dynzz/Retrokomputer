@@ -224,6 +224,7 @@ import type { Transaksi } from '@/types'
 import { transaksiService, settingService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { printReceipt } from '@/utils/printReceipt'
+import { customDialog } from '@/utils/dialog'
 
 const authStore = useAuthStore()
 const loading = ref(true)
@@ -266,24 +267,25 @@ async function printTransaction(id: number) {
       printReceipt(res.data, null, logoText.value)
     }
   } catch (err) {
-    alert('Gagal mengambil detail transaksi untuk dicetak.')
+    customDialog.error('Gagal mengambil detail transaksi untuk dicetak.')
   } finally {
     printingId.value = null
   }
 }
 
 async function deleteTransaction(t: Transaksi) {
-  if (!confirm(`Apakah Anda yakin ingin menghapus transaksi ${t.kode_transaksi}? Tindakan ini akan mengembalikan stok produk dan membatalkan catatan keuangan!`)) {
+  const confirmed = await customDialog.confirm(`Apakah Anda yakin ingin menghapus transaksi ${t.kode_transaksi}? Tindakan ini akan mengembalikan stok produk dan membatalkan catatan keuangan!`)
+  if (!confirmed) {
     return
   }
 
   try {
     await transaksiService.delete(t.id)
-    alert('Transaksi berhasil dihapus.')
+    customDialog.success('Transaksi berhasil dihapus.')
     await fetchTransactions()
   } catch (err: any) {
     const msg = err.response?.data?.message || 'Gagal menghapus transaksi.'
-    alert(msg)
+    customDialog.error(msg)
   }
 }
 

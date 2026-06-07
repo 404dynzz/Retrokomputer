@@ -3,12 +3,7 @@
     <div class="bg-white rounded-lg border-2 border-retro-blue shadow-md">
       <!-- Title bar -->
       <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md">
-        <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
-        <div class="flex gap-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-        </div>
+        <span class="font-bold text-xs">■ TAMBAH PEMBELIAN BARANG</span>
       </div>
 
       <div class="p-6 font-sans">
@@ -164,6 +159,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce'
 import type { Produk, PembelianPayload } from '@/types'
 import { produkService, pembelianService, supplierService } from '@/services'
 
@@ -198,9 +194,13 @@ function filterProducts(index: number) {
   )
 }
 
+const debouncedFilterProducts = debounce((index: number) => {
+  filterProducts(index)
+}, 300)
+
 function onSearchInput(index: number) {
   form.value.items[index].produk_id = ''
-  filterProducts(index)
+  debouncedFilterProducts(index)
 }
 
 function selectProduct(index: number, product: Produk) {

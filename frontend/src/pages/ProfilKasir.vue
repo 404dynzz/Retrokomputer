@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-xl font-bold text-retro-blue">&gt;_</span>
+        <span class="text-xl font-bold text-retro-blue">■</span>
         <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">
           PENGELOLAAN PROFIL KASIR
         </h2>
@@ -19,7 +19,7 @@
       <div class="lg:col-span-1 space-y-4">
         <div class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-blue text-white px-4 py-2.5 text-xs font-bold uppercase">
-            &gt;_ {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
+            ■ {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
           </div>
 
           <form @submit.prevent="handleSubmit" class="p-4 space-y-4">
@@ -100,7 +100,7 @@
       <!-- Admin List Panel (2 columns) -->
       <div class="lg:col-span-2 bg-white rounded-lg border-2 border-slate-200 overflow-hidden shadow-sm flex flex-col">
         <div class="p-4 border-b-2 border-slate-200 flex justify-between items-center bg-slate-50">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">&gt;_ DAFTAR SEMUA PROFIL KASIR</h3>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">■ DAFTAR SEMUA PROFIL KASIR</h3>
           <span class="text-[10px] text-slate-400 font-mono">Total: {{ profiles.length }} profil</span>
         </div>
 
@@ -205,7 +205,7 @@
       <!-- Profiles List -->
       <div class="bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <div class="bg-slate-100 border-b-2 border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 flex justify-between items-center">
-          <span>&gt;_ DAFTAR PROFIL KASIR SAYA</span>
+          <span>■ DAFTAR PROFIL KASIR SAYA</span>
           <span class="text-[10px] text-slate-400 font-sans">Pilih dan aktifkan profil untuk mulai bekerja</span>
         </div>
 
@@ -280,7 +280,7 @@
     >
       <div class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-sm overflow-hidden shadow-2xl font-mono">
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ VERIFIKASI KODE KHUSUS</span>
+          <span class="font-bold text-xs">■ VERIFIKASI KODE KHUSUS</span>
           <button @click="closePinModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
 
@@ -333,6 +333,8 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import type { ProfilKasir } from '@/types'
 import { profilKasirService } from '@/services'
+import { toast } from '@/utils/toast'
+import { customDialog } from '@/utils/dialog'
 
 const authStore = useAuthStore()
 
@@ -364,7 +366,7 @@ async function fetchProfiles() {
     const res = await profilKasirService.getAll()
     profiles.value = res.data
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Gagal memuat profil kasir.')
+    toast.error(err.response?.data?.message || 'Gagal memuat profil kasir.')
   } finally {
     loading.value = false
   }
@@ -421,12 +423,12 @@ async function handleSubmit() {
         payload.kode_khusus = form.value.kode_khusus
       }
       await profilKasirService.update(editingProfileId.value, payload)
-      alert('Profil kasir berhasil diperbarui.')
+      customDialog.success('Profil kasir berhasil diperbarui.')
       cancelEdit()
     } else {
       // Create
       if (form.value.user_id === '') {
-        alert('Silakan pilih user kasir.')
+        customDialog.warning('Silakan pilih user kasir.')
         return
       }
       await profilKasirService.create({
@@ -434,19 +436,20 @@ async function handleSubmit() {
         nama: form.value.nama,
         kode_khusus: form.value.kode_khusus,
       })
-      alert('Profil kasir berhasil ditambahkan.')
+      customDialog.success('Profil kasir berhasil ditambahkan.')
       resetForm()
     }
     await fetchProfiles()
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Gagal memproses profil kasir.')
+    customDialog.error(err.response?.data?.message || 'Gagal memproses profil kasir.')
   } finally {
     processing.value = false
   }
 }
 
 async function confirmDelete(p: ProfilKasir) {
-  if (!confirm(`Apakah Anda yakin ingin menghapus profil kasir "${p.nama}"?`)) {
+  const confirmed = await customDialog.confirm(`Apakah Anda yakin ingin menghapus profil kasir "${p.nama}"?`)
+  if (!confirmed) {
     return
   }
   
@@ -456,9 +459,9 @@ async function confirmDelete(p: ProfilKasir) {
       authStore.activeKasirProfile = null
     }
     await fetchProfiles()
-    alert('Profil kasir berhasil dihapus.')
+    customDialog.success('Profil kasir berhasil dihapus.')
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Gagal menghapus profil kasir.')
+    customDialog.error(err.response?.data?.message || 'Gagal menghapus profil kasir.')
   }
 }
 
@@ -490,7 +493,7 @@ async function submitActivation() {
     authStore.activeKasirProfile = res.data
     closePinModal()
     await fetchProfiles()
-    alert(`Profil kasir "${res.data.nama}" telah diaktifkan!`)
+    toast.success(`Profil kasir "${res.data.nama}" telah diaktifkan!`)
   } catch (err: any) {
     pinError.value = err.response?.data?.message || 'Gagal mengaktifkan profil kasir.'
   } finally {
@@ -505,9 +508,9 @@ async function deactivateProfile() {
     await profilKasirService.nonaktifkan()
     authStore.activeKasirProfile = null
     await fetchProfiles()
-    alert('Profil kasir dinonaktifkan.')
+    toast.success('Profil kasir dinonaktifkan.')
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Gagal menonaktifkan profil kasir.')
+    toast.error(err.response?.data?.message || 'Gagal menonaktifkan profil kasir.')
   } finally {
     processing.value = false
   }
