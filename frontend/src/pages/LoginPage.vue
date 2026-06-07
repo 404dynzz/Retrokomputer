@@ -1,5 +1,22 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative" style="background-color: #111827;">
+  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
+    <!-- Floating Theme Toggle Button -->
+    <button
+      @click="toggleTheme"
+      type="button"
+      class="fixed top-4 right-4 z-50 p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors shadow-sm flex items-center justify-center"
+      title="Toggle Theme"
+    >
+      <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
+      <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-retro-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+      </svg>
+      <!-- Moon Icon (shows in Light Mode to switch to Dark) -->
+      <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+    </button>
+
     <!-- Grid Overlay -->
     <div class="absolute inset-0 pointer-events-none bg-grid z-0 animate-fadeIn" />
 
@@ -55,7 +72,7 @@
           </button>
         </form>
         <div class="flex items-center justify-center mt-5 pt-3 border-t border-slate-100">
-          <span class="px-2 py-0.5 text-[9px] font-semibold font-mono tracking-wider bg-slate-50 text-slate-400/80 rounded border border-slate-200/60">
+          <span class="px-2 py-0.5 text-[9px] font-semibold font-mono tracking-wider">
             v1.0
           </span>
         </div>
@@ -67,8 +84,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useTheme } from '@/utils/theme'
 
 const authStore = useAuthStore()
+const { isDark, toggleTheme } = useTheme()
+
 const username = ref('')
 const password = ref('')
 

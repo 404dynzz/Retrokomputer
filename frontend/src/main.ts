@@ -1,4 +1,8 @@
 import './assets/main.css'
+import { useTheme } from './utils/theme'
+
+const { initTheme } = useTheme()
+initTheme()
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
