@@ -4,8 +4,11 @@
     <div class="absolute inset-0 pointer-events-none bg-grid z-0 animate-fadeIn" />
 
     <div class="w-full max-w-sm animate-slideUp z-10">
-      <!-- Text Custom Header (No Logo) -->
-      <div class="text-center mb-8">
+      <!-- Text Custom Header with Logo -->
+      <div class="text-center mb-8 flex flex-col items-center">
+        <div class="w-16 h-16 mb-3 p-1 bg-slate-800 rounded-lg border border-slate-700 shadow-md">
+          <img src="/logo.svg" alt="Retro Komputer Logo" class="w-full h-full object-contain" />
+        </div>
         <h1 class="text-2xl font-bold font-mono tracking-wider text-retro-orange drop-shadow-lg">Retro Komputer</h1>
         <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
       </div>
@@ -53,6 +56,9 @@
         </form>
 
       </div>
+
+      <!-- Version Footer -->
+      <p class="text-center text-slate-500 text-[10px] mt-4 tracking-wider font-mono">Retro Komputer POS &middot; v1.0.0</p>
     </div>
   </div>
 </template>

@@ -14,17 +14,10 @@
            style="height: 56px;">
         <div v-if="sidebarOpen" class="flex items-center justify-between w-full px-4">
           <div class="flex items-center gap-2.5">
-            <!-- Custom Handmade Smiling Retro Computer Monitor SVG -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8 text-retro-orange shrink-0">
-              <rect x="2" y="3" width="20" height="13" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1.5"></rect>
-              <rect x="4" y="5" width="16" height="9" rx="1.5" fill="#0b0f17" stroke="#334155" stroke-width="1"></rect>
-              <line x1="15" y1="11.5" x2="18" y2="11.5" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"></line>
-              <circle cx="9" cy="9" r="1" fill="#f97316"></circle>
-              <circle cx="15" cy="9" r="1" fill="#f97316"></circle>
-              <path d="M10 11.5c.5.5 1.5.5 2 0" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"></path>
-              <path d="M8 16l-1.5 4h11l-1.5-4" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              <line x1="5" y1="20" x2="19" y2="20" stroke="#475569" stroke-width="2" stroke-linecap="round"></line>
-            </svg>
+            <!-- Logo Image -->
+            <div class="w-8 h-8 shrink-0">
+              <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
+            </div>
             <div class="flex flex-col text-left">
               <span class="text-xs font-mono font-bold text-white tracking-wide uppercase leading-tight">Retrokomputer</span>
               <span class="text-[9px] text-slate-400 font-sans mt-0.5 leading-none">POS & Inventory</span>
@@ -39,16 +32,9 @@
         </div>
         <div v-else class="flex items-center justify-center w-full">
           <!-- Collapsed Logo -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8 text-retro-orange">
-            <rect x="2" y="3" width="20" height="13" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1.5"></rect>
-            <rect x="4" y="5" width="16" height="9" rx="1.5" fill="#0b0f17" stroke="#334155" stroke-width="1"></rect>
-            <line x1="15" y1="11.5" x2="18" y2="11.5" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"></line>
-            <circle cx="9" cy="9" r="1" fill="#f97316"></circle>
-            <circle cx="15" cy="9" r="1" fill="#f97316"></circle>
-            <path d="M10 11.5c.5.5 1.5.5 2 0" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"></path>
-            <path d="M8 16l-1.5 4h11l-1.5-4" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-            <line x1="5" y1="20" x2="19" y2="20" stroke="#475569" stroke-width="2" stroke-linecap="round"></line>
-          </svg>
+          <div class="w-8 h-8 shrink-0">
+            <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
+          </div>
         </div>
       </div>
 
