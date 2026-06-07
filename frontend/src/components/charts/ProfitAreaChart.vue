@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive, onUnmounted } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 // FIX: import type yang pasti ada, ChartLabaRugi di-extend dari ChartPenjualanBulanan
 //      jika tipe ChartLabaRugi belum ada di @/types, ganti dengan baris di bawah:
@@ -81,6 +81,11 @@ import { laporanService } from '@/services'
 
 const apexchart = VueApexCharts
 const chartRef = ref<any>(null)
+
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 640
+}
 
 const loading = ref(true)
 // FIX: tipe data menggunakan ChartLabaRugi, bukan ChartPenjualanBulanan
@@ -157,10 +162,12 @@ const chartOptions = computed(() => ({
   xaxis: {
     categories: data.value.map(d => d.bulan),
     labels: {
-      style: { colors: '#64748b', fontSize: '10px' },
-      rotate: -40,
+      style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
+      rotate: isMobile.value ? 0 : -30,
+      rotateAlways: false,
       hideOverlappingLabels: true,
     },
+    tickAmount: isMobile.value ? 6 : undefined,
     axisBorder: { show: false },
     axisTicks: { show: false },
   },
@@ -226,6 +233,8 @@ async function exportExcel() {
 }
 
 onMounted(async () => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   try {
 // FIX: getChartLabaRugiBulanan — jika belum ada di service, fallback ke getChartPenjualanBulanan
     const serviceMethod = (laporanService as any).getChartLabaRugiBulanan
@@ -237,6 +246,10 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>
 

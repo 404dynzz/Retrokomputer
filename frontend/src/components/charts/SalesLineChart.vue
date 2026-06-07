@@ -71,12 +71,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ChartPenjualanHarian } from '@/types'
 import { laporanService } from '@/services'
 
 const apexchart = VueApexCharts
+
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 640
+}
 
 const loading = ref(true)
 const data = ref<ChartPenjualanHarian[]>([])
@@ -153,10 +158,12 @@ const chartOptions = computed(() => ({
       return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
     }),
     labels: {
-      style: { colors: '#64748b', fontSize: '10px' },
-      rotate: selectedRange.value === 30 ? -45 : -30,
+      style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
+      rotate: isMobile.value ? 0 : (selectedRange.value === 30 ? -40 : -20),
+      rotateAlways: false,
       hideOverlappingLabels: true,
     },
+    tickAmount: isMobile.value ? 5 : (selectedRange.value === 30 ? 12 : undefined),
     axisBorder: { show: false },
     axisTicks: { show: false },
   },
@@ -271,7 +278,15 @@ async function exportExcel() {
   }
 }
 
-onMounted(loadData)
+onMounted(() => {
+  loadData()
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 </script>
 
 <style scoped>

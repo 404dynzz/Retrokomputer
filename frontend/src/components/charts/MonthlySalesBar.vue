@@ -57,12 +57,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ChartPenjualanBulanan } from '@/types'
 import { laporanService } from '@/services'
 
 const apexchart = VueApexCharts
+
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 640
+}
 
 const loading = ref(true)
 const allData = ref<ChartPenjualanBulanan[]>([])
@@ -151,10 +156,12 @@ const chartOptions = computed(() => {
     xaxis: {
       categories: data.value.map(d => d.bulan),
       labels: {
-        style: { colors: '#64748b', fontSize: '10px' },
-        rotate: -40,
+        style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
+        rotate: isMobile.value ? 0 : -30,
+        rotateAlways: false,
         hideOverlappingLabels: true,
       },
+      tickAmount: isMobile.value ? 6 : undefined,
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
@@ -223,6 +230,8 @@ async function exportExcel() {
 }
 
 onMounted(async () => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   try {
     const res = await laporanService.getChartPenjualanBulanan()
     allData.value = res.data as ChartPenjualanBulanan[]
@@ -236,6 +245,10 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>
 
