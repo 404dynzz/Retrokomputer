@@ -1,33 +1,16 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative bg-slate-50 dark:bg-slate-950">
-    <!-- Floating Theme Toggle Button -->
-    <button
-      @click="toggleTheme"
-      type="button"
-      class="fixed top-4 right-4 z-50 p-2 rounded-md bg-white/80 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-retro-blue dark:hover:text-retro-yellow border border-slate-200/60 dark:border-slate-700/60 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center shadow-sm backdrop-blur-sm"
-      title="Toggle Theme"
-    >
-      <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
-      <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-retro-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-      </svg>
-      <!-- Moon Icon (shows in Light Mode to switch to Dark) -->
-      <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-      </svg>
-    </button>
-
+  <div class="min-h-screen flex items-center justify-center p-4 transition-all duration-300 relative" style="background-color: #111827;">
     <!-- Grid Overlay -->
     <div class="absolute inset-0 pointer-events-none bg-grid z-0 animate-fadeIn" />
 
     <div class="w-full max-w-sm animate-slideUp z-10">
       <!-- Text Custom Header with Logo -->
       <div class="text-center mb-8 flex flex-col items-center">
-        <div class="w-16 h-16 mb-3 p-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-md">
+        <div class="w-16 h-16 mb-3 p-1 bg-slate-800 rounded-lg border border-slate-700 shadow-md">
           <img src="/logo.svg" alt="Retro Komputer Logo" class="w-full h-full object-contain" />
         </div>
         <h1 class="text-2xl font-bold font-mono tracking-wider text-retro-orange drop-shadow-lg">Retro Komputer</h1>
-        <p class="text-slate-600 dark:text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
+        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
       </div>
 
       <!-- Card Container -->
@@ -84,11 +67,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useTheme } from '@/utils/theme'
 
 const authStore = useAuthStore()
-const { isDark, toggleTheme } = useTheme()
-
 const username = ref('')
 const password = ref('')
 
