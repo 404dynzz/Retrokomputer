@@ -4,7 +4,7 @@
     <button
       @click="toggleTheme"
       type="button"
-      class="fixed top-4 right-4 z-50 p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors shadow-sm flex items-center justify-center"
+      class="fixed top-4 right-4 z-50 p-2 rounded-md bg-white/80 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-retro-blue dark:hover:text-retro-yellow border border-slate-200/60 dark:border-slate-700/60 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center shadow-sm backdrop-blur-sm"
       title="Toggle Theme"
     >
       <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
@@ -23,11 +23,11 @@
     <div class="w-full max-w-sm animate-slideUp z-10">
       <!-- Text Custom Header with Logo -->
       <div class="text-center mb-8 flex flex-col items-center">
-        <div class="w-16 h-16 mb-3 p-1 bg-slate-800 rounded-lg border border-slate-700 shadow-md">
+        <div class="w-16 h-16 mb-3 p-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-md">
           <img src="/logo.svg" alt="Retro Komputer Logo" class="w-full h-full object-contain" />
         </div>
         <h1 class="text-2xl font-bold font-mono tracking-wider text-retro-orange drop-shadow-lg">Retro Komputer</h1>
-        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
+        <p class="text-slate-600 dark:text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
       </div>
 
       <!-- Card Container -->

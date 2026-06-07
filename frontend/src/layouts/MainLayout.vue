@@ -10,7 +10,7 @@
       ]"
     >
       <!-- Logo & Header -->
-      <div class="flex items-center border-b border-slate-200 shrink-0 bg-slate-900 transition-all duration-150 justify-between select-none"
+      <div class="flex items-center border-b border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 transition-all duration-150 justify-between select-none"
            style="height: 56px;">
         <div v-if="sidebarOpen" class="flex items-center justify-between w-full px-4">
           <div class="flex items-center gap-2.5">
@@ -19,8 +19,8 @@
               <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
             </div>
             <div class="flex flex-col text-left">
-              <span class="text-xs font-mono font-bold text-white tracking-wide uppercase leading-tight">Retrokomputer</span>
-              <span class="text-[9px] text-slate-400 font-sans mt-0.5 leading-none">POS & Inventory</span>
+              <span class="text-xs font-mono font-bold text-slate-800 dark:text-white tracking-wide uppercase leading-tight">Retrokomputer</span>
+              <span class="text-[9px] text-slate-500 dark:text-slate-400 font-sans mt-0.5 leading-none">POS & Inventory</span>
             </div>
           </div>
           <!-- Close button on Mobile -->
@@ -139,7 +139,7 @@
           <!-- Theme Toggle Button -->
           <button
             @click="toggleTheme"
-            class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors flex items-center justify-center border border-slate-100 dark:border-slate-800"
+            class="p-2 rounded-md bg-slate-50/50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-retro-blue dark:hover:text-retro-yellow border border-slate-200/60 dark:border-slate-800/80 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center shadow-sm"
             title="Toggle Theme"
           >
             <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
