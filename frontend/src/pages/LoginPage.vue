@@ -9,14 +9,22 @@
         <div class="w-16 h-16 mb-3 p-1 bg-slate-800 rounded-lg border border-slate-700 shadow-md">
           <img src="/logo.svg" alt="Retro Komputer Logo" class="w-full h-full object-contain" />
         </div>
-        <h1 class="text-2xl font-bold font-mono tracking-wider text-retro-orange drop-shadow-lg">Retro Komputer</h1>
-        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS</p>
+        <h1 class="text-2xl font-extrabold font-display tracking-wide text-retro-orange drop-shadow-lg">Retro Komputer</h1>
+        <p class="text-slate-300 drop-shadow text-xs mt-2 font-medium tracking-wide">Sistem POS & Inventory</p>
       </div>
 
       <!-- Card Container -->
       <div class="bg-white rounded-lg border border-slate-200 p-6 shadow-md">
-        <h2 class="text-sm font-semibold text-slate-800 mb-1">Masuk</h2>
-        <p class="text-xs text-slate-500 mb-5">Masukkan username dan password</p>
+        <!-- Profile/Person Icon -->
+        <div class="flex justify-center mb-3">
+          <div class="p-3 bg-slate-50 rounded-full border border-slate-100 text-slate-500 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </div>
+        </div>
+
+        <h2 class="text-base font-bold text-slate-800 text-center mb-5">Masuk ke Sistem</h2>
 
         <div v-if="authStore.error" class="mb-4 p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">
           {{ authStore.error }}
@@ -24,18 +32,18 @@
 
         <form @submit.prevent="handleLogin" class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Username</label>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Username & Gmail</label>
             <input
               id="login-username"
               v-model="username"
               type="text"
               class="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-retro-blue focus:border-retro-blue"
-              placeholder="admin"
+              placeholder="Username atau Gmail"
               required
             />
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Password</label>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Kata Sandi</label>
             <input
               id="login-password"
               v-model="password"
@@ -55,10 +63,11 @@
           </button>
         </form>
 
+        <!-- Version inside Card -->
+        <div class="mt-5 pt-3 border-t border-slate-100 text-center">
+          <p class="text-slate-400 text-[10px] tracking-wider font-mono">v1.0.0</p>
+        </div>
       </div>
-
-      <!-- Version Footer -->
-      <p class="text-center text-slate-500 text-[10px] mt-4 tracking-wider font-mono">Retro Komputer POS &middot; v1.0.0</p>
     </div>
   </div>
 </template>
