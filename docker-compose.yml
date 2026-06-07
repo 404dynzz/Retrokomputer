@@ -39,6 +39,7 @@ services:
       - CACHE_STORE=file
       - SESSION_DRIVER=file
     volumes:
+      - ./backend/.env:/var/www/html/.env
       - backend-storage:/var/www/html/public/storage
     networks:
       - retro-network
