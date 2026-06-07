@@ -39,7 +39,7 @@
                   @click="openStruk(p.struk)"
                   class="text-[10px] font-mono font-bold px-2 py-0.5 bg-retro-orange/10 text-retro-orange-dark border border-retro-orange/20 rounded hover:bg-retro-orange/20 transition-colors"
                 >
-                  [LIHAT BUKTI]
+                  Lihat Bukti
                 </button>
                 <span v-else class="text-slate-300 text-xs font-mono">-</span>
               </td>
@@ -132,14 +132,14 @@
               @click="openStruk(detailItem.struk)"
               class="text-xs font-mono font-bold px-3 py-1.5 bg-retro-orange text-white rounded hover:bg-retro-orange-dark transition-colors shadow-sm"
             >
-              [LIHAT STRUK]
+              Lihat Struk
             </button>
           </div>
           <button
             @click="detailItem = null"
             class="text-xs font-mono font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
           >
-            [TUTUP]
+            Tutup
           </button>
         </div>
       </div>
