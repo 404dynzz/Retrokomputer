@@ -23,6 +23,10 @@ import type {
   Notifikasi,
   ProfilKasir,
   ProfilKasirPayload,
+  ChartPenjualanHarian,
+  ChartPenjualanBulanan,
+  ChartMetodePembayaran,
+  ChartProdukTerlaris,
 } from '@/types'
 
 export const authService = {
@@ -96,6 +100,16 @@ export const laporanService = {
     api.get<StokStats>('/laporan/stok'),
   getRiwayatStok: (params?: FilterParams) =>
     api.get<RiwayatStok[]>('/riwayat-stok', { params }),
+
+  // Chart Analytics
+  getChartPenjualanHarian: (params?: { hari?: number }) =>
+    api.get<ChartPenjualanHarian[]>('/laporan/chart/penjualan-harian', { params }),
+  getChartPenjualanBulanan: (params?: { tahun?: number }) =>
+    api.get<ChartPenjualanBulanan[]>('/laporan/chart/penjualan-bulanan', { params }),
+  getChartMetodePembayaran: (params?: { periode?: string }) =>
+    api.get<ChartMetodePembayaran[]>('/laporan/chart/metode-pembayaran', { params }),
+  getChartProdukTerlaris: (params?: { limit?: number }) =>
+    api.get<ChartProdukTerlaris[]>('/laporan/chart/produk-terlaris', { params }),
 }
 
 export const settingService = {

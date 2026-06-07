@@ -2,18 +2,8 @@
   <div class="max-w-3xl mx-auto font-mono">
     <div class="bg-white rounded-lg border-2 border-retro-blue shadow-md">
       <!-- Title bar -->
-<<<<<<< HEAD
-      <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-        <span class="font-bold text-xs">TAMBAH PEMBELIAN BARANG</span>
-=======
       <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md">
-        <span class="font-bold text-xs">&gt;_ TAMBAH PEMBELIAN BARANG</span>
->>>>>>> 9dae7b0b55f4896754e1fc5711610062a4e2adee
-        <div class="flex gap-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-        </div>
+        <span class="font-bold text-xs">■ TAMBAH PEMBELIAN BARANG</span>
       </div>
 
       <div class="p-6 font-sans">
@@ -62,7 +52,7 @@
                 @click="addRow"
                 class="text-xs font-mono font-bold text-retro-blue hover:underline uppercase"
               >
-                [+ TAMBAH BARANG]
+                + TAMBAH BARANG
               </button>
             </div>
 
@@ -132,7 +122,7 @@
                       class="text-red-500 hover:text-red-700 text-xs font-bold font-mono"
                       title="Hapus baris"
                     >
-                      [X]
+                      X
                     </button>
                     <span v-else class="text-slate-300 text-xs">-</span>
                   </div>
@@ -148,16 +138,16 @@
           <div class="flex justify-end gap-2 pt-2">
             <router-link
               to="/pembelian"
-              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-55"
             >
-              [BATAL]
+              Batal
             </router-link>
             <button
               type="submit"
               :disabled="saving"
               class="text-xs font-mono font-bold px-4 py-2 rounded bg-retro-blue text-white hover:bg-blue-700 disabled:opacity-50 shadow-sm"
             >
-              [{{ saving ? 'MENYIMPAN...' : 'SIMPAN' }}]
+              {{ saving ? 'Menyimpan...' : 'Simpan' }}
             </button>
           </div>
         </form>
@@ -169,6 +159,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce'
 import type { Produk, PembelianPayload } from '@/types'
 import { produkService, pembelianService, supplierService } from '@/services'
 
@@ -203,9 +194,13 @@ function filterProducts(index: number) {
   )
 }
 
+const debouncedFilterProducts = debounce((index: number) => {
+  filterProducts(index)
+}, 300)
+
 function onSearchInput(index: number) {
   form.value.items[index].produk_id = ''
-  filterProducts(index)
+  debouncedFilterProducts(index)
 }
 
 function selectProduct(index: number, product: Produk) {

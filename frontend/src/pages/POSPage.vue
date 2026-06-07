@@ -9,7 +9,7 @@
         </div>
         <input
           ref="searchInput"
-          v-model="searchQuery"
+          v-model="tempSearchQuery"
           type="text"
           class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-sans"
           placeholder="Cari berdasarkan nama atau kode barang..."
@@ -70,7 +70,7 @@
             @click="cart.clearCart()"
             class="text-[10px] font-bold text-retro-yellow hover:underline uppercase transition-colors"
           >
-            [Kosongkan]
+            Kosongkan
           </button>
         </div>
 
@@ -183,6 +183,29 @@
             </div>
           </div>
 
+          <!-- Uang Diterima & Kembalian (Only for Tunai) -->
+          <div v-if="cart.metode_pembayaran === 'tunai'" class="space-y-2 bg-white p-3 rounded border-2 border-slate-200">
+            <div class="flex justify-between items-center">
+              <label class="text-[10px] font-bold text-slate-500 uppercase">UANG DITERIMA</label>
+              <span class="text-[9px] text-slate-400 font-sans">Nominal uang tunai</span>
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-1.5 text-xs font-bold text-slate-400">Rp</span>
+              <input
+                v-model="displayUangDiterima"
+                type="text"
+                class="w-full pl-8 pr-3 py-1.5 text-xs border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-mono bg-white font-bold"
+                placeholder="0"
+              />
+            </div>
+            <div v-if="uangDiterima !== null && (uangDiterima as any) !== ''" class="flex justify-between items-center text-xs font-bold font-mono pt-1">
+              <span class="text-slate-500">KEMBALIAN:</span>
+              <span :class="uangDiterima >= cart.grandTotal ? 'text-emerald-600' : 'text-red-500'">
+                {{ formatCurrency(kembalian) }}
+              </span>
+            </div>
+          </div>
+
           <!-- Checkout Button -->
           <button
             @click="processPayment"
@@ -201,19 +224,30 @@
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs">TRANSAKSI BERHASIL</span>
-          <button @click="showSuccess = false" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+          <button @click="closeSuccessModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 text-center">
-          <div class="w-12 h-12 rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center mx-auto mb-3 text-emerald-500 text-2xl font-bold">✓</div>
+          <div class="w-12 h-12 rounded-full bg-emerald-950 border-2 border-emerald-500 flex items-center justify-center mx-auto mb-3 text-emerald-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </div>
           <h3 class="text-sm font-bold text-slate-800 mb-1">Pembayaran Sukses!</h3>
           <p class="text-[10px] text-slate-400 font-bold uppercase font-mono mb-2">{{ lastCode }}</p>
           <p class="text-lg font-bold text-retro-orange-dark font-mono mb-4">{{ formatCurrency(lastTotal) }}</p>
-          <button
-            @click="showSuccess = false"
-            class="text-xs font-bold px-5 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors uppercase shadow-sm"
-          >
-            [Selesai]
-          </button>
+          <div class="flex flex-col gap-2">
+            <button
+              @click="printLastReceipt"
+              class="text-xs font-bold px-5 py-2 bg-retro-orange hover:bg-orange-600 text-white rounded transition-colors uppercase shadow-sm flex items-center justify-center gap-1.5"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.115-.465-1.12-1.08L6 18m11.66 0H6.34m.665-4.171V6.375c0-.621.504-1.125 1.125-1.125h8.25c.621 0 1.125.504 1.125 1.125v7.454M16.5 7.5h.008v.008H16.5V7.5z"/></svg>
+              CETAK NOTA
+            </button>
+            <button
+              @click="closeSuccessModal"
+              class="text-xs font-bold px-5 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors uppercase shadow-sm"
+            >
+              Selesai
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -221,19 +255,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import type { Produk } from '@/types'
-import { produkService, transaksiService } from '@/services'
+import { produkService, transaksiService, settingService } from '@/services'
+import { printReceipt } from '@/utils/printReceipt'
+import { customDialog } from '@/utils/dialog'
 
 const cart = useCartStore()
 const authStore = useAuthStore()
 const router = useRouter()
 
+const tempSearchQuery = ref('')
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement>()
+
+const updateSearchQuery = debounce((val: string) => {
+  searchQuery.value = val
+}, 300)
+
+watch(tempSearchQuery, (newVal) => {
+  updateSearchQuery(newVal)
+})
 const showSuccess = ref(false)
 const processing = ref(false)
 const lastCode = ref('')
@@ -244,6 +290,33 @@ const namaPembeli = ref('')
 
 const editingItemId = ref<number | null>(null)
 const editQtyValue = ref<number>(0)
+
+// Cash printing states
+const uangDiterima = ref<number | null>(null)
+const lastTransaksi = ref<any | null>(null)
+const logoText = ref('Retro Komputer')
+
+const kembalian = computed(() => {
+  if (!uangDiterima.value) return 0
+  return Math.max(0, uangDiterima.value - cart.grandTotal)
+})
+
+const displayUangDiterima = computed({
+  get() {
+    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') return ''
+    return new Intl.NumberFormat('id-ID').format(uangDiterima.value)
+  },
+  set(val: string) {
+    const clean = val.replace(/\D/g, '')
+    uangDiterima.value = clean ? parseInt(clean, 10) : null
+  }
+})
+
+watch(() => cart.metode_pembayaran, (newVal) => {
+  if (newVal !== 'tunai') {
+    uangDiterima.value = null
+  }
+})
 
 const methods = [
   { value: 'tunai', label: 'Tunai' },
@@ -256,13 +329,23 @@ onMounted(async () => {
     try {
       await authStore.fetchActiveKasirProfile()
       if (!authStore.activeKasirProfile) {
-        alert('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
+        customDialog.warning('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
         router.push('/profil-kasir')
         return
       }
     } catch {
       // ignore
     }
+  }
+
+  // Fetch active store settings to get logo_text for receipt
+  try {
+    const settingRes = await settingService.getActive()
+    if (settingRes.data && settingRes.data.logo_text) {
+      logoText.value = settingRes.data.logo_text
+    }
+  } catch {
+    // ignore
   }
 
   try {
@@ -282,7 +365,7 @@ function addToCart(p: Produk) {
   try {
     cart.addItem(p)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   }
 }
 
@@ -290,7 +373,7 @@ function updateCartQty(produkId: number, qty: number) {
   try {
     cart.updateQty(produkId, qty)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   }
 }
 
@@ -312,7 +395,7 @@ function saveQty(item: any) {
 
   const val = Number(editQtyValue.value)
   if (isNaN(val) || val <= 0) {
-    alert('Jumlah barang harus minimal 1.')
+    customDialog.warning('Jumlah barang harus minimal 1.')
     editingItemId.value = null
     return
   }
@@ -320,7 +403,7 @@ function saveQty(item: any) {
   try {
     cart.updateQty(item.produk.id, val)
   } catch (e: any) {
-    alert(e.message)
+    customDialog.warning(e.message)
   } finally {
     editingItemId.value = null
   }
@@ -328,6 +411,19 @@ function saveQty(item: any) {
 
 async function processPayment() {
   if (cart.items.length === 0) return
+
+  // Validate cash amount if payment method is Tunai
+  if (cart.metode_pembayaran === 'tunai') {
+    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') {
+      customDialog.warning('Harap masukkan nominal uang yang diterima!')
+      return
+    }
+    if (uangDiterima.value < cart.grandTotal) {
+      customDialog.warning('Nominal uang diterima kurang dari total pembayaran!')
+      return
+    }
+  }
+
   processing.value = true
   try {
     const res = await transaksiService.create({
@@ -336,6 +432,8 @@ async function processPayment() {
     })
     lastCode.value = res.data.kode_transaksi
     lastTotal.value = res.data.total
+    lastTransaksi.value = res.data
+
     // Update local stock
     cart.items.forEach(item => {
       const prod = products.value.find(p => p.id === item.produk.id)
@@ -345,10 +443,22 @@ async function processPayment() {
     namaPembeli.value = ''
     showSuccess.value = true
   } catch (e: any) {
-    alert(e.response?.data?.message || 'Gagal memproses transaksi')
+    customDialog.error(e.response?.data?.message || 'Gagal memproses transaksi')
   } finally {
     processing.value = false
   }
+}
+
+function printLastReceipt() {
+  if (lastTransaksi.value) {
+    printReceipt(lastTransaksi.value, uangDiterima.value, logoText.value)
+  }
+}
+
+function closeSuccessModal() {
+  showSuccess.value = false
+  uangDiterima.value = null
+  lastTransaksi.value = null
 }
 
 function formatCurrency(v: number) {

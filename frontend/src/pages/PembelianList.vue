@@ -39,7 +39,7 @@
                   @click="openStruk(p.struk)"
                   class="text-[10px] font-mono font-bold px-2 py-0.5 bg-retro-orange/10 text-retro-orange-dark border border-retro-orange/20 rounded hover:bg-retro-orange/20 transition-colors"
                 >
-                  [LIHAT BUKTI]
+                  Lihat Bukti
                 </button>
                 <span v-else class="text-slate-300 text-xs font-mono">-</span>
               </td>
@@ -62,31 +62,7 @@
       </div>
     </div>
 
-<<<<<<< HEAD
-    <!-- Receipt Lightbox Modal -->
-    <div v-if="activeStruk" class="fixed inset-0 bg-retro-dark/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" @click="activeStruk = null">
-      <div class="bg-white border-2 border-retro-blue rounded-lg max-w-lg w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
-        <!-- Title bar -->
-        <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">BUKTI NOTA / STRUK</span>
-          <button @click="activeStruk = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
-        </div>
-        <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
-          <img :src="activeStruk" class="max-h-[70vh] object-contain rounded border-2 border-retro-orange shadow-lg" alt="Bukti Struk" />
-        </div>
-        <div class="bg-slate-50 px-4 py-2.5 flex justify-end">
-          <button
-            @click="activeStruk = null"
-            class="text-xs font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
-          >
-            TUTUP
-          </button>
-        </div>
-      </div>
-    </div>
 
-=======
->>>>>>> 9dae7b0b55f4896754e1fc5711610062a4e2adee
     <!-- Purchase Detail Modal -->
     <div v-if="detailItem" class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 1000;" @click="detailItem = null">
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-xl w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
@@ -156,14 +132,14 @@
               @click="openStruk(detailItem.struk)"
               class="text-xs font-mono font-bold px-3 py-1.5 bg-retro-orange text-white rounded hover:bg-retro-orange-dark transition-colors shadow-sm"
             >
-              [LIHAT STRUK]
+              Lihat Struk
             </button>
           </div>
           <button
             @click="detailItem = null"
             class="text-xs font-mono font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
           >
-            [TUTUP]
+            Tutup
           </button>
         </div>
       </div>
@@ -174,7 +150,7 @@
       <div class="bg-white border-2 border-retro-blue rounded-lg max-w-lg w-full overflow-hidden shadow-2xl animate-slideUp font-mono" @click.stop>
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ BUKTI NOTA / STRUK</span>
+          <span class="font-bold text-xs">■ BUKTI NOTA / STRUK</span>
           <button @click="activeStruk = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
@@ -197,6 +173,7 @@
 import { ref, onMounted } from 'vue'
 import type { Pembelian } from '@/types'
 import { pembelianService } from '@/services'
+import { customDialog } from '@/utils/dialog'
 
 const loading = ref(true)
 const list = ref<Pembelian[]>([])
@@ -223,7 +200,7 @@ async function viewDetail(id: number) {
     const res = await pembelianService.getById(id)
     detailItem.value = res.data
   } catch (err) {
-    alert('Gagal mengambil detail pembelian')
+    customDialog.error('Gagal mengambil detail pembelian')
   }
 }
 
@@ -233,6 +210,9 @@ function formatCurrency(v: number) {
 
 function getStrukUrl(url: string | null) {
   if (!url) return ''
+  if (url.startsWith('http://localhost:8000/')) {
+    return url.replace('http://localhost:8000/', '/')
+  }
   if (url.startsWith('http://localhost/')) {
     return url.replace('http://localhost/', '/')
   }

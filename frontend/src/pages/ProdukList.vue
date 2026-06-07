@@ -15,7 +15,7 @@
     <div class="bg-white rounded-lg border-2 border-retro-blue p-3 flex flex-col md:flex-row gap-3">
       <div class="flex-1">
         <input
-          v-model="search"
+          v-model="tempSearch"
           class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-sans"
           placeholder="Cari berdasarkan nama atau kode produk..."
         />
@@ -129,11 +129,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { debounce } from '@/utils/debounce'
 import type { Produk } from '@/types'
 import { produkService } from '@/services'
+import { customDialog } from '@/utils/dialog'
 
+const tempSearch = ref('')
 const search = ref('')
+
+const updateSearch = debounce((val: string) => {
+  search.value = val
+}, 300)
+
+watch(tempSearch, (newVal) => {
+  updateSearch(newVal)
+})
 const selectedCategory = ref('')
 const loading = ref(true)
 const produkList = ref<Produk[]>([])
@@ -173,7 +184,7 @@ async function doDelete() {
   try {
     await produkService.delete(deleteTarget.value.id)
     produkList.value = produkList.value.filter(p => p.id !== deleteTarget.value!.id)
-  } catch { alert('Gagal menghapus produk') }
+  } catch { customDialog.error('Gagal menghapus produk') }
   deleteTarget.value = null
 }
 

@@ -185,4 +185,565 @@ class LaporanController extends Controller
 
         return response()->json($query->get());
     }
+
+    /**
+     * Chart: Penjualan harian (30 hari terakhir)
+     * GET /api/laporan/chart/penjualan-harian
+     */
+    public function chartPenjualanHarian(Request $request)
+    {
+        if (!in_array($request->user()->role, ['owner', 'admin'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $hari = intval($request->query('hari', 30));
+        if ($hari <= 0) $hari = 30;
+
+        $startDate = Carbon::now()->subDays($hari - 1)->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
+
+        // Get actual sales data grouped by date
+        $salesData = Transaksi::select(
+                DB::raw('DATE(created_at) as tanggal'),
+                DB::raw('SUM(total) as total'),
+                DB::raw('COUNT(*) as jumlah_transaksi')
+            )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->orderBy('tanggal')
+            ->get()
+            ->keyBy('tanggal');
+
+        // Fill in missing dates with zero
+        $result = [];
+        $currentDate = $startDate->copy();
+        while ($currentDate <= $endDate) {
+            $dateStr = $currentDate->toDateString();
+            $result[] = [
+                'tanggal' => $dateStr,
+                'total' => (float) ($salesData[$dateStr]->total ?? 0),
+                'jumlah_transaksi' => (int) ($salesData[$dateStr]->jumlah_transaksi ?? 0),
+            ];
+            $currentDate->addDay();
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * Chart: Penjualan bulanan (12 bulan terakhir)
+     * GET /api/laporan/chart/penjualan-bulanan
+     */
+    public function chartPenjualanBulanan(Request $request)
+    {
+        if (!in_array($request->user()->role, ['owner', 'admin'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $result = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+
+            $penjualan = Transaksi::whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->sum('total');
+
+            $pembelian = Pembelian::whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->sum('total');
+
+            $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
+                ->whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->with('produk')
+                ->get()
+                ->sum(function ($item) {
+                    return $item->qty * ($item->produk->harga_beli ?? 0);
+                });
+
+            $result[] = [
+                'bulan' => $date->translatedFormat('M Y'),
+                'bulan_num' => $month,
+                'tahun' => $year,
+                'total_penjualan' => (float) $penjualan,
+                'total_pembelian' => (float) $pembelian,
+                'laba_bersih' => (float) ($penjualan - $pembelian - $kerugian),
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * Chart: Metode pembayaran (bulan ini)
+     * GET /api/laporan/chart/metode-pembayaran
+     */
+    public function chartMetodePembayaran(Request $request)
+    {
+        if (!in_array($request->user()->role, ['owner', 'admin'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $periode = $request->query('periode', 'bulan');
+        $query = Transaksi::select(
+            'metode_pembayaran',
+            DB::raw('COUNT(*) as jumlah_transaksi'),
+            DB::raw('SUM(total) as total_nominal')
+        );
+
+        if ($periode === 'minggu') {
+            $query->where('created_at', '>=', Carbon::now()->subDays(6)->startOfDay());
+        } elseif ($periode === '3bulan') {
+            $query->where('created_at', '>=', Carbon::now()->subMonths(2)->startOfMonth()->startOfDay());
+        } else {
+            // default: bulan ini
+            $query->whereMonth('created_at', Carbon::now()->month)
+                  ->whereYear('created_at', Carbon::now()->year);
+        }
+
+        $data = $query->groupBy('metode_pembayaran')->get();
+
+        return response()->json($data);
+    }
+
+    /**
+     * Chart: Top 5 produk terlaris (bulan ini)
+     * GET /api/laporan/chart/produk-terlaris
+     */
+    public function chartProdukTerlaris(Request $request)
+    {
+        if (!in_array($request->user()->role, ['owner', 'admin'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $limit = intval($request->query('limit', 5));
+        if ($limit <= 0) $limit = 5;
+
+        $now = Carbon::now();
+        $lastMonth = Carbon::now()->subMonth();
+
+        $data = DB::table('transaksi_details')
+            ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+            ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+            ->select(
+                'produks.id',
+                'produks.nama_produk',
+                DB::raw('SUM(transaksi_details.qty) as total_terjual'),
+                DB::raw('SUM(transaksi_details.subtotal) as total_pendapatan')
+            )
+            ->whereMonth('transaksis.created_at', $now->month)
+            ->whereYear('transaksis.created_at', $now->year)
+            ->groupBy('produks.id', 'produks.nama_produk')
+            ->orderByDesc('total_terjual')
+            ->limit($limit)
+            ->get();
+
+        foreach ($data as $item) {
+            $lastMonthQty = DB::table('transaksi_details')
+                ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                ->where('transaksi_details.produk_id', $item->id)
+                ->whereMonth('transaksis.created_at', $lastMonth->month)
+                ->whereYear('transaksis.created_at', $lastMonth->year)
+                ->sum('transaksi_details.qty');
+
+            $item->total_terjual_bulan_lalu = (int) $lastMonthQty;
+        }
+
+        return response()->json($data);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $tokenString = $request->query('token');
+        if (!$tokenString) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $token = \Laravel\Sanctum\PersonalAccessToken::findToken($tokenString);
+        if (!$token || !$token->tokenable) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $user = $token->tokenable;
+        if (!in_array($user->role, ['owner', 'admin'])) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $type = $request->query('type');
+        $headers = [];
+        $rows = [];
+        $filename = '';
+        $title = '';
+        $currencyColumns = []; // columns that should be formatted as IDR currency (0-indexed)
+
+        switch ($type) {
+            case 'penjualan-harian':
+                $hari = intval($request->query('hari', 30));
+                if ($hari <= 0) $hari = 30;
+
+                $title = 'Laporan Penjualan Harian';
+                $filename = 'Laporan_Penjualan_Harian_' . Carbon::now()->format('Ymd_His') . '.xlsx';
+                
+                $startDate = Carbon::now()->subDays($hari - 1)->startOfDay();
+                $endDate = Carbon::now()->endOfDay();
+
+                $salesData = Transaksi::select(
+                        DB::raw('DATE(created_at) as tanggal'),
+                        DB::raw('SUM(total) as total'),
+                        DB::raw('COUNT(*) as jumlah_transaksi')
+                    )
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->groupBy(DB::raw('DATE(created_at)'))
+                    ->orderBy('tanggal')
+                    ->get()
+                    ->keyBy('tanggal');
+
+                $headers = ['No', 'Tanggal', 'Total Penjualan (IDR)', 'Jumlah Transaksi'];
+                $currencyColumns = [2];
+                $currentDate = $startDate->copy();
+                $no = 1;
+                while ($currentDate <= $endDate) {
+                    $dateStr = $currentDate->toDateString();
+                    $dateFormatted = $currentDate->translatedFormat('d F Y');
+                    $total = (float) ($salesData[$dateStr]->total ?? 0);
+                    $jumlahTrx = (int) ($salesData[$dateStr]->jumlah_transaksi ?? 0);
+                    
+                    $rows[] = [$no++, $dateFormatted, $total, $jumlahTrx];
+                    $currentDate->addDay();
+                }
+                break;
+
+            case 'penjualan-bulanan':
+            case 'laba-rugi-bulanan':
+                $year = $request->query('tahun');
+                $isLabaRugi = ($type === 'laba-rugi-bulanan');
+                $title = $isLabaRugi ? 'Laporan Laba Kotor Bulanan' : 'Laporan Penjualan Bulanan';
+                $filename = ($isLabaRugi ? 'Laporan_Laba_Kotor_Bulanan_' : 'Laporan_Penjualan_Bulanan_') . ($year ? $year . '_' : '') . Carbon::now()->format('Ymd_His') . '.xlsx';
+
+                $headers = ['No', 'Bulan', 'Tahun', 'Total Penjualan (IDR)', 'Total Pembelian (IDR)', 'Laba Bersih (IDR)'];
+                $currencyColumns = [3, 4, 5];
+                $no = 1;
+
+                if ($year) {
+                    $yearVal = intval($year);
+                    for ($month = 1; $month <= 12; $month++) {
+                        $date = Carbon::create($yearVal, $month, 1);
+                        
+                        $penjualan = Transaksi::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->sum('total');
+
+                        $pembelian = Pembelian::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->sum('total');
+
+                        $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
+                            ->whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->with('produk')
+                            ->get()
+                            ->sum(function ($item) {
+                                return $item->qty * ($item->produk->harga_beli ?? 0);
+                            });
+
+                        $rows[] = [
+                            $no++,
+                            $date->translatedFormat('F'),
+                            $yearVal,
+                            (float) $penjualan,
+                            (float) $pembelian,
+                            (float) ($penjualan - $pembelian - $kerugian)
+                        ];
+                    }
+                } else {
+                    for ($i = 11; $i >= 0; $i--) {
+                        $date = Carbon::now()->subMonths($i);
+                        $month = $date->month;
+                        $yearVal = $date->year;
+
+                        $penjualan = Transaksi::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->sum('total');
+
+                        $pembelian = Pembelian::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->sum('total');
+
+                        $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
+                            ->whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->with('produk')
+                            ->get()
+                            ->sum(function ($item) {
+                                return $item->qty * ($item->produk->harga_beli ?? 0);
+                            });
+
+                        $rows[] = [
+                            $no++,
+                            $date->translatedFormat('F'),
+                            $yearVal,
+                            (float) $penjualan,
+                            (float) $pembelian,
+                            (float) ($penjualan - $pembelian - $kerugian)
+                        ];
+                    }
+                }
+                break;
+
+            case 'metode-pembayaran':
+                $title = 'Laporan Metode Pembayaran';
+                $filename = 'Laporan_Metode_Pembayaran_' . Carbon::now()->format('Ymd_His') . '.xlsx';
+
+                $periode = $request->query('periode', 'bulan');
+                $query = Transaksi::select(
+                    'metode_pembayaran',
+                    DB::raw('COUNT(*) as jumlah_transaksi'),
+                    DB::raw('SUM(total) as total_nominal')
+                );
+
+                if ($periode === 'minggu') {
+                    $query->where('created_at', '>=', Carbon::now()->subDays(6)->startOfDay());
+                } elseif ($periode === '3bulan') {
+                    $query->where('created_at', '>=', Carbon::now()->subMonths(2)->startOfMonth()->startOfDay());
+                } else {
+                    $query->whereMonth('created_at', Carbon::now()->month)
+                          ->whereYear('created_at', Carbon::now()->year);
+                }
+
+                $data = $query->groupBy('metode_pembayaran')->get();
+
+                $headers = ['No', 'Metode Pembayaran', 'Jumlah Transaksi', 'Total Nominal (IDR)'];
+                $currencyColumns = [3];
+                $no = 1;
+                foreach ($data as $item) {
+                    $rows[] = [
+                        $no++,
+                        ucfirst($item->metode_pembayaran),
+                        $item->jumlah_transaksi,
+                        (float) $item->total_nominal
+                    ];
+                }
+                break;
+
+            case 'produk-terlaris':
+                $title = 'Laporan Produk Terlaris';
+                $filename = 'Laporan_Produk_Terlaris_' . Carbon::now()->format('Ymd_His') . '.xlsx';
+
+                $limit = intval($request->query('limit', 5));
+                if ($limit <= 0) $limit = 5;
+
+                $now = Carbon::now();
+                $lastMonth = Carbon::now()->subMonth();
+
+                $data = DB::table('transaksi_details')
+                    ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                    ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+                    ->select(
+                        'produks.id',
+                        'produks.nama_produk',
+                        DB::raw('SUM(transaksi_details.qty) as total_terjual'),
+                        DB::raw('SUM(transaksi_details.subtotal) as total_pendapatan')
+                    )
+                    ->whereMonth('transaksis.created_at', $now->month)
+                    ->whereYear('transaksis.created_at', $now->year)
+                    ->groupBy('produks.id', 'produks.nama_produk')
+                    ->orderByDesc('total_terjual')
+                    ->limit($limit)
+                    ->get();
+
+                $headers = [
+                    'No',
+                    'Nama Produk',
+                    'Terjual Bulan Ini',
+                    'Terjual Bulan Lalu',
+                    'Perubahan (%)',
+                    'Pendapatan Bulan Ini (IDR)'
+                ];
+                $currencyColumns = [5];
+                $no = 1;
+                foreach ($data as $item) {
+                    $lastMonthQty = DB::table('transaksi_details')
+                        ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                        ->where('transaksi_details.produk_id', $item->id)
+                        ->whereMonth('transaksis.created_at', $lastMonth->month)
+                        ->whereYear('transaksis.created_at', $lastMonth->year)
+                        ->sum('transaksi_details.qty');
+
+                    $totalTerjualBulanLalu = (int) $lastMonthQty;
+                    $diffPctLabel = 'Baru';
+                    if ($totalTerjualBulanLalu > 0) {
+                        $diff = (($item->total_terjual - $totalTerjualBulanLalu) / $totalTerjualBulanLalu) * 100;
+                        $diffPctLabel = ($diff >= 0 ? '+' : '') . round($diff, 1) . '%';
+                    }
+
+                    $rows[] = [
+                        $no++,
+                        $item->nama_produk,
+                        $item->total_terjual,
+                        $totalTerjualBulanLalu,
+                        $diffPctLabel,
+                        (float) $item->total_pendapatan
+                    ];
+                }
+                break;
+
+            default:
+                return response()->json(['message' => 'Invalid export type'], 400);
+        }
+
+        return $this->generateExcelResponse($title, $headers, $rows, $filename, $currencyColumns);
+    }
+
+    /**
+     * Generate a styled Excel (.xlsx) response using PhpSpreadsheet.
+     */
+    private function generateExcelResponse(string $title, array $headers, array $rows, string $filename, array $currencyColumns = [])
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle(mb_substr($title, 0, 31)); // Excel max sheet title = 31 chars
+
+        // ── Title Row ──
+        $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($headers));
+        $sheet->mergeCells("A1:{$lastCol}1");
+        $sheet->setCellValue('A1', strtoupper($title));
+        $sheet->getStyle('A1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+                'color' => ['rgb' => 'FFFFFF'],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '0B0F19'],
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+        $sheet->getRowDimension(1)->setRowHeight(36);
+
+        // ── Subtitle Row ──
+        $sheet->mergeCells("A2:{$lastCol}2");
+        $sheet->setCellValue('A2', 'Retro Komputer POS — Dicetak: ' . Carbon::now()->translatedFormat('d F Y, H:i'));
+        $sheet->getStyle('A2')->applyFromArray([
+            'font' => [
+                'italic' => true,
+                'size' => 10,
+                'color' => ['rgb' => '94A3B8'],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '131926'],
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+        ]);
+        $sheet->getRowDimension(2)->setRowHeight(22);
+
+        // ── Header Row (row 4) ──
+        $headerRow = 4;
+        foreach ($headers as $colIdx => $header) {
+            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx + 1);
+            $sheet->setCellValue("{$colLetter}{$headerRow}", $header);
+        }
+        $headerRange = "A{$headerRow}:{$lastCol}{$headerRow}";
+        $sheet->getStyle($headerRange)->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 11,
+                'color' => ['rgb' => '000000'],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'FF7A00'], // Retro Orange
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => 'CC6200'],
+                ],
+            ],
+        ]);
+        $sheet->getRowDimension($headerRow)->setRowHeight(28);
+
+        // ── Data Rows ──
+        $dataStartRow = $headerRow + 1;
+        foreach ($rows as $rowIdx => $row) {
+            $currentRow = $dataStartRow + $rowIdx;
+            foreach ($row as $colIdx => $value) {
+                $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx + 1);
+                $sheet->setCellValue("{$colLetter}{$currentRow}", $value);
+            }
+
+            // Alternating row colors for readability
+            $bgColor = ($rowIdx % 2 === 0) ? 'F8FAFC' : 'EDF2F7';
+            $dataRange = "A{$currentRow}:{$lastCol}{$currentRow}";
+            $sheet->getStyle($dataRange)->applyFromArray([
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => $bgColor],
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['rgb' => 'E2E8F0'],
+                    ],
+                ],
+                'alignment' => [
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+            ]);
+        }
+
+        // ── Currency Formatting ──
+        $idrFormat = '#,##0';
+        foreach ($currencyColumns as $colIdx) {
+            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx + 1);
+            $lastDataRow = $dataStartRow + count($rows) - 1;
+            if ($lastDataRow >= $dataStartRow) {
+                $sheet->getStyle("{$colLetter}{$dataStartRow}:{$colLetter}{$lastDataRow}")
+                    ->getNumberFormat()
+                    ->setFormatCode($idrFormat);
+            }
+        }
+
+        // ── Auto-width columns ──
+        foreach (range(1, count($headers)) as $colNum) {
+            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colNum);
+            $sheet->getColumnDimension($colLetter)->setAutoSize(true);
+        }
+
+        // ── Freeze pane below headers ──
+        $sheet->freezePane("A" . ($headerRow + 1));
+
+        // ── Auto-filter ──
+        $sheet->setAutoFilter("{$headerRange}");
+
+        // ── Write to output ──
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+
+        return response($content)
+            ->header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->header('Cache-Control', 'max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
 }

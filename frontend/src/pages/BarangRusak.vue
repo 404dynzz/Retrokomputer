@@ -1,58 +1,64 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     <!-- LEFT PANEL: Form for Admins, Infographic Analysis for Owner -->
     <div class="lg:col-span-1 self-start">
       
       <!-- OWNER INFOGRAPHIC PANEL -->
-      <div v-if="isOwner" class="bg-white rounded-lg border-2 border-retro-orange overflow-hidden shadow-sm space-y-0">
+      <div v-if="isOwner" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
         <!-- Title Bar -->
-        <div class="bg-retro-orange text-white px-3 py-1.5 text-xs font-bold flex justify-between">
-          <span>ANALISIS KERUGIAN</span>
-          <span>[LOSS]</span>
+        <div class="px-5 py-3 flex justify-between items-center" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <span class="text-xs font-semibold tracking-wide" style="color: #94a3b8;">Analisis Kerugian</span>
+          <span class="text-[10px] font-medium px-2 py-0.5 rounded-full" style="background: rgba(244, 63, 94, 0.08); color: #fb7185;">Loss</span>
         </div>
         
-        <div class="p-5 space-y-5 font-sans">
+        <div class="p-5 space-y-5">
           <!-- Total Financial Loss Callout -->
-          <div class="space-y-1 bg-red-50/50 p-4 border border-red-200 rounded text-center">
-            <span class="block text-[10px] font-bold text-red-500 uppercase tracking-widest font-mono">Total Kerugian Finansial</span>
-            <div class="text-xl font-black text-red-600 font-mono tracking-tight">
+          <div class="p-4 rounded-lg text-center" style="background: rgba(244, 63, 94, 0.06); border: 1px solid rgba(244, 63, 94, 0.1);">
+            <span class="block text-[10px] font-semibold uppercase tracking-widest" style="color: #fb7185;">Total Kerugian Finansial</span>
+            <div class="text-xl font-bold tracking-tight mt-1" style="color: #fda4af;">
               Rp {{ formatRupiah(totalFinancialLoss) }}
             </div>
-            <span class="block text-[9px] text-slate-400 italic font-mono">Berdasarkan Harga Beli Terakhir</span>
+            <span class="block text-[9px] mt-1" style="color: #475569;">Berdasarkan Harga Beli Terakhir</span>
           </div>
 
           <!-- Breakdown metrics -->
-          <div class="space-y-3 font-mono text-xs">
-            <div class="flex justify-between border-b border-slate-100 pb-1.5">
-              <span class="text-amber-650 font-bold uppercase">■ BARANG RUSAK</span>
-              <div class="text-right font-mono">
-                <span class="font-bold text-slate-800">{{ rusakQty }} pcs</span>
-                <span class="block text-[10px] text-slate-400">Rp {{ formatRupiah(rusakLoss) }}</span>
+          <div class="space-y-3 text-xs">
+            <div class="flex justify-between items-center pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <span class="font-semibold uppercase tracking-wide flex items-center gap-2" style="color: #cbd5e1;">
+                <span class="w-2 h-2 rounded-full" style="background: #c084fc;"></span>
+                Barang Rusak
+              </span>
+              <div class="text-right">
+                <span class="font-bold" style="color: #e2e8f0;">{{ rusakQty }} pcs</span>
+                <span class="block text-[10px]" style="color: #475569;">Rp {{ formatRupiah(rusakLoss) }}</span>
               </div>
             </div>
-            <div class="flex justify-between border-b border-slate-100 pb-1.5">
-              <span class="text-red-600 font-bold uppercase">■ BARANG HILANG</span>
-              <div class="text-right font-mono">
-                <span class="font-bold text-slate-800">{{ hilangQty }} pcs</span>
-                <span class="block text-[10px] text-slate-400">Rp {{ formatRupiah(hilangLoss) }}</span>
+            <div class="flex justify-between items-center pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <span class="font-semibold uppercase tracking-wide flex items-center gap-2" style="color: #cbd5e1;">
+                <span class="w-2 h-2 rounded-full" style="background: #fb7185;"></span>
+                Barang Hilang
+              </span>
+              <div class="text-right">
+                <span class="font-bold" style="color: #e2e8f0;">{{ hilangQty }} pcs</span>
+                <span class="block text-[10px]" style="color: #475569;">Rp {{ formatRupiah(hilangLoss) }}</span>
               </div>
             </div>
           </div>
 
           <!-- Ratio Visual Bar -->
           <div class="space-y-2">
-            <div class="flex justify-between text-[10px] font-bold font-mono">
-              <span class="text-amber-600">RUSAK ({{ ratioRusak }}%)</span>
-              <span class="text-red-600">HILANG ({{ ratioHilang }}%)</span>
+            <div class="flex justify-between text-[10px] font-semibold">
+              <span style="color: #c084fc;">Rusak ({{ ratioRusak }}%)</span>
+              <span style="color: #fb7185;">Hilang ({{ ratioHilang }}%)</span>
             </div>
-            <div class="relative w-full h-3 bg-slate-100 rounded overflow-hidden flex border border-slate-200">
+            <div class="relative w-full h-2 rounded-full overflow-hidden flex" style="background: rgba(255,255,255,0.04);">
               <div
-                class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500"
-                :style="{ width: `${ratioRusak}%` }"
+                class="h-full rounded-l-full transition-all duration-700 ease-out"
+                :style="{ width: `${ratioRusak}%`, background: 'linear-gradient(90deg, rgba(192, 132, 252, 0.6) 0%, rgba(168, 85, 247, 0.4) 100%)' }"
               ></div>
               <div
-                class="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                :style="{ width: `${ratioHilang}%` }"
+                class="h-full rounded-r-full transition-all duration-700 ease-out"
+                :style="{ width: `${ratioHilang}%`, background: 'linear-gradient(90deg, rgba(244, 63, 94, 0.5) 0%, rgba(251, 113, 133, 0.3) 100%)' }"
               ></div>
             </div>
           </div>
@@ -60,19 +66,20 @@
       </div>
 
       <!-- ADMIN RECORD FORM -->
-      <div v-else class="bg-white rounded-lg border border-slate-200 p-5 space-y-4 shadow-sm">
-        <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-          <span class="text-retro-orange text-lg">■</span>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Catat Kerugian Inventaris</h3>
+      <div v-else style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
+        <div class="px-5 py-3 flex items-center gap-2" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div class="w-1 h-5 rounded-full" style="background: linear-gradient(to bottom, #c084fc, #818cf8);"></div>
+          <h3 class="text-xs font-semibold uppercase tracking-wide" style="color: #94a3b8;">Catat Kerugian Inventaris</h3>
         </div>
 
-        <form @submit.prevent="submitRecord" class="space-y-4">
+        <form @submit.prevent="submitRecord" class="p-5 space-y-4">
           <!-- Product Dropdown -->
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Produk</label>
+            <label class="block text-[11px] font-semibold mb-1.5" style="color: #64748b;">Pilih Produk</label>
             <select
               v-model="form.produk_id"
-              class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded bg-white focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              class="w-full px-3 py-2 text-xs rounded-lg"
+              style="background: rgba(0,0,0,0.2); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.06);"
               required
             >
               <option value="" disabled>-- Pilih Produk --</option>
@@ -84,14 +91,14 @@
 
           <!-- Category -->
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Laporan</label>
+            <label class="block text-[11px] font-semibold mb-1.5" style="color: #64748b;">Kategori Laporan</label>
             <div class="flex gap-4">
-              <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
-                <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
+              <label class="inline-flex items-center text-xs cursor-pointer" style="color: #cbd5e1;">
+                <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5" style="accent-color: #818cf8;" />
                 Barang Rusak
               </label>
-              <label class="inline-flex items-center text-xs text-slate-700 cursor-pointer">
-                <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5 text-retro-orange focus:ring-retro-orange" />
+              <label class="inline-flex items-center text-xs cursor-pointer" style="color: #cbd5e1;">
+                <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5" style="accent-color: #818cf8;" />
                 Barang Hilang
               </label>
             </div>
@@ -99,12 +106,13 @@
 
           <!-- Quantity -->
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah (Qty)</label>
+            <label class="block text-[11px] font-semibold mb-1.5" style="color: #64748b;">Jumlah (Qty)</label>
             <input
               v-model.number="form.qty"
               type="number"
               min="1"
-              class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              class="w-full px-3 py-2 text-xs rounded-lg"
+              style="background: rgba(0,0,0,0.2); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.06);"
               placeholder="1"
               required
             />
@@ -112,30 +120,35 @@
 
           <!-- Description -->
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Alasan</label>
+            <label class="block text-[11px] font-semibold mb-1.5" style="color: #64748b;">Keterangan / Alasan</label>
             <textarea
               v-model="form.keterangan"
               rows="3"
-              class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-retro-orange focus:border-retro-orange"
+              class="w-full px-3 py-2 text-xs rounded-lg"
+              style="background: rgba(0,0,0,0.2); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.06);"
               placeholder="Tulis alasan atau kronologi detail..."
             ></textarea>
           </div>
 
           <!-- Bukti Fisik File Upload (Damaged goods only) -->
           <div v-if="form.kategori === 'rusak'">
-            <label class="block text-xs font-semibold text-slate-650 mb-1">Bukti Fisik Kerusakan (Foto)</label>
+            <label class="block text-[11px] font-semibold mb-1.5" style="color: #64748b;">Bukti Fisik Kerusakan (Foto)</label>
             <input
               type="file"
               accept="image/*"
               @change="handleFileChange"
-              class="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-retro-orange/10 file:text-retro-orange hover:file:bg-retro-orange/20 cursor-pointer"
+              class="w-full text-xs cursor-pointer"
+              style="color: #64748b;"
             />
           </div>
 
           <button
             :disabled="submitting || products.length === 0"
             type="submit"
-            class="w-full py-2 text-xs font-bold text-white bg-retro-orange hover:bg-orange-600 rounded transition-colors shadow-sm disabled:opacity-50"
+            class="w-full py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 disabled:opacity-40"
+            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(129, 140, 248, 0.2) 100%); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.2);"
+            @mouseenter="($event.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(129, 140, 248, 0.3) 100%)'"
+            @mouseleave="($event.currentTarget as HTMLElement).style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(129, 140, 248, 0.2) 100%)'"
           >
             {{ submitting ? 'Memproses...' : 'Catat Kerugian' }}
           </button>
@@ -145,63 +158,75 @@
     </div>
 
     <!-- History Panel -->
-    <div class="lg:col-span-2 bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm flex flex-col">
-      <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Riwayat Penyesuaian Kerugian</h3>
-        <span class="text-[10px] text-slate-400 font-mono">Real-time inventory loss logs</span>
+    <div class="lg:col-span-2 flex flex-col" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
+      <div class="px-5 py-3 flex justify-between items-center" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+        <h3 class="text-xs font-semibold uppercase tracking-wide" style="color: #94a3b8;">Riwayat Penyesuaian Kerugian</h3>
+        <span class="text-[10px] font-medium" style="color: #475569;">Real-time inventory loss logs</span>
       </div>
 
       <div class="overflow-x-auto flex-1">
-        <div v-if="loading" class="p-8 text-center text-xs text-slate-400">
+        <div v-if="loading" class="p-8 text-center text-xs" style="color: #475569;">
           Memuat data riwayat...
         </div>
         <table v-else class="w-full text-left text-xs border-collapse">
           <thead>
-            <tr class="bg-slate-50/50 text-slate-500 border-b border-slate-200">
-              <th class="py-2.5 px-3 font-semibold">Tanggal</th>
-              <th class="py-2.5 px-3 font-semibold">Produk</th>
-              <th class="py-2.5 px-3 font-semibold text-center">Kategori</th>
-              <th class="py-2.5 px-3 font-semibold text-center">Qty</th>
-              <th class="py-2.5 px-3 font-semibold">Keterangan</th>
-              <th class="py-2.5 px-3 font-semibold text-center">Bukti</th>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Tanggal</th>
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Produk</th>
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Kategori</th>
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Qty</th>
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Keterangan</th>
+              <th class="py-2.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Bukti</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 text-slate-700">
+          <tbody>
             <tr v-if="history.length === 0">
-              <td colspan="6" class="py-8 text-center text-slate-400 font-medium">Belum ada catatan kerugian barang.</td>
+              <td colspan="6" class="py-8 text-center text-sm" style="color: #475569;">Belum ada catatan kerugian barang.</td>
             </tr>
-            <tr v-for="item in history" :key="item.id" class="hover:bg-slate-50/50 transition-colors">
-              <td class="py-3 px-3 text-slate-500 font-mono whitespace-nowrap">{{ formatDate(item.created_at) }}</td>
-              <td class="py-3 px-3 font-medium">
-                <span class="block text-slate-800">{{ item.produk?.nama_produk }}</span>
-                <span class="text-[10px] text-slate-400 font-mono">{{ item.produk?.kode_produk }}</span>
+            <tr
+              v-for="item in history"
+              :key="item.id"
+              class="transition-colors duration-200"
+              style="border-bottom: 1px solid rgba(255,255,255,0.03);"
+              @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.04)'"
+              @mouseleave="($event.currentTarget as HTMLElement).style.background = 'transparent'"
+            >
+              <td class="py-3 px-3 font-mono whitespace-nowrap" style="color: #64748b;">{{ formatDate(item.created_at) }}</td>
+              <td class="py-3 px-3">
+                <span class="block font-semibold" style="color: #cbd5e1;">{{ item.produk?.nama_produk }}</span>
+                <span class="text-[10px] font-mono" style="color: #475569;">{{ item.produk?.kode_produk }}</span>
               </td>
               <td class="py-3 px-3 text-center whitespace-nowrap">
                 <span
                   v-if="item.kategori === 'rusak'"
-                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide bg-amber-50 text-amber-600 rounded border border-amber-200"
+                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded-md"
+                  style="background: rgba(192, 132, 252, 0.1); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.15);"
                 >
                   Rusak
                 </span>
 
                 <span
                   v-else
-                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide bg-red-50 text-red-600 rounded border border-red-200"
+                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded-md"
+                  style="background: rgba(244, 63, 94, 0.08); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.15);"
                 >
                   Hilang
                 </span>
               </td>
-              <td class="py-3 px-3 text-center font-bold text-slate-800">{{ item.qty }}</td>
-              <td class="py-3 px-3 text-slate-500 italic max-w-[200px] truncate" :title="item.keterangan">{{ item.keterangan || '-' }}</td>
-              <td class="py-3 px-3 text-center whitespace-nowrap font-mono">
+              <td class="py-3 px-3 text-center font-bold" style="color: #e2e8f0;">{{ item.qty }}</td>
+              <td class="py-3 px-3 max-w-[200px] truncate" style="color: #64748b;" :title="item.keterangan">{{ item.keterangan || '-' }}</td>
+              <td class="py-3 px-3 text-center whitespace-nowrap">
                 <button
                   v-if="item.bukti_foto"
                   @click="openLightbox(item.bukti_foto)"
-                  class="text-[10px] font-bold px-2 py-0.5 bg-retro-orange/10 text-retro-orange-dark border border-retro-orange/20 rounded hover:bg-retro-orange/20 transition-colors animate-pulse"
+                  class="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all duration-200"
+                  style="background: rgba(99, 102, 241, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2);"
+                  @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.2)'"
+                  @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.1)'"
                 >
-                  [LIHAT FOTO]
+                  Lihat Foto
                 </button>
-                <span v-else class="text-slate-350">-</span>
+                <span v-else style="color: #334155;">-</span>
               </td>
             </tr>
           </tbody>
@@ -210,21 +235,24 @@
     </div>
 
     <!-- Lightbox Modal -->
-    <div v-if="activeBukti" class="fixed inset-0 bg-retro-dark/80 backdrop-blur-sm flex items-center justify-center p-4" style="z-index: 3000;" @click="activeBukti = null">
-      <div class="bg-white border-2 border-retro-orange rounded-lg max-w-lg w-full overflow-hidden shadow-2xl font-mono animate-slideUp" @click.stop>
-        <div class="bg-retro-orange text-white px-4 py-2 flex items-center justify-between">
-          <span class="font-bold text-xs">&gt;_ BUKTI FISIK KERUSAKAN</span>
-          <button @click="activeBukti = null" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+    <div v-if="activeBukti" class="fixed inset-0 flex items-center justify-center p-4" style="z-index: 3000; background: rgba(4, 6, 10, 0.85); backdrop-filter: blur(12px);" @click="activeBukti = null">
+      <div class="max-w-lg w-full overflow-hidden animate-slideUp" style="background: linear-gradient(145deg, #131b2e 0%, #0b0f17 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; box-shadow: 0 25px 50px rgba(0,0,0,0.6);" @click.stop>
+        <div class="px-5 py-3 flex items-center justify-between" style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <span class="text-xs font-semibold tracking-wide" style="color: #94a3b8;">Bukti Fisik Kerusakan</span>
+          <button @click="activeBukti = null" class="w-7 h-7 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200" style="color: #64748b; background: rgba(255,255,255,0.04);" @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'" @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'">×</button>
         </div>
-        <div class="p-4 flex items-center justify-center bg-slate-900 border-b border-slate-200 min-h-[300px]">
-          <img :src="getCleanUrl(activeBukti)" class="max-h-[70vh] object-contain rounded border-2 border-retro-orange shadow-lg" alt="Bukti Fisik" />
+        <div class="p-4 flex items-center justify-center min-h-[300px]" style="background: rgba(0,0,0,0.2);">
+          <img :src="getCleanUrl(activeBukti)" class="max-h-[70vh] object-contain rounded-lg" style="border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.4);" alt="Bukti Fisik" />
         </div>
-        <div class="bg-slate-50 px-4 py-2.5 flex justify-end">
+        <div class="px-5 py-3 flex justify-end" style="border-top: 1px solid rgba(255,255,255,0.04);">
           <button
             @click="activeBukti = null"
-            class="text-xs font-bold px-4 py-1.5 border-2 border-slate-300 rounded hover:bg-slate-100 transition-colors"
+            class="text-xs font-semibold px-4 py-1.5 rounded-lg transition-all duration-200"
+            style="background: rgba(255,255,255,0.04); color: #94a3b8; border: 1px solid rgba(255,255,255,0.06);"
+            @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'"
+            @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'"
           >
-            TUTUP
+            Tutup
           </button>
         </div>
       </div>
@@ -237,6 +265,7 @@ import { ref, computed, onMounted } from 'vue'
 import { produkService, barangRusakService } from '@/services'
 import type { Produk, BarangRusak, BarangRusakPayload } from '@/types'
 import { useAuthStore } from '@/stores/auth'
+import { customDialog } from '@/utils/dialog'
 
 const authStore = useAuthStore()
 const products = ref<Produk[]>([])
@@ -316,13 +345,13 @@ async function fetchHistory() {
 
 async function submitRecord() {
   if (form.value.produk_id === 0) {
-    alert('Silakan pilih produk terlebih dahulu!')
+    customDialog.warning('Silakan pilih produk terlebih dahulu!')
     return
   }
 
   const selectedProduct = products.value.find(p => p.id === form.value.produk_id)
   if (selectedProduct && selectedProduct.stok < form.value.qty) {
-    alert(`Stok produk tidak mencukupi! Stok saat ini: ${selectedProduct.stok}`)
+    customDialog.warning(`Stok produk tidak mencukupi! Stok saat ini: ${selectedProduct.stok}`)
     return
   }
 
@@ -338,7 +367,7 @@ async function submitRecord() {
     }
 
     await barangRusakService.create(formData)
-    alert('Kerugian inventaris berhasil dicatat!')
+    customDialog.success('Kerugian inventaris berhasil dicatat!')
     
     // Reset Form
     form.value = {
@@ -357,7 +386,7 @@ async function submitRecord() {
     await Promise.all([fetchProducts(), fetchHistory()])
   } catch (err: any) {
     const msg = err.response?.data?.message || 'Gagal menyimpan catatan kerugian.'
-    alert(msg)
+    customDialog.error(msg)
   } finally {
     submitting.value = false
   }
@@ -376,6 +405,9 @@ function openLightbox(url: string) {
 
 function getCleanUrl(url: string | null) {
   if (!url) return ''
+  if (url.startsWith('http://localhost:8000/')) {
+    return url.replace('http://localhost:8000/', '/')
+  }
   if (url.startsWith('http://localhost/')) {
     return url.replace('http://localhost/', '/')
   }

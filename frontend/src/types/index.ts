@@ -255,3 +255,33 @@ export interface ProfilKasirPayload {
   nama: string
   kode_khusus: string
 }
+
+/* ===== Chart Analytics Types ===== */
+
+export interface ChartPenjualanHarian {
+  tanggal: string
+  total: number
+  jumlah_transaksi: number
+}
+
+export interface ChartPenjualanBulanan {
+  bulan: string
+  bulan_num: number
+  tahun: number
+  total_penjualan: number
+  total_pembelian: number
+  laba_bersih: number
+}
+
+export interface ChartMetodePembayaran {
+  metode_pembayaran: string
+  jumlah_transaksi: number
+  total_nominal: number
+}
+
+export interface ChartProdukTerlaris {
+  nama_produk: string
+  total_terjual: number
+  total_pendapatan: number
+  total_terjual_bulan_lalu: number
+}

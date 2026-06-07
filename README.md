@@ -9,8 +9,8 @@ POS Retro Komputer adalah aplikasi manajemen kasir, transaksi, stok, dan laporan
 
 Aplikasi ini dibangun menggunakan arsitektur modern Single Page Application (SPA) dengan memisahkan sisi Frontend dan Backend secara modular:
 
-*   **Frontend**: Vue 3 (Composition API) + TypeScript + Tailwind CSS + Vite + Pinia (State Management)
-*   **Backend**: Laravel 12 + Laravel Sanctum (Token-Based REST API Authentication)
+*   **Frontend**: Vue  3.5.32 (Composition API) + TypeScript + Tailwind CSS + Vite + Pinia (State Management)
+*   **Backend**: Laravel 13.8 Laravel Sanctum (Token-Based REST API Authentication)
 *   **Database**: MySQL 8.0
 *   **Containerization**: Docker & Docker Compose (Multi-stage builds)
 

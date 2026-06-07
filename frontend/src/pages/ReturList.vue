@@ -10,7 +10,7 @@
         to="/retur/tambah"
         class="text-xs font-bold px-3 py-2 bg-retro-blue text-white rounded hover:bg-blue-700 transition-colors shadow-sm"
       >
-        [+ TAMBAH RETUR]
+        + TAMBAH RETUR
       </router-link>
     </div>
 
@@ -70,7 +70,7 @@
                   @click="showDetail(r)"
                   class="px-2.5 py-1 text-[10px] font-bold border-2 border-retro-blue text-retro-blue rounded hover:bg-retro-blue hover:text-white transition-colors"
                 >
-                  [DETAIL]
+                  Detail
                 </button>
               </td>
             </tr>
@@ -165,7 +165,7 @@
             @click="activeRetur = null"
             class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-colors"
           >
-            [TUTUP]
+            Tutup
           </button>
         </div>
       </div>

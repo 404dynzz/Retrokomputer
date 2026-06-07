@@ -3,21 +3,50 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 transition-all duration-200 lg:relative',
-        sidebarOpen ? 'w-56' : 'w-0 lg:w-16',
+        'fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out lg:relative overflow-hidden',
+        isMobile
+          ? (sidebarOpen ? 'w-56 translate-x-0' : 'w-56 -translate-x-full')
+          : (sidebarOpen ? 'w-56 translate-x-0' : 'w-16 translate-x-0')
       ]"
     >
-      <!-- Logo -->
-      <div class="flex items-center px-3 border-b border-slate-200 shrink-0 bg-retro-dark transition-all duration-150 justify-center"
+      <!-- Logo & Header -->
+      <div class="flex items-center border-b border-slate-200 shrink-0 bg-slate-900 transition-all duration-150 justify-between select-none"
            style="height: 56px;">
-        <span v-if="sidebarOpen" class="text-xs font-mono font-bold text-white truncate" title="Sistem POS">SISTEM POS</span>
-        <span v-else class="text-white font-bold text-xs font-mono">POS</span>
+        <div v-if="sidebarOpen" class="flex items-center justify-between w-full px-4">
+          <div class="flex items-center gap-2.5">
+            <!-- Logo Image -->
+            <div class="w-8 h-8 shrink-0">
+              <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-xs font-mono font-bold text-white tracking-wide uppercase leading-tight">Retrokomputer</span>
+              <span class="text-[9px] text-slate-400 font-sans mt-0.5 leading-none">POS & Inventory</span>
+            </div>
+          </div>
+          <!-- Close button on Mobile -->
+          <button v-if="isMobile" @click="sidebarOpen = false" class="text-slate-400 hover:text-white transition-colors p-1" title="Tutup Menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div v-else class="flex items-center justify-center w-full">
+          <!-- Collapsed Logo -->
+          <div class="w-8 h-8 shrink-0">
+            <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
+          </div>
+        </div>
       </div>
 
       <!-- Nav -->
-      <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5" v-if="sidebarOpen || !isMobile">
+      <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-1">
         <template v-for="group in menuGroups" :key="group.label">
-          <p v-if="sidebarOpen" class="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+          <p
+            :class="[
+              'px-3.5 pt-4 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 transition-all duration-300 ease-in-out truncate',
+              sidebarOpen ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0 py-0 overflow-hidden pointer-events-none'
+            ]"
+          >
             {{ group.label }}
           </p>
           <router-link
@@ -25,21 +54,33 @@
             :key="item.path"
             :to="item.path"
             :class="[
-              'flex items-center gap-2.5 px-3 py-2 rounded text-[13px] transition-colors',
+              'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] transition-all sidebar-link',
               isActive(item.path)
-                ? 'bg-retro-blue/10 text-retro-blue font-bold border-l-2 border-retro-blue'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                ? 'bg-indigo-600 text-white font-bold'
+                : 'text-slate-400 hover:bg-slate-800/40 hover:text-white',
             ]"
             @click="isMobile && (sidebarOpen = false)"
           >
-            <span class="text-base shrink-0 w-5 text-center">{{ item.icon }}</span>
-            <span v-if="sidebarOpen" class="truncate">{{ item.label }}</span>
+            <span class="shrink-0 w-5 h-5 flex items-center justify-center" v-html="getIconSvg(item.icon)"></span>
+            <span
+              :class="[
+                'transition-all duration-300 ease-in-out truncate',
+                sidebarOpen ? 'opacity-100 max-w-[120px] ml-0' : 'opacity-0 max-w-0 ml-0 overflow-hidden pointer-events-none'
+              ]"
+            >
+              {{ item.label }}
+            </span>
           </router-link>
         </template>
       </nav>
 
       <!-- User Info -->
-      <div v-if="sidebarOpen" class="p-2 border-t border-slate-200 shrink-0">
+      <div 
+        :class="[
+          'p-2 border-t border-slate-200 shrink-0 transition-all duration-300 ease-in-out',
+          sidebarOpen ? 'opacity-100 max-h-24' : 'opacity-0 max-h-0 py-0 border-t-0 overflow-hidden pointer-events-none'
+        ]"
+      >
         <div class="flex items-center gap-2 p-2 rounded-md">
           <div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
             <span class="text-slate-600 text-xs font-semibold">{{ userInitial }}</span>
@@ -222,7 +263,7 @@ const pageTitle = computed(() => {
     'stok-riwayat': 'Riwayat Stok',
     'laporan-penjualan': 'Laporan Penjualan',
     'laporan-stok': 'Laporan Stok',
-    'laporan-laba-rugi': 'Laba Rugi',
+    'laporan-laba-rugi': 'Laba Kotor',
     'barang-rusak': 'Barang Rusak / Hilang',
     'profil-kasir': 'Profil Kasir',
     'settings': 'Pengaturan Sistem',
@@ -237,17 +278,17 @@ const menuGroups = computed<MenuGroup[]>(() => {
   if (authStore.isOwner) {
     return [
       { label: 'Overview', items: [
-        { label: 'Dashboard', icon: '◉', path: '/dashboard/owner' },
+        { label: 'Dashboard', icon: 'dashboard', path: '/dashboard/owner' },
       ]},
       { label: 'Monitoring', items: [
-        { label: 'Transaksi', icon: '↗', path: '/transaksi' },
-        { label: 'Barang Rusak', icon: '☒', path: '/barang-rusak' },
-        { label: 'Riwayat Stok', icon: '⇅', path: '/stok/riwayat' },
+        { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+        { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
+        { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
       ]},
       { label: 'Laporan', items: [
-        { label: 'Penjualan', icon: '▤', path: '/laporan/penjualan' },
-        { label: 'Stok', icon: '▥', path: '/laporan/stok' },
-        { label: 'Laba Rugi', icon: '◎', path: '/laporan/laba-rugi' },
+        { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
+        { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
+        { label: 'Laba Kotor', icon: 'laba-rugi', path: '/laporan/laba-rugi' },
       ]},
     ]
   }
@@ -256,13 +297,13 @@ const menuGroups = computed<MenuGroup[]>(() => {
   if (authStore.isKasir) {
     return [
       { label: 'Menu', items: [
-        { label: 'Dashboard', icon: '◉', path: '/dashboard' },
-        { label: 'Profil Kasir', icon: '👤', path: '/profil-kasir' },
-        { label: 'Kasir POS', icon: '⊞', path: '/pos' },
+        { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
+        { label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' },
+        { label: 'Kasir POS', icon: 'pos', path: '/pos' },
       ]},
       { label: 'Laporan', items: [
-        { label: 'Transaksi', icon: '↗', path: '/transaksi' },
-        { label: 'Penjualan', icon: '▤', path: '/laporan/penjualan' },
+        { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+        { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
       ]},
     ]
   }
@@ -270,23 +311,23 @@ const menuGroups = computed<MenuGroup[]>(() => {
   // Admin items
   const items = [
     { label: 'Menu', items: [
-      { label: 'Dashboard', icon: '◉', path: '/dashboard' },
+      { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
     ]},
     { label: 'Inventaris', items: [
-      { label: 'Produk', icon: '□', path: '/produk' },
-      { label: 'Supplier', icon: '▤', path: '/supplier' },
-      { label: 'Pembelian', icon: '↙', path: '/pembelian' },
-      { label: 'Retur', icon: '↩', path: '/retur' },
-      { label: 'Barang Rusak', icon: '☒', path: '/barang-rusak' },
+      { label: 'Produk', icon: 'produk', path: '/produk' },
+      { label: 'Supplier', icon: 'supplier', path: '/supplier' },
+      { label: 'Pembelian', icon: 'pembelian', path: '/pembelian' },
+      { label: 'Retur', icon: 'retur', path: '/retur' },
+      { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
     ]},
     { label: 'Stok & Laporan', items: [
-      { label: 'Riwayat Stok', icon: '⇅', path: '/stok/riwayat' },
-      { label: 'Transaksi', icon: '↗', path: '/transaksi' },
-      { label: 'Penjualan', icon: '▤', path: '/laporan/penjualan' },
-      { label: 'Stok', icon: '▥', path: '/laporan/stok' },
+      { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
+      { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+      { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
+      { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
     ]},
     { label: 'Pengelolaan', items: [
-      { label: 'Profil Kasir', icon: '👤', path: '/profil-kasir' },
+      { label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' },
     ]},
   ]
 
@@ -329,6 +370,25 @@ function handleWindowClick(e: MouseEvent) {
   }
 }
 
+function getIconSvg(iconName: string): string {
+  const icons: Record<string, string> = {
+    dashboard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>`,
+    transaksi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+    'barang-rusak': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><line x1="9" y1="14" x2="15" y2="10"></line><line x1="15" y1="14" x2="9" y2="10"></line></svg>`,
+    'stok-riwayat': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
+    penjualan: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`,
+    stok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
+    'laba-rugi': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
+    'profil-kasir': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
+    pos: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
+    produk: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>`,
+    supplier: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>`,
+    pembelian: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
+    retur: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M3 2v6h6M3 10a9 9 0 1 1 3.4-6.9l-3.4 3.4"></path></svg>`,
+  }
+  return icons[iconName] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4.5 h-4.5"><circle cx="12" cy="12" r="10"></circle></svg>`
+}
+
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
@@ -355,6 +415,30 @@ onUnmounted(() => {
 .dropdown-enter-from, .dropdown-leave-to {
   opacity: 0;
   transform: translateY(-4px);
+}
+
+.sidebar-link {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-link.router-link-active {
+  background-color: var(--color-primary, #6366f1) !important;
+  color: #ffffff !important;
+  border-left: none !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25) !important;
+}
+
+.sidebar-link :deep(svg) {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-link:hover :deep(svg) {
+  transform: scale(1.1) translateX(2px);
+  color: var(--color-accent, #14b8a6) !important;
 }
 </style>
 

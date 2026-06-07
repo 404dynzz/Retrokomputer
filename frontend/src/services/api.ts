@@ -1,11 +1,26 @@
 import axios from 'axios'
 
+// Determine API base URL based on environment
+function getBaseURL(): string {
+  const isProduction = import.meta.env.MODE === 'production'
+
+  if (isProduction) {
+    // Production: use relative path (backend served on same domain)
+    return '/api'
+  } else {
+    // Development: use Vite proxy (works for all devices: localhost, mobile, network)
+    // Vite proxy forwards /api to http://localhost:8000 automatically
+    return '/api'
+  }
+}
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
+  withCredentials: true, // For CORS cookies
 })
 
 // Request interceptor - attach token
@@ -27,7 +42,7 @@ api.interceptors.response.use(
       window.location.href = '/login'
     }
     return Promise.reject(error)
-  }
+  },
 )
 
 export default api
