@@ -166,3 +166,20 @@ export const profilKasirService = {
     api.get<{ id: number; name: string; username: string }[]>('/kasir-users'),
 }
 
+export const profileService = {
+  getProfile: () =>
+    api.get('/profile'),
+  verifyPassword: (password: string) =>
+    api.post<{ message: string; verification_token: string }>('/profile/verify-password', { password }),
+  sendOtp: () =>
+    api.post<{ message: string; masked_email: string }>('/profile/send-otp'),
+  verifyOtp: (otp: string) =>
+    api.post<{ message: string; verification_token: string }>('/profile/verify-otp', { otp }),
+  updateProfile: (payload: { email?: string; password?: string; password_confirmation?: string }, token: string) =>
+    api.put('/profile', payload, {
+      headers: {
+        'X-Profile-Verification-Token': token,
+      },
+    }),
+}
+
