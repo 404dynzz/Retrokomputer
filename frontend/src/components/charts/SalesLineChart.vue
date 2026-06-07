@@ -36,13 +36,11 @@
         <span class="comp-val">{{ bestDay?.tanggal_label ?? '-' }}</span>
         <span class="comp-sub">{{ bestDay ? formatCurrencyShort(bestDay.total) : '' }}</span>
       </div>
-      <div class="comp-divider"></div>
       <div class="comp-item">
         <span class="comp-label">Rata-rata/hari</span>
         <span class="comp-val">{{ formatCurrencyShort(avgHarian) }}</span>
         <span class="comp-sub">{{ totalTransaksi }} transaksi total</span>
       </div>
-      <div class="comp-divider"></div>
       <div class="comp-item">
         <span class="comp-label">Hari Aktif</span>
         <span class="comp-val">{{ hariAktif }} hari</span>
@@ -316,52 +314,80 @@ onMounted(loadData)
 }
 
 .comparison-row {
-  display: flex;
-  gap: 0;
-  padding: 0 0 12px 0;
-  background: #0b0f19;
-  border: 1px solid #1e293b;
-  border-radius: 10px;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .comp-item {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 10px 14px;
-  transition: background 0.15s;
+  padding: 10px 12px;
+  background: #0b0f19;
+  border: 1.5px solid #1e293b;
+  border-radius: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
 .comp-item:hover {
-  background: #131926;
-}
-
-.comp-divider {
-  width: 1px;
-  background: #1e293b;
-  margin: 8px 0;
+  background: #111827;
+  border-color: #6366f1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
 }
 
 .comp-label {
   font-size: 10px;
-  color: #475569;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.comp-item:hover .comp-label {
+  color: #a5b4fc;
 }
 
 .comp-val {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: #f8fafc;
   font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
+
+.comp-item:hover .comp-val {
+  color: #fff;
 }
 
 .comp-sub {
   font-size: 10px;
   color: #475569;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .comparison-row {
+    gap: 8px;
+  }
+  .comp-item {
+    padding: 8px 10px;
+  }
+  .comp-label {
+    font-size: 9px;
+  }
+  .comp-val {
+    font-size: 12px;
+  }
+  .comp-sub {
+    font-size: 9px;
+  }
 }
 </style>

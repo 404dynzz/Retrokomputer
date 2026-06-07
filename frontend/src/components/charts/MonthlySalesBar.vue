@@ -266,43 +266,72 @@ onMounted(async () => {
 }
 
 .stats-row {
-  display: flex;
-  gap: 8px;
-  padding: 0 0 12px 0;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .stat-pill {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 6px 14px;
+  padding: 10px 12px;
   background: #0b0f19;
-  border: 1px solid #1e293b;
+  border: 1.5px solid #1e293b;
   border-radius: 8px;
-  transition: border-color 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
 .stat-pill:hover {
-  border-color: #334155;
+  background: #111827;
+  border-color: #F28500;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(242, 133, 0, 0.15);
 }
 
 .stat-label {
   font-size: 10px;
-  color: #475569;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.stat-pill:hover .stat-label {
+  color: #fdba74;
 }
 
 .stat-value {
   font-size: 13px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: #f8fafc;
   font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
+
+.stat-pill:hover .stat-value {
+  color: #fff;
 }
 
 .stat-value.highlight {
   color: #F28500;
+}
+
+@media (max-width: 640px) {
+  .stats-row {
+    gap: 8px;
+  }
+  .stat-pill {
+    padding: 8px 10px;
+  }
+  .stat-label {
+    font-size: 9px;
+  }
+  .stat-value {
+    font-size: 12px;
+  }
 }
 </style>

@@ -304,31 +304,43 @@ onMounted(async () => {
 }
 
 .latest-metrics {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .metric {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 6px 12px;
+  padding: 10px 12px;
   background: #0b0f19;
-  border: 1px solid #1e293b;
+  border: 1.5px solid #1e293b;
+  border-left: 3px solid var(--mc);
   border-radius: 8px;
-  border-left: 2px solid var(--mc);
-  transition: border-color 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
 .metric:hover {
+  background: #111827;
   border-color: var(--mc);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mc) 15%, transparent);
 }
 
 .metric-label {
   font-size: 10px;
-  color: #475569;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.metric:hover .metric-label {
+  color: #fff;
+  opacity: 0.8;
 }
 
 .metric-val {
@@ -336,5 +348,20 @@ onMounted(async () => {
   font-weight: 700;
   color: var(--mc);
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .latest-metrics {
+    gap: 8px;
+  }
+  .metric {
+    padding: 8px 10px;
+  }
+  .metric-label {
+    font-size: 9px;
+  }
+  .metric-val {
+    font-size: 12px;
+  }
 }
 </style>
