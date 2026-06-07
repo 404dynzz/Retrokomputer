@@ -70,7 +70,7 @@
             @click="cart.clearCart()"
             class="text-[10px] font-bold text-retro-yellow hover:underline uppercase transition-colors"
           >
-            [Kosongkan]
+            Kosongkan
           </button>
         </div>
 
@@ -245,7 +245,7 @@
               @click="closeSuccessModal"
               class="text-xs font-bold px-5 py-2 bg-retro-blue hover:bg-blue-700 text-white rounded transition-colors uppercase shadow-sm"
             >
-              [Selesai]
+              Selesai
             </button>
           </div>
         </div>

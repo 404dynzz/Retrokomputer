@@ -420,8 +420,8 @@ class LaporanController extends Controller
             case 'laba-rugi-bulanan':
                 $year = $request->query('tahun');
                 $isLabaRugi = ($type === 'laba-rugi-bulanan');
-                $title = $isLabaRugi ? 'Laporan Laba Rugi Bulanan' : 'Laporan Penjualan Bulanan';
-                $filename = ($isLabaRugi ? 'Laporan_Laba_Rugi_Bulanan_' : 'Laporan_Penjualan_Bulanan_') . ($year ? $year . '_' : '') . Carbon::now()->format('Ymd_His') . '.xlsx';
+                $title = $isLabaRugi ? 'Laporan Laba Kotor Bulanan' : 'Laporan Penjualan Bulanan';
+                $filename = ($isLabaRugi ? 'Laporan_Laba_Kotor_Bulanan_' : 'Laporan_Penjualan_Bulanan_') . ($year ? $year . '_' : '') . Carbon::now()->format('Ymd_His') . '.xlsx';
 
                 $headers = ['No', 'Bulan', 'Tahun', 'Total Penjualan (IDR)', 'Total Pembelian (IDR)', 'Laba Bersih (IDR)'];
                 $currencyColumns = [3, 4, 5];

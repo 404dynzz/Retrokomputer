@@ -60,13 +60,13 @@
       <div class="empty-icon-wrapper">
         <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
       </div>
-      <p class="text-xs text-slate-500 font-mono">Belum ada data laba rugi</p>
+      <p class="text-xs text-slate-500 font-mono">Belum ada data laba kotor</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive, onUnmounted } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 // FIX: import type yang pasti ada, ChartLabaRugi di-extend dari ChartPenjualanBulanan
 //      jika tipe ChartLabaRugi belum ada di @/types, ganti dengan baris di bawah:
@@ -81,6 +81,11 @@ import { laporanService } from '@/services'
 
 const apexchart = VueApexCharts
 const chartRef = ref<any>(null)
+
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 640
+}
 
 const loading = ref(true)
 // FIX: tipe data menggunakan ChartLabaRugi, bukan ChartPenjualanBulanan
@@ -157,10 +162,12 @@ const chartOptions = computed(() => ({
   xaxis: {
     categories: data.value.map(d => d.bulan),
     labels: {
-      style: { colors: '#64748b', fontSize: '10px' },
-      rotate: -40,
+      style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
+      rotate: isMobile.value ? 0 : -30,
+      rotateAlways: false,
       hideOverlappingLabels: true,
     },
+    tickAmount: isMobile.value ? 6 : undefined,
     axisBorder: { show: false },
     axisTicks: { show: false },
   },
@@ -213,7 +220,7 @@ async function exportExcel() {
     const res = await fetch(url.toString())
     const disposition = res.headers.get('Content-Disposition') ?? ''
     const match = disposition.match(/filename="?([^"]+)"?/)
-    const filename = match?.[1] ?? `Laporan_Laba_Rugi_Bulanan.xlsx`
+    const filename = match?.[1] ?? `Laporan_Laba_Kotor_Bulanan.xlsx`
     const blob = await res.blob()
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
@@ -226,6 +233,8 @@ async function exportExcel() {
 }
 
 onMounted(async () => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   try {
 // FIX: getChartLabaRugiBulanan — jika belum ada di service, fallback ke getChartPenjualanBulanan
     const serviceMethod = (laporanService as any).getChartLabaRugiBulanan
@@ -237,6 +246,10 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>
 
@@ -304,31 +317,43 @@ onMounted(async () => {
 }
 
 .latest-metrics {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .metric {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 6px 12px;
+  padding: 10px 12px;
   background: #0b0f19;
-  border: 1px solid #1e293b;
+  border: 1.5px solid #1e293b;
+  border-left: 3px solid var(--mc);
   border-radius: 8px;
-  border-left: 2px solid var(--mc);
-  transition: border-color 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
 .metric:hover {
+  background: #111827;
   border-color: var(--mc);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--mc) 15%, transparent);
 }
 
 .metric-label {
   font-size: 10px;
-  color: #475569;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.metric:hover .metric-label {
+  color: #fff;
+  opacity: 0.8;
 }
 
 .metric-val {
@@ -336,5 +361,20 @@ onMounted(async () => {
   font-weight: 700;
   color: var(--mc);
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .latest-metrics {
+    gap: 8px;
+  }
+  .metric {
+    padding: 8px 10px;
+  }
+  .metric-label {
+    font-size: 9px;
+  }
+  .metric-val {
+    font-size: 12px;
+  }
 }
 </style>

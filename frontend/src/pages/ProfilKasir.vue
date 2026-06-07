@@ -9,7 +9,7 @@
         </h2>
       </div>
       <div class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 border border-slate-200 rounded">
-        [Role: {{ authStore.user?.role?.toUpperCase() }}]
+        Role: {{ authStore.user?.role?.toUpperCase() }}
       </div>
     </div>
 
@@ -145,13 +145,13 @@
                       @click="startEdit(p)"
                       class="text-xs text-retro-blue hover:text-blue-700 font-bold hover:underline"
                     >
-                      [EDIT]
+                      Edit
                     </button>
                     <button
                       @click="confirmDelete(p)"
                       class="text-xs text-red-500 hover:text-red-700 font-bold hover:underline"
                     >
-                      [HAPUS]
+                      Hapus
                     </button>
                   </div>
                 </td>
@@ -183,7 +183,7 @@
           :disabled="processing"
           class="px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded transition-colors uppercase"
         >
-          [Nonaktifkan]
+          Nonaktifkan
         </button>
       </div>
 

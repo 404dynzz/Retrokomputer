@@ -52,7 +52,7 @@
                 @click="addRow"
                 class="text-xs font-mono font-bold text-retro-blue hover:underline uppercase"
               >
-                [+ TAMBAH BARANG]
+                + TAMBAH BARANG
               </button>
             </div>
 
@@ -122,7 +122,7 @@
                       class="text-red-500 hover:text-red-700 text-xs font-bold font-mono"
                       title="Hapus baris"
                     >
-                      [X]
+                      X
                     </button>
                     <span v-else class="text-slate-300 text-xs">-</span>
                   </div>
@@ -138,16 +138,16 @@
           <div class="flex justify-end gap-2 pt-2">
             <router-link
               to="/pembelian"
-              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-55"
             >
-              [BATAL]
+              Batal
             </router-link>
             <button
               type="submit"
               :disabled="saving"
               class="text-xs font-mono font-bold px-4 py-2 rounded bg-retro-blue text-white hover:bg-blue-700 disabled:opacity-50 shadow-sm"
             >
-              [{{ saving ? 'MENYIMPAN...' : 'SIMPAN' }}]
+              {{ saving ? 'Menyimpan...' : 'Simpan' }}
             </button>
           </div>
         </form>

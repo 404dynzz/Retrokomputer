@@ -165,14 +165,14 @@
           <!-- Form Buttons -->
           <div class="flex justify-end gap-2 pt-2">
             <router-link to="/retur" class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50">
-              [BATAL]
+              Batal
             </router-link>
             <button
               type="submit"
               :disabled="saving || !form.referensi_id || selectedItemsCount === 0"
               class="text-xs font-mono font-bold px-4 py-2 rounded bg-retro-blue text-white hover:bg-blue-700 disabled:opacity-50 shadow-sm"
             >
-              [{{ saving ? 'MENYIMPAN...' : 'SIMPAN' }}]
+              {{ saving ? 'Menyimpan...' : 'Simpan' }}
             </button>
           </div>
         </form>
