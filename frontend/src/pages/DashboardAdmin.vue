@@ -6,11 +6,11 @@
         <div
           class="w-1 h-8 bg-gradient-to-b from-retro-orange to-retro-orange/50 rounded-full"
         ></div>
-        <h1 class="text-3xl font-bold text-slate-900 font-display">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white font-display">
           {{ authStore.isKasir ? 'Dashboard Kasir' : 'Dashboard Admin' }}
         </h1>
       </div>
-      <p class="text-sm text-slate-500 ml-4">
+      <p class="text-sm text-slate-500 dark:text-slate-400 ml-4">
         {{
           authStore.isKasir
             ? 'Kelola dan pantau transaksi penjualan Anda'
@@ -20,9 +20,9 @@
     </div>
 
     <!-- ============ FILTER BAR ============ -->
-    <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
+    <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-5">
       <h3
-        class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-4 flex items-center gap-2"
+        class="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-4 flex items-center gap-2"
       >
         <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
         Filter Data
@@ -30,11 +30,11 @@
       <div class="flex flex-wrap items-end gap-3">
         <!-- Mode Filter -->
         <div class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase">Mode</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Mode</label>
           <select
             v-model="filterMode"
             @change="onFilterModeChange"
-            class="text-xs rounded-md border border-slate-300 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
           >
             <option value="">Bulan Ini (Default)</option>
             <option value="harian">Harian</option>
@@ -46,11 +46,11 @@
 
         <!-- Sub-filter: Harian (day of week) -->
         <div v-if="filterMode === 'harian'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase">Pilih Hari</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Hari</label>
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 px-3 py-2 min-w-[130px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[130px] focus:ring-2 focus:ring-retro-orange/30"
           >
             <option value="senin">Senin</option>
             <option value="selasa">Selasa</option>
@@ -64,11 +64,11 @@
 
         <!-- Sub-filter: Mingguan (week number) -->
         <div v-if="filterMode === 'mingguan'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase">Pilih Minggu</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Minggu</label>
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 px-3 py-2 min-w-[150px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[150px] focus:ring-2 focus:ring-retro-orange/30"
           >
             <option value="1">Minggu ke-1</option>
             <option value="2">Minggu ke-2</option>
@@ -79,11 +79,11 @@
 
         <!-- Sub-filter: Bulanan (month) -->
         <div v-if="filterMode === 'bulanan'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase">Pilih Bulan</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Bulan</label>
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
           >
             <option v-for="(name, idx) in monthNames" :key="idx" :value="String(idx + 1)">
               {{ name }}
@@ -93,12 +93,12 @@
 
         <!-- Sub-filter: Tanggal (date picker) -->
         <div v-if="filterMode === 'tanggal'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase">Pilih Tanggal</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Tanggal</label>
           <input
             v-model="filterValue"
             type="date"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
           />
         </div>
 
@@ -106,15 +106,15 @@
         <button
           v-if="filterMode"
           @click="resetFilter"
-          class="text-[11px] px-3 py-2 rounded-md border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 font-semibold transition-all"
+          class="text-[11px] px-3 py-2 rounded-md border-2 border-red-300 dark:border-red-500/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-400 font-semibold transition-all"
         >
           ✕ Reset
         </button>
       </div>
 
       <!-- Active Filter Badge -->
-      <div v-if="filterMode" class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Filter Aktif:</span>
+      <div v-if="filterMode" class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
+        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filter Aktif:</span>
         <span
           class="text-xs px-3 py-1.5 rounded-full bg-retro-orange/10 text-retro-orange font-semibold border border-retro-orange/30"
         >
@@ -130,54 +130,54 @@
     >
       <!-- Penjualan -->
       <div
-        class="bg-gradient-to-br from-green-50 to-white rounded-lg border border-green-200/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-green-300 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+        class="bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-slate-800 rounded-lg border border-green-200/50 dark:border-green-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-green-300 dark:hover:border-green-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
       >
         <div>
           <p
-            class="text-[10px] md:text-xs text-green-600 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
+            class="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
             {{ kpiPenjualanLabel }}
           </p>
-          <p class="text-xl md:text-3xl font-bold text-green-700 mb-1 line-clamp-2 break-words">
+          <p class="text-xl md:text-3xl font-bold text-green-700 dark:text-green-300 mb-1 line-clamp-2 break-words">
             {{ formatCurrency(stats.penjualan_bulan_ini) }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-green-500 font-medium">{{ kpiSublabel }}</p>
+        <p class="text-[10px] md:text-xs text-green-500 dark:text-green-500/80 font-medium">{{ kpiSublabel }}</p>
       </div>
 
       <!-- Total Transaksi -->
       <div
-        class="bg-gradient-to-br from-blue-50 to-white rounded-lg border border-blue-200/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-blue-300 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+        class="bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-slate-800 rounded-lg border border-blue-200/50 dark:border-blue-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-blue-300 dark:hover:border-blue-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
       >
         <div>
           <p
-            class="text-[10px] md:text-xs text-blue-600 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
+            class="text-[10px] md:text-xs text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
             Total Transaksi
           </p>
-          <p class="text-xl md:text-3xl font-bold text-blue-700 mb-1 line-clamp-2">
+          <p class="text-xl md:text-3xl font-bold text-blue-700 dark:text-blue-300 mb-1 line-clamp-2">
             {{ stats.total_transaksi }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-blue-500 font-medium">{{ kpiSublabel }}</p>
+        <p class="text-[10px] md:text-xs text-blue-500 dark:text-blue-500/80 font-medium">{{ kpiSublabel }}</p>
       </div>
 
       <!-- Pembelian (Admin Only) -->
       <div
         v-if="!authStore.isKasir"
-        class="bg-gradient-to-br from-orange-50 to-white rounded-lg border border-orange-200/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-orange-300 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+        class="bg-gradient-to-br from-orange-50 to-white dark:from-orange-900/20 dark:to-slate-800 rounded-lg border border-orange-200/50 dark:border-orange-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-orange-300 dark:hover:border-orange-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
       >
         <div>
           <p
-            class="text-[10px] md:text-xs text-orange-600 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
+            class="text-[10px] md:text-xs text-orange-600 dark:text-orange-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
             Pembelian Bulan Ini
           </p>
-          <p class="text-xl md:text-3xl font-bold text-orange-700 mb-1 line-clamp-2 break-words">
+          <p class="text-xl md:text-3xl font-bold text-orange-700 dark:text-orange-300 mb-1 line-clamp-2 break-words">
             {{ formatCurrency(stats.pembelian_bulan_ini) }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-orange-500 font-medium">Dari supplier</p>
+        <p class="text-[10px] md:text-xs text-orange-500 dark:text-orange-500/80 font-medium">Dari supplier</p>
       </div>
 
       <!-- Laba Bersih (Admin Only) -->
@@ -185,28 +185,28 @@
         v-if="!authStore.isKasir"
         :class="[
           stats.laba_bersih >= 0
-            ? 'bg-gradient-to-br from-emerald-50 to-white border border-emerald-200/50 hover:border-emerald-300'
-            : 'bg-gradient-to-br from-red-50 to-white border border-red-200/50 hover:border-red-300',
+            ? 'bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-900/20 dark:to-slate-800 border border-emerald-200/50 dark:border-emerald-800/50 hover:border-emerald-300 dark:hover:border-emerald-700'
+            : 'bg-gradient-to-br from-red-50 to-white dark:from-red-900/20 dark:to-slate-800 border border-red-200/50 dark:border-red-800/50 hover:border-red-300 dark:hover:border-red-700',
           'rounded-lg p-3 md:p-5 hover:shadow-lg transition-all min-h-[120px] md:min-h-[140px] flex flex-col justify-between',
         ]"
       >
         <div>
           <p
             class="text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
-            :class="stats.laba_bersih >= 0 ? 'text-emerald-600' : 'text-red-600'"
+            :class="stats.laba_bersih >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
           >
             Laba Bersih
           </p>
           <p
             class="text-xl md:text-3xl font-bold mb-1 line-clamp-2 break-words"
-            :class="stats.laba_bersih >= 0 ? 'text-emerald-700' : 'text-red-700'"
+            :class="stats.laba_bersih >= 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'"
           >
             {{ formatCurrency(stats.laba_bersih) }}
           </p>
         </div>
         <p
           class="text-[10px] md:text-xs font-medium"
-          :class="stats.laba_bersih >= 0 ? 'text-emerald-500' : 'text-red-500'"
+          :class="stats.laba_bersih >= 0 ? 'text-emerald-500 dark:text-emerald-500/80' : 'text-red-500 dark:text-red-500/80'"
         >
           Keuntungan bersih
         </p>
@@ -215,13 +215,13 @@
 
     <!-- ============ RECENT TRANSACTIONS LIST ============ -->
     <div
-      class="bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+      class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
     >
       <!-- List Header -->
       <div
-        class="flex items-center justify-between p-5 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white"
+        class="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800 dark:to-slate-800"
       >
-        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2.5">
+        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2.5">
           <span class="inline-block w-1 h-1 bg-retro-blue rounded-full"></span>
           {{ authStore.isKasir ? 'Transaksi Saya' : 'Transaksi Terbaru' }}
         </h3>
@@ -230,7 +230,7 @@
           <select
             v-model="listFilter"
             @change="onListFilterChange"
-            class="text-[11px] rounded-md border border-slate-300 px-2 py-1.5 focus:ring-2 focus:ring-retro-blue/30"
+            class="text-[11px] rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-2 py-1.5 focus:ring-2 focus:ring-retro-blue/30"
           >
             <option value="minggu_ini">Minggu Ini</option>
             <option value="1_minggu">Seminggu yang lalu</option>
@@ -260,22 +260,22 @@
       <!-- Transaction Table with Group Separators -->
       <div v-else class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 border-b border-slate-200">
+          <thead class="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
             <tr>
-              <th class="text-left text-xs font-semibold text-slate-600 px-4 py-3">
+              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">
                 Kode Transaksi
               </th>
-              <th class="text-left text-xs font-semibold text-slate-600 px-4 py-3">Waktu</th>
-              <th class="text-left text-xs font-semibold text-slate-600 px-4 py-3">Metode</th>
-              <th class="text-right text-xs font-semibold text-slate-600 px-4 py-3">Total</th>
-              <th class="text-center text-xs font-semibold text-slate-600 px-4 py-3">Aksi</th>
+              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Waktu</th>
+              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Metode</th>
+              <th class="text-right text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Total</th>
+              <th class="text-center text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Aksi</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
             <template v-for="(group, gIdx) in groupedTransactions" :key="gIdx">
               <!-- Group Separator Row -->
-              <tr class="bg-slate-50">
-                <td colspan="5" class="px-4 py-2.5 border-b border-t border-slate-200">
+              <tr class="bg-slate-50 dark:bg-slate-700/30">
+                <td colspan="5" class="px-4 py-2.5 border-b border-t border-slate-200 dark:border-slate-700">
                   <div class="flex items-center gap-3">
                     <div
                       class="h-px flex-1 bg-gradient-to-r from-retro-orange/40 to-transparent"
@@ -289,7 +289,7 @@
                       class="h-px flex-1 bg-gradient-to-l from-retro-orange/40 to-transparent"
                     ></div>
                     <span
-                      class="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full"
+                      class="text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full"
                       >{{ group.transactions.length }}</span
                     >
                   </div>
@@ -300,21 +300,21 @@
               <tr
                 v-for="trx in group.transactions"
                 :key="trx.id"
-                class="hover:bg-slate-50 transition-colors"
+                class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
               >
                 <td class="px-4 py-3 text-xs font-mono text-retro-blue font-semibold">
                   {{ trx.kode_transaksi }}
                 </td>
-                <td class="px-4 py-3 text-xs text-slate-600">{{ formatTime(trx.created_at) }}</td>
+                <td class="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">{{ formatTime(trx.created_at) }}</td>
                 <td class="px-4 py-3">
                   <span
                     class="text-[11px] px-2.5 py-1 rounded-full font-semibold"
                     :class="
                       trx.metode_pembayaran === 'tunai'
-                        ? 'bg-green-100 text-green-700'
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                         : trx.metode_pembayaran === 'transfer'
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-purple-100 text-purple-700'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                          : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
                     "
                   >
                     {{
@@ -326,7 +326,7 @@
                     }}
                   </span>
                 </td>
-                <td class="px-4 py-3 text-xs font-bold text-slate-900 text-right">
+                <td class="px-4 py-3 text-xs font-bold text-slate-900 dark:text-slate-100 text-right">
                   {{ formatCurrency(trx.total) }}
                 </td>
                 <td class="px-4 py-3 text-center">
@@ -349,7 +349,7 @@
       <!-- Tambah Produk (Admin Only) -->
       <router-link
         to="/produk/tambah"
-        class="group bg-white rounded-lg border border-slate-200 p-5 hover:shadow-lg hover:border-retro-blue/50 transition-all"
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-blue/50 transition-all"
       >
         <div class="flex items-start justify-between mb-3">
           <div
@@ -374,14 +374,14 @@
             >→</span
           >
         </div>
-        <h4 class="text-sm font-bold text-slate-900 mb-1">Tambah Produk</h4>
-        <p class="text-xs text-slate-500">Tambahkan produk baru ke katalog</p>
+        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">Tambah Produk</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Tambahkan produk baru ke katalog</p>
       </router-link>
 
       <!-- Input Pembelian (Admin Only) -->
       <router-link
         to="/pembelian/tambah"
-        class="group bg-white rounded-lg border border-slate-200 p-5 hover:shadow-lg hover:border-retro-orange/50 transition-all"
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-orange/50 transition-all"
       >
         <div class="flex items-start justify-between mb-3">
           <div
@@ -406,21 +406,21 @@
             >→</span
           >
         </div>
-        <h4 class="text-sm font-bold text-slate-900 mb-1">Input Pembelian</h4>
-        <p class="text-xs text-slate-500">Catat pembelian dari supplier</p>
+        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">Input Pembelian</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Catat pembelian dari supplier</p>
       </router-link>
 
       <!-- Laporan Penjualan (Admin Only) -->
       <router-link
         to="/laporan/penjualan"
-        class="group bg-white rounded-lg border border-slate-200 p-5 hover:shadow-lg hover:border-slate-400/50 transition-all"
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-slate-400/50 transition-all"
       >
         <div class="flex items-start justify-between mb-3">
           <div
-            class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors"
+            class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-600 transition-colors"
           >
             <svg
-              class="w-6 h-6 text-slate-600"
+              class="w-6 h-6 text-slate-600 dark:text-slate-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -434,12 +434,12 @@
             </svg>
           </div>
           <span
-            class="text-xs font-semibold text-slate-400 group-hover:text-slate-600 transition-colors"
+            class="text-xs font-semibold text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors"
             >→</span
           >
         </div>
-        <h4 class="text-sm font-bold text-slate-900 mb-1">Laporan</h4>
-        <p class="text-xs text-slate-500">Lihat laporan penjualan lengkap</p>
+        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">Laporan</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Lihat laporan penjualan lengkap</p>
       </router-link>
     </div>
   </div>

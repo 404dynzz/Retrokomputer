@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
-        <h2 class="text-sm font-semibold tracking-wide uppercase" style="color: #e2e8f0; letter-spacing: 0.08em;">
+        <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           Laporan Stok
         </h2>
       </div>
@@ -13,66 +13,63 @@
     <!-- Stats Cards Row -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <!-- Card 1: Jenis Produk -->
-      <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.25rem;">
-        <p class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Jenis Produk</p>
-        <p class="text-xl font-bold tracking-tight mt-1.5" style="color: #cbd5e1;">{{ stokStats.total_jenis_produk }}</p>
+      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Jenis Produk</p>
+        <p class="text-xl font-bold tracking-tight mt-1.5 text-slate-800 dark:text-slate-100">{{ stokStats.total_jenis_produk }}</p>
       </div>
       <!-- Card 2: Stok Aman -->
-      <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(52, 211, 153, 0.12); border-radius: 12px; padding: 1.25rem;">
-        <p class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Stok Aman</p>
-        <p class="text-xl font-bold tracking-tight mt-1.5" style="color: #34d399;">{{ stokStats.stok_aman }}</p>
+      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-teal-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Stok Aman</p>
+        <p class="text-xl font-bold tracking-tight mt-1.5 text-teal-600 dark:text-teal-400">{{ stokStats.stok_aman }}</p>
       </div>
       <!-- Card 3: Stok Rendah -->
-      <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(245, 158, 11, 0.12); border-radius: 12px; padding: 1.25rem;">
-        <p class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Stok Rendah</p>
-        <p class="text-xl font-bold tracking-tight mt-1.5" style="color: #fbbf24;">{{ stokStats.stok_rendah }}</p>
+      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-amber-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Stok Rendah</p>
+        <p class="text-xl font-bold tracking-tight mt-1.5 text-amber-500 dark:text-amber-400">{{ stokStats.stok_rendah }}</p>
       </div>
       <!-- Card 4: Stok Habis -->
-      <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(239, 68, 68, 0.12); border-radius: 12px; padding: 1.25rem;">
-        <p class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Stok Habis</p>
-        <p class="text-xl font-bold tracking-tight mt-1.5" style="color: #f87171;">{{ stokStats.stok_habis }}</p>
+      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-red-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Stok Habis</p>
+        <p class="text-xl font-bold tracking-tight mt-1.5 text-rose-500 dark:text-rose-400">{{ stokStats.stok_habis }}</p>
       </div>
     </div>
 
     <!-- Table Container -->
-    <div style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-      <div v-if="loading" class="p-8 text-center text-sm" style="color: #475569;">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div v-if="loading" class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
         Memuat data laporan...
       </div>
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Kode</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Produk</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Kategori</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Stok</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Minimum</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Status</th>
+            <tr class="border-b border-slate-100 dark:border-slate-800">
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Kode</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Produk</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Kategori</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Stok</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Minimum</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Status</th>
             </tr>
           </thead>
           <tbody class="text-xs">
             <tr
               v-for="p in produkList"
               :key="p.id"
-              class="transition-colors duration-200"
-              style="border-bottom: 1px solid rgba(255,255,255,0.03);"
-              @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.04)'"
-              @mouseleave="($event.currentTarget as HTMLElement).style.background = 'transparent'"
+              class="transition-colors duration-200 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50"
             >
-              <td class="px-4 py-3 font-mono font-bold" style="color: #818cf8;">
+              <td class="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                 {{ p.kode_produk }}
               </td>
-              <td class="px-4 py-3 font-semibold font-sans" style="color: #cbd5e1;">
+              <td class="px-4 py-3 font-semibold font-sans text-slate-700 dark:text-slate-300">
                 {{ p.nama_produk }}
               </td>
-              <td class="px-4 py-3 font-sans" style="color: #64748b;">
+              <td class="px-4 py-3 font-sans text-slate-500 dark:text-slate-400">
                 {{ p.kategori }}
               </td>
               <td class="px-4 py-3 text-center font-bold font-mono" :style="{ color: p.stok <= 0 ? '#f87171' : p.stok <= p.stok_minimum ? '#fbbf24' : '#34d399' }">
                 {{ p.stok }}
               </td>
-              <td class="px-4 py-3 text-center font-mono" style="color: #64748b;">
+              <td class="px-4 py-3 text-center font-mono text-slate-500 dark:text-slate-400">
                 {{ p.stok_minimum }}
               </td>
               <td class="px-4 py-3">
@@ -89,7 +86,7 @@
               </td>
             </tr>
             <tr v-if="produkList.length === 0">
-              <td colspan="6" class="px-4 py-8 text-center text-sm" style="color: #475569;">
+              <td colspan="6" class="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">
                 Belum ada data
               </td>
             </tr>

@@ -262,11 +262,14 @@ onMounted(async () => {
 .dashboard-title {
   font-size: 24px;
   font-weight: 800;
-  color: #f8fafc;
+  color: #1e293b;
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 0;
+}
+.dark .dashboard-title {
+  color: #f8fafc;
 }
 
 .title-icon {
@@ -275,8 +278,11 @@ onMounted(async () => {
 
 .dashboard-subtitle {
   font-size: 13px;
-  color: #94a3b8;
+  color: #64748b;
   margin: 4px 0 0 0;
+}
+.dark .dashboard-subtitle {
+  color: #94a3b8;
 }
 
 .header-date {
@@ -285,11 +291,16 @@ onMounted(async () => {
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #cbd5e1;
-  background: #131926;
-  border: 1px solid rgba(255, 122, 0, 0.15);
+  color: #475569;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 8px 14px;
+}
+.dark .header-date {
+  color: #cbd5e1;
+  background: #131926;
+  border-color: rgba(255, 122, 0, 0.15);
 }
 
 .date-icon {
@@ -316,9 +327,9 @@ onMounted(async () => {
 }
 
 .kpi-card {
-  background: #131926;
+  background: #ffffff;
   border-radius: 14px;
-  border: 1px solid rgba(255, 122, 0, 0.15);
+  border: 1px solid #e2e8f0;
   padding: 18px;
   display: flex;
   align-items: flex-start;
@@ -326,11 +337,22 @@ onMounted(async () => {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .kpi-card:hover {
   transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.dark .kpi-card {
+  background: #131926;
+  border-color: rgba(255, 122, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dark .kpi-card:hover {
   box-shadow: 0 8px 30px rgba(255, 122, 0, 0.1);
   border-color: rgba(255, 122, 0, 0.3);
 }
@@ -374,21 +396,27 @@ onMounted(async () => {
 .kpi-label {
   font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
+}
+.dark .kpi-label {
+  color: #94a3b8;
 }
 
 .kpi-value {
   font-size: 20px;
   font-weight: 800;
-  color: #f8fafc;
+  color: #0f172a;
   margin: 4px 0 0 0;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.dark .kpi-value {
+  color: #f8fafc;
 }
 
 .kpi-value.text-emerald { color: #059669; }
@@ -447,12 +475,16 @@ onMounted(async () => {
   display: flex;
   gap: 8px;
   margin: 10px 0 16px 0;
-  background: #131926;
+  background: #ffffff;
   padding: 6px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 122, 0, 0.15);
+  border: 1px solid #e2e8f0;
   width: fit-content;
   flex-wrap: wrap;
+}
+.dark .chart-tabs {
+  background: #131926;
+  border-color: rgba(255, 122, 0, 0.15);
 }
 
 .chart-tabs button {
@@ -462,15 +494,22 @@ onMounted(async () => {
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #64748b;
   background: transparent;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
 }
+.dark .chart-tabs button {
+  color: #94a3b8;
+}
 
 .chart-tabs button:hover {
+  color: #0f172a;
+  background: rgba(0, 0, 0, 0.03);
+}
+.dark .chart-tabs button:hover {
   color: #f8fafc;
   background: rgba(255, 255, 255, 0.05);
 }
@@ -510,15 +549,26 @@ onMounted(async () => {
 <!-- Global chart card styles (used by child chart components) -->
 <style>
 .chart-card {
-  background: #131926;
+  background: #ffffff;
   border-radius: 14px;
-  border: 1px solid rgba(255, 122, 0, 0.15);
+  border: 1px solid #e2e8f0;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
 }
 
 .chart-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.dark .chart-card {
+  background: #131926;
+  border-color: rgba(255, 122, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dark .chart-card:hover {
   box-shadow: 0 8px 30px rgba(255, 122, 0, 0.1);
   border-color: rgba(255, 122, 0, 0.3);
 }
@@ -533,14 +583,20 @@ onMounted(async () => {
 .chart-title {
   font-size: 15px;
   font-weight: 700;
-  color: #f8fafc;
+  color: #1e293b;
   margin: 0;
+}
+.dark .chart-title {
+  color: #f8fafc;
 }
 
 .chart-subtitle {
   font-size: 11px;
-  color: #94a3b8;
+  color: #64748b;
   margin: 2px 0 0 0;
+}
+.dark .chart-subtitle {
+  color: #94a3b8;
 }
 
 .chart-badge {
@@ -563,8 +619,11 @@ onMounted(async () => {
   justify-content: center;
   gap: 10px;
   padding: 60px 20px;
-  color: #94a3b8;
+  color: #64748b;
   font-size: 13px;
+}
+.dark .chart-loading {
+  color: #94a3b8;
 }
 
 .chart-loading .spinner {
@@ -586,8 +645,11 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   padding: 50px 20px;
-  color: #94a3b8;
+  color: #64748b;
   font-size: 13px;
+}
+.dark .chart-empty {
+  color: #94a3b8;
 }
 
 .chart-empty .empty-icon {
@@ -606,16 +668,25 @@ onMounted(async () => {
   gap: 6px;
   font-size: 11px;
   font-weight: 700;
-  color: #cbd5e1;
+  color: #475569;
   background: transparent;
-  border: 1px solid rgba(255, 122, 0, 0.2);
+  border: 1px solid #cbd5e1;
   padding: 5px 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
+.dark .btn-download-csv {
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 122, 0, 0.2);
+}
 
 .btn-download-csv:hover {
+  color: #0f172a;
+  border-color: #94a3b8;
+  background: rgba(0, 0, 0, 0.02);
+}
+.dark .btn-download-csv:hover {
   color: #ffffff;
   border-color: #ff7a00;
   background: rgba(255, 122, 0, 0.08);

@@ -4,37 +4,37 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
-        <h2 class="text-sm font-semibold tracking-wide uppercase" style="color: #e2e8f0; letter-spacing: 0.08em;">
+        <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           Laporan Laba Kotor
         </h2>
       </div>
     </div>
 
     <!-- Container -->
-    <div style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-      <div v-if="loading" class="p-8 text-center text-sm" style="color: #475569;">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div v-if="loading" class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
         Memuat data laporan...
       </div>
       <div v-else class="p-6 space-y-4 text-xs font-mono">
-        <div class="flex justify-between items-center py-2.5" style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-          <span style="color: #64748b;">Total Penjualan</span>
-          <span class="font-bold" style="color: #cbd5e1;">{{ formatCurrency(stats.penjualan_bulan_ini) }}</span>
+        <div class="flex justify-between items-center py-2.5 border-b border-slate-100 dark:border-slate-800">
+          <span class="text-slate-500 dark:text-slate-400">Total Penjualan</span>
+          <span class="font-bold text-slate-700 dark:text-slate-200">{{ formatCurrency(stats.penjualan_bulan_ini) }}</span>
         </div>
-        <div class="flex justify-between items-center py-2.5" style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-          <span style="color: #64748b;">Total Pembelian (HPP)</span>
-          <span class="font-bold" style="color: #cbd5e1;">{{ formatCurrency(stats.pembelian_bulan_ini) }}</span>
+        <div class="flex justify-between items-center py-2.5 border-b border-slate-100 dark:border-slate-800">
+          <span class="text-slate-500 dark:text-slate-400">Total Pembelian (HPP)</span>
+          <span class="font-bold text-slate-700 dark:text-slate-200">{{ formatCurrency(stats.pembelian_bulan_ini) }}</span>
         </div>
-        <div class="flex justify-between items-center py-2.5" style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-          <span style="color: #64748b;">Kerugian Inventaris</span>
-          <span class="font-bold" style="color: #fb7185;">{{ formatCurrency(stats.kerugian_inventaris) }}</span>
+        <div class="flex justify-between items-center py-2.5 border-b border-slate-100 dark:border-slate-800">
+          <span class="text-slate-500 dark:text-slate-400">Kerugian Inventaris</span>
+          <span class="font-bold text-rose-600 dark:text-rose-400">{{ formatCurrency(stats.kerugian_inventaris) }}</span>
         </div>
         <div class="pt-4 flex justify-between items-center">
-          <span class="font-bold text-sm uppercase tracking-wide" style="color: #e2e8f0;">Laba Bersih</span>
-          <span class="font-bold text-lg" :style="{ color: stats.laba_bersih >= 0 ? '#34d399' : '#f87171' }">
+          <span class="font-bold text-sm uppercase tracking-wide text-slate-800 dark:text-slate-100">Laba Bersih</span>
+          <span class="font-bold text-lg" :class="stats.laba_bersih >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-rose-600 dark:text-rose-400'">
             {{ formatCurrency(stats.laba_bersih) }}
           </span>
         </div>
-        <div class="pt-3 text-[10px] text-center" style="color: #475569; border-top: 1px solid rgba(255,255,255,0.04);">
+        <div class="pt-3 text-[10px] text-center text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800">
           Periode: Bulan ini
         </div>
       </div>

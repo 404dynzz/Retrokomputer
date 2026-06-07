@@ -47,10 +47,16 @@
                   {{ r.jenis_retur }}
                 </span>
               </td>
-              <td class="px-4 py-3 font-bold text-slate-800">
-                #{{ r.referensi_id }}
-                <div v-if="r.jenis_retur === 'pembelian' && r.pembelian" class="text-[10px] text-slate-500 font-sans font-normal mt-0.5">
-                  Supplier: <span class="font-semibold text-slate-700">{{ r.pembelian.supplier }}</span>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <span
+                    v-if="r.jenis_retur === 'pembelian' && r.pembelian"
+                    class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-mono font-bold text-slate-600 whitespace-nowrap"
+                  >#{{ r.referensi_id }}</span>
+                  <span class="text-xs text-slate-600 font-sans font-normal" v-if="r.jenis_retur === 'pembelian' && r.pembelian">
+                    Supplier: <span class="font-semibold text-slate-800">{{ r.pembelian.supplier }}</span>
+                  </span>
+                  <span class="font-bold text-slate-800" v-if="!(r.jenis_retur === 'pembelian' && r.pembelian)">#{{ r.referensi_id }}</span>
                 </div>
               </td>
               <td class="px-4 py-3 text-right font-bold text-slate-800">

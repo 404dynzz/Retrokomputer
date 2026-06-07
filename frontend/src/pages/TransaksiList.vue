@@ -4,11 +4,11 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
-        <h2 class="text-sm font-semibold tracking-wide uppercase" style="color: #e2e8f0; letter-spacing: 0.08em;">
+        <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           {{ isOwner ? 'Analisis Penjualan' : 'Riwayat Transaksi' }}
         </h2>
       </div>
-      <div v-if="isOwner" class="text-[11px] font-medium px-2.5 py-1 rounded-full" style="background: rgba(99, 102, 241, 0.08); color: #818cf8;">
+      <div v-if="isOwner" class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30">
         Owner
       </div>
     </div>
@@ -18,83 +18,83 @@
       <!-- KPI Cards Row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Card 1: Total Omzet -->
-        <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(99, 102, 241, 0.12); border-radius: 12px; padding: 1.25rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-indigo-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-indigo-500/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(99, 102, 241, 0.1);">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #818cf8;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
-              <span class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Total Omzet</span>
+              <span class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Omzet</span>
             </div>
           </div>
-          <div class="text-xl font-bold tracking-tight" style="color: #e2e8f0;">
+          <div class="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
             Rp {{ formatRupiah(totalRevenue) }}
           </div>
-          <div class="text-[10px] mt-1.5" style="color: #475569;">Volume penjualan terkumpul</div>
+          <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Volume penjualan terkumpul</div>
           <!-- Subtle accent line -->
-          <div class="mt-3 h-[2px] rounded-full" style="background: linear-gradient(90deg, #6366f1 0%, transparent 100%); opacity: 0.4;"></div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-transparent dark:from-indigo-400 opacity-40"></div>
         </div>
 
         <!-- Card 2: Total Transaksi -->
-        <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(20, 184, 166, 0.12); border-radius: 12px; padding: 1.25rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-teal-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-teal-500/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(20, 184, 166, 0.1);">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #5eead4;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                 </svg>
               </div>
-              <span class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Transaksi</span>
+              <span class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Transaksi</span>
             </div>
           </div>
-          <div class="text-xl font-bold tracking-tight" style="color: #e2e8f0;">
-            {{ transaksiList.length }} <span class="text-sm font-normal" style="color: #64748b;">trx</span>
+          <div class="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
+            {{ transaksiList.length }} <span class="text-sm font-normal text-slate-400">trx</span>
           </div>
-          <div class="text-[10px] mt-1.5" style="color: #475569;">Jumlah nota kasir tercetak</div>
-          <div class="mt-3 h-[2px] rounded-full" style="background: linear-gradient(90deg, #14b8a6 0%, transparent 100%); opacity: 0.4;"></div>
+          <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Jumlah nota kasir tercetak</div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-teal-500 to-transparent dark:from-teal-400 opacity-40"></div>
         </div>
 
         <!-- Card 3: Rata-Rata Transaksi -->
-        <div class="kpi-card group" style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(168, 85, 247, 0.12); border-radius: 12px; padding: 1.25rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-purple-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-purple-500/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(168, 85, 247, 0.1);">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #c084fc;">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
               </div>
-              <span class="text-[11px] font-medium uppercase tracking-wider" style="color: #64748b;">Rata-Rata</span>
+              <span class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Rata-Rata</span>
             </div>
           </div>
-          <div class="text-xl font-bold tracking-tight" style="color: #e2e8f0;">
+          <div class="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
             Rp {{ formatRupiah(avgTransaction) }}
           </div>
-          <div class="text-[10px] mt-1.5" style="color: #475569;">Nilai rata-rata per transaksi</div>
-          <div class="mt-3 h-[2px] rounded-full" style="background: linear-gradient(90deg, #a855f7 0%, transparent 100%); opacity: 0.4;"></div>
+          <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Nilai rata-rata per transaksi</div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-purple-500 to-transparent dark:from-purple-400 opacity-40"></div>
         </div>
       </div>
 
       <!-- Charts Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Daily Revenue Trend -->
-        <div style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-          <div class="px-5 py-3 flex justify-between items-center" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-            <span class="text-xs font-semibold tracking-wide" style="color: #94a3b8;">Tren Penjualan Harian</span>
-            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full" style="background: rgba(99, 102, 241, 0.08); color: #818cf8;">7 Hari</span>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+          <div class="px-5 py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+            <span class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">Tren Penjualan Harian</span>
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">7 Hari</span>
           </div>
           <div class="p-5 min-h-[260px] flex flex-col justify-between">
-            <div v-if="trendData.length === 0" class="flex-1 flex items-center justify-center text-xs italic" style="color: #475569;">
+            <div v-if="trendData.length === 0" class="flex-1 flex items-center justify-center text-xs italic text-slate-400 dark:text-slate-500">
               Tidak cukup data penjualan
             </div>
             <div v-else class="relative w-full flex-1 flex items-end justify-between pt-6 px-1 gap-1">
               <!-- Gridlines -->
               <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.03);" class="w-full pt-1"></div>
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.03);" class="w-full"></div>
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.03);" class="w-full"></div>
-                <div style="border-bottom: 1px solid rgba(255,255,255,0.03);" class="w-full"></div>
+                <div class="w-full pt-1 border-b border-slate-100 dark:border-slate-800/50"></div>
+                <div class="w-full border-b border-slate-100 dark:border-slate-800/50"></div>
+                <div class="w-full border-b border-slate-100 dark:border-slate-800/50"></div>
+                <div class="w-full border-b border-slate-100 dark:border-slate-800/50"></div>
               </div>
 
               <!-- Bars -->
@@ -104,7 +104,7 @@
                 class="flex-1 flex flex-col items-center group relative z-10"
               >
                 <!-- Tooltip -->
-                <div class="absolute -top-8 px-2.5 py-1 rounded-md text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-20" style="background: rgba(15, 23, 42, 0.95); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                <div class="absolute -top-8 px-2.5 py-1 rounded-md text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-20 bg-slate-900 text-slate-100 border border-slate-800 shadow-xl">
                   Rp {{ formatRupiah(day.total) }}
                 </div>
                 
@@ -121,7 +121,7 @@
                 </div>
 
                 <!-- Date Label -->
-                <span class="text-[9px] mt-2.5 font-medium" style="color: #475569;">
+                <span class="text-[9px] mt-2.5 font-medium text-slate-400 dark:text-slate-500">
                   {{ day.label }}
                 </span>
               </div>
@@ -130,34 +130,34 @@
         </div>
 
         <!-- Payment Method Breakdowns -->
-        <div style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-          <div class="px-5 py-3 flex justify-between items-center" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-            <span class="text-xs font-semibold tracking-wide" style="color: #94a3b8;">Metode Pembayaran</span>
-            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full" style="background: rgba(20, 184, 166, 0.08); color: #5eead4;">Breakdown</span>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+          <div class="px-5 py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+            <span class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">Metode Pembayaran</span>
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400">Breakdown</span>
           </div>
           <div class="p-5 flex-1 flex flex-col justify-center space-y-5">
             <div v-for="method in paymentMethods" :key="method.name" class="space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-xs font-semibold uppercase tracking-wide flex items-center gap-2" style="color: #cbd5e1;">
+                <span class="text-xs font-semibold uppercase tracking-wide flex items-center gap-2 text-slate-700 dark:text-slate-300">
                   <span class="w-2 h-2 rounded-full" :style="{ background: method.dotColor }"></span>
                   {{ method.name }}
                 </span>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold" style="color: #e2e8f0;">{{ method.count }}x</span>
+                  <span class="text-xs font-bold text-slate-800 dark:text-slate-100">{{ method.count }}x</span>
                   <span class="text-[10px] font-medium px-1.5 py-0.5 rounded" :style="{ background: method.badgeBg, color: method.badgeText }">
                     {{ method.pct }}%
                   </span>
                 </div>
               </div>
               <!-- Progress Bar -->
-              <div class="relative w-full h-2 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.04);">
+              <div class="relative w-full h-2 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                 <div
                   class="h-full rounded-full transition-all duration-700 ease-out"
                   :style="{ width: `${method.pct}%`, background: method.barGradient }"
                 >
                 </div>
               </div>
-              <div class="text-[10px] font-medium" style="color: #475569;">
+              <div class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
                 Omzet: Rp {{ formatRupiah(method.total) }}
               </div>
             </div>
@@ -167,83 +167,71 @@
     </div>
 
     <!-- STANDARD VIEW: Data Table (For non-owners or backup) -->
-    <div v-else style="background: linear-gradient(135deg, #131b2e 0%, #0f1623 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-      <div v-if="loading" class="p-8 text-center text-sm" style="color: #475569;">
+    <div v-else class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div v-if="loading" class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
         Memuat riwayat transaksi...
       </div>
       
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Kode Transaksi</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Tanggal</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Operator Kasir</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider" style="color: #64748b; background: rgba(0,0,0,0.15);">Metode</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-right" style="color: #64748b; background: rgba(0,0,0,0.15);">Total Belanja</th>
-              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center" style="color: #64748b; background: rgba(0,0,0,0.15);">Aksi</th>
+            <tr class="border-b border-slate-100 dark:border-slate-800">
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Kode Transaksi</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Tanggal</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Operator Kasir</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Metode</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-right text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Total Belanja</th>
+              <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-center text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/40">Aksi</th>
             </tr>
           </thead>
           <tbody class="text-xs">
             <tr
               v-for="t in transaksiList"
               :key="t.id"
-              class="transition-colors duration-200"
-              style="border-bottom: 1px solid rgba(255,255,255,0.03);"
-              @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.04)'"
-              @mouseleave="($event.currentTarget as HTMLElement).style.background = 'transparent'"
+              class="transition-colors duration-200 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50"
             >
-              <td class="px-4 py-3 font-mono font-bold" style="color: #818cf8;">
+              <td class="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                 {{ t.kode_transaksi }}
               </td>
-              <td class="px-4 py-3" style="color: #64748b;">
+              <td class="px-4 py-3 text-slate-500 dark:text-slate-400">
                 {{ formatDate(t.created_at) }}
               </td>
-              <td class="px-4 py-3 font-semibold" style="color: #cbd5e1;">
+              <td class="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
                 {{ t.nama_kasir || t.kasir?.name || '-' }}
               </td>
               <td class="px-4 py-3">
-                <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase" style="background: rgba(255,255,255,0.04); color: #94a3b8; border: 1px solid rgba(255,255,255,0.06);">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   {{ t.metode_pembayaran }}
                 </span>
               </td>
-              <td class="px-4 py-3 font-bold text-right" style="color: #e2e8f0;">
+              <td class="px-4 py-3 font-bold text-right text-slate-800 dark:text-slate-100">
                 Rp {{ formatRupiah(t.total) }}
               </td>
               <td class="px-4 py-3 text-center flex items-center justify-center gap-1.5">
                 <router-link
                   :to="`/transaksi/${t.id}`"
-                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200"
-                  style="background: rgba(99, 102, 241, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2);"
-                  @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.2)'"
-                  @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(99, 102, 241, 0.1)'"
+                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50"
                 >
                   Detail
                 </router-link>
                 <button
                   @click="printTransaction(t.id)"
                   :disabled="printingId === t.id"
-                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 disabled:opacity-40"
-                  style="background: rgba(20, 184, 166, 0.1); color: #5eead4; border: 1px solid rgba(20, 184, 166, 0.2);"
-                  @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(20, 184, 166, 0.2)'"
-                  @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(20, 184, 166, 0.1)'"
+                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800 hover:bg-teal-100 dark:hover:bg-teal-900/50 disabled:opacity-40"
                 >
                   {{ printingId === t.id ? 'Loading...' : 'Cetak' }}
                 </button>
                 <button
                   v-if="isAdmin"
                   @click="deleteTransaction(t)"
-                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200"
-                  style="background: rgba(244, 63, 94, 0.08); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.15);"
-                  @mouseenter="($event.currentTarget as HTMLElement).style.background = 'rgba(244, 63, 94, 0.15)'"
-                  @mouseleave="($event.currentTarget as HTMLElement).style.background = 'rgba(244, 63, 94, 0.08)'"
+                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 dark:hover:bg-rose-900/50"
                 >
                   Hapus
                 </button>
               </td>
             </tr>
             <tr v-if="transaksiList.length === 0">
-              <td colspan="6" class="px-4 py-8 text-center text-sm" style="color: #475569;">
+              <td colspan="6" class="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">
                 Belum ada transaksi terekam.
               </td>
             </tr>

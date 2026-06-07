@@ -41,19 +41,29 @@
 html { font-size: 14px; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
   background: var(--bg-deep) !important;
   color: var(--text-primary) !important;
-  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-deep) !important; }
+::-webkit-scrollbar-track { background: transparent; }
+.dark ::-webkit-scrollbar-track { background: var(--bg-deep) !important; }
 ::-webkit-scrollbar-thumb { 
   background: rgba(99, 102, 241, 0.15) !important; 
   border-radius: 4px;
-  border: 2px solid var(--bg-deep);
+  border: 2px solid transparent;
   transition: var(--transition-smooth);
+}
+.dark ::-webkit-scrollbar-thumb {
+  border-color: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb:hover { 
   background: var(--color-accent) !important; 
@@ -66,47 +76,47 @@ body {
 .animate-slideUp { animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 /* ====================================================================
-   PREMIUM RETRO DARK (LOW-WHITE) THEME OVERRIDES
+   PREMIUM RETRO DARK (LOW-WHITE) THEME OVERRIDES (Scoped to .dark)
    ==================================================================== */
 
-.bg-white, [class*="bg-white"] {
+.dark .bg-white, .dark [class*="bg-white"] {
   background-color: var(--bg-card) !important;
 }
 
-.bg-slate-50, [class*="bg-slate-50"] {
+.dark .bg-slate-50, .dark [class*="bg-slate-50"] {
   background-color: var(--bg-deep) !important;
 }
 
-.bg-slate-100 {
+.dark .bg-slate-100 {
   background-color: #161e2e !important;
 }
 
-.bg-slate-200 {
+.dark .bg-slate-200 {
   background-color: #1e293b !important;
 }
 
-.border-slate-100, .border-slate-200, .border-slate-300 {
+.dark .border-slate-100, .dark .border-slate-200, .dark .border-slate-300 {
   border-color: var(--border-color) !important;
 }
 
-.text-slate-800, .text-slate-900, .text-slate-700 {
+.dark .text-slate-800, .dark .text-slate-900, .dark .text-slate-700 {
   color: var(--text-primary) !important;
 }
 
-.text-slate-600 {
+.dark .text-slate-600 {
   color: var(--text-secondary) !important;
 }
 
-.text-slate-500 {
+.dark .text-slate-500 {
   color: var(--text-secondary) !important;
 }
 
-.text-slate-400 {
+.dark .text-slate-400 {
   color: var(--text-muted) !important;
 }
 
 /* Inputs, Selects, and Textareas */
-input, select, textarea {
+.dark input, .dark select, .dark textarea {
   background-color: var(--bg-input) !important;
   color: var(--text-primary) !important;
   border: 1px solid var(--border-color) !important;
@@ -114,56 +124,55 @@ input, select, textarea {
   transition: var(--transition-smooth) !important;
 }
 
-input:focus, select:focus, textarea:focus {
+.dark input:focus, .dark select:focus, .dark textarea:focus {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 3px var(--color-primary-glow) !important;
 }
 
-input::placeholder {
+.dark input::placeholder {
   color: #334155 !important;
 }
 
 /* Interactive elements / hover */
-.hover\:bg-slate-50:hover {
+.dark .hover\:bg-slate-50:hover {
   background-color: #141b2b !important;
 }
 
-.hover\:bg-slate-100:hover {
+.dark .hover\:bg-slate-100:hover {
   background-color: #1e293b !important;
 }
 
-.active\:bg-slate-100:active {
+.dark .active\:bg-slate-100:active {
   background-color: #334155 !important;
 }
 
 /* Router links, highlights & sidebar retro borders */
-.router-link-active, .bg-retro-blue\/10 {
+.dark .router-link-active {
   background-color: rgba(99, 102, 241, 0.08) !important;
   color: #ffffff !important;
-  border-left: 3px solid var(--color-accent) !important;
   font-weight: bold;
 }
 
 /* Cards & Containers: Glassmorphism / Sleek console style */
-.bg-white.rounded-lg.border.border-slate-200 {
+.dark .bg-white.rounded-lg.border.border-slate-200 {
   background: linear-gradient(135deg, var(--bg-card) 0%, #121a2d 100%) !important;
   border-color: var(--border-color) !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
   transition: var(--transition-smooth);
 }
 
-.bg-white.rounded-lg.border.border-slate-200:hover {
+.dark .bg-white.rounded-lg.border.border-slate-200:hover {
   border-color: rgba(99, 102, 241, 0.12) !important;
   box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(99, 102, 241, 0.02) !important;
 }
 
 /* Header & Aside borders */
-header.border-b, aside.border-r {
+.dark header.border-b, .dark aside.border-r {
   border-color: var(--border-color) !important;
 }
 
 /* Table Header Styles */
-th {
+.dark th {
   background-color: #121927 !important;
   color: var(--text-secondary) !important;
   font-weight: 600 !important;
@@ -171,46 +180,46 @@ th {
 }
 
 /* Table rows hover */
-tr:hover td {
+.dark tr:hover td {
   background-color: rgba(99, 102, 241, 0.04) !important;
   transition: var(--transition-smooth);
 }
 
 /* ApexCharts Context Menu overrides to fix white-on-white download text */
-.apexcharts-menu {
+.dark .apexcharts-menu {
   background: var(--bg-card) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
 }
 
-.apexcharts-menu-item {
+.dark .apexcharts-menu-item {
   color: var(--text-primary) !important;
   padding: 8px 16px !important;
   font-size: 12px !important;
   transition: var(--transition-smooth) !important;
 }
 
-.apexcharts-menu-item:hover {
+.dark .apexcharts-menu-item:hover {
   background: var(--color-primary) !important;
   color: #ffffff !important;
 }
 
 /* ====================================================================
-   PREMIUM GLASSMORPHIC MODAL/POPUP OVERRIDES
+   PREMIUM GLASSMORPHIC MODAL/POPUP OVERRIDES (Scoped to .dark)
    ==================================================================== */
 
 /* Modal Backdrop */
-.fixed.inset-0[class*="bg-"] {
+.dark .fixed.inset-0[class*="bg-"] {
   background-color: rgba(4, 6, 10, 0.8) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
 }
 
 /* Modal Box Container */
-.fixed.inset-0 .bg-white,
-.fixed.inset-0 form.bg-white,
-.fixed.inset-0 .bg-white.rounded-lg {
+.dark .fixed.inset-0 .bg-white,
+.dark .fixed.inset-0 form.bg-white,
+.dark .fixed.inset-0 .bg-white.rounded-lg {
   background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-deep) 100%) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 12px !important;
@@ -220,40 +229,40 @@ tr:hover td {
 }
 
 /* Danger Modal Border (e.g. Delete Confirmations) */
-.fixed.inset-0 .border-red-600,
-.fixed.inset-0 .border-red-200 {
+.dark .fixed.inset-0 .border-red-600,
+.dark .fixed.inset-0 .border-red-200 {
   border-color: var(--color-danger) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
               0 0 30px rgba(244, 63, 94, 0.1) !important;
 }
 
 /* Modal Title bar (Success/Primary modal) */
-.fixed.inset-0 .bg-retro-blue,
-.fixed.inset-0 .bg-blue-600 {
+.dark .fixed.inset-0 .bg-retro-blue,
+.dark .fixed.inset-0 .bg-blue-600 {
   background: linear-gradient(90deg, #1e3a8a 0%, var(--color-primary) 100%) !important;
   border-bottom: 1px solid rgba(99, 102, 241, 0.15) !important;
   padding: 12px 18px !important;
 }
 
 /* Modal Title bar (Danger modal) */
-.fixed.inset-0 .bg-red-600 {
+.dark .fixed.inset-0 .bg-red-600 {
   background: linear-gradient(90deg, #7f1d1d 0%, var(--color-danger) 100%) !important;
   border-bottom: 1px solid rgba(244, 63, 94, 0.15) !important;
   padding: 12px 18px !important;
 }
 
 /* Footer Section inside modal */
-.fixed.inset-0 .bg-slate-50,
-.fixed.inset-0 .bg-slate-100 {
+.dark .fixed.inset-0 .bg-slate-50,
+.dark .fixed.inset-0 .bg-slate-100 {
   background-color: #090d16 !important;
   border-top: 1px solid var(--border-color) !important;
   padding: 12px 18px !important;
 }
 
 /* Modal Inputs & PIN Fields styling */
-.fixed.inset-0 input,
-.fixed.inset-0 select,
-.fixed.inset-0 textarea {
+.dark .fixed.inset-0 input,
+.dark .fixed.inset-0 select,
+.dark .fixed.inset-0 textarea {
   background-color: var(--bg-input) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
@@ -261,22 +270,361 @@ tr:hover td {
   transition: var(--transition-smooth) !important;
 }
 
-.fixed.inset-0 input:focus,
-.fixed.inset-0 select:focus,
-.fixed.inset-0 textarea:focus {
+.dark .fixed.inset-0 input:focus,
+.dark .fixed.inset-0 select:focus,
+.dark .fixed.inset-0 textarea:focus {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 3px var(--color-primary-glow) !important;
 }
 
 /* Tactical buttons styling in modals */
-.fixed.inset-0 button {
+.dark .fixed.inset-0 button {
   transition: var(--transition-smooth) !important;
 }
 
-.fixed.inset-0 button:hover {
+.dark .fixed.inset-0 button:hover {
   transform: translateY(-1px);
 }
 
-.fixed.inset-0 button:active {
+.dark .fixed.inset-0 button:active {
   transform: translateY(1px);
 }
+
+/* ====================================================================
+   GLOBAL INNER CHART & COMPONENT THEME OVERRIDES
+   ==================================================================== */
+
+/* --- Select Year & View Toggle filters --- */
+html:not(.dark) .year-select,
+html:not(.dark) .view-toggle {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+html:not(.dark) .year-select:hover,
+html:not(.dark) .year-select:focus,
+html:not(.dark) .view-toggle:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+.dark .year-select,
+.dark .view-toggle {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+}
+.dark .year-select:hover,
+.dark .year-select:focus,
+.dark .view-toggle:hover {
+  border-color: #ff7a00 !important;
+  color: #ff7a00 !important;
+}
+
+/* --- Filter Tabs --- */
+html:not(.dark) .filter-tabs {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+.dark .filter-tabs {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* --- Filter Tab Buttons --- */
+html:not(.dark) .filter-tab {
+  color: #64748b !important;
+}
+html:not(.dark) .filter-tab:hover:not(.active) {
+  color: #1e293b !important;
+}
+html:not(.dark) .filter-tab.active {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.dark .filter-tab {
+  color: var(--text-muted) !important;
+}
+.dark .filter-tab:hover:not(.active) {
+  color: var(--text-primary) !important;
+}
+.dark .filter-tab.active {
+  background: #1e293b !important;
+  color: #ff7a00 !important; /* Gold/Accent for Monthly Sales & Top Products */
+}
+/* Indigo override for active tabs on SalesLineChart active filters */
+.dark .chart-card:has(.active[class*="indigo"]) .filter-tab.active,
+.dark .chart-card:has(.active:hover) .filter-tab.active {
+  color: var(--color-primary) !important;
+}
+
+/* --- Stats Pills, Comparison Items, Metrics --- */
+html:not(.dark) .stat-pill,
+html:not(.dark) .comp-item,
+html:not(.dark) .metric {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+}
+html:not(.dark) .stat-pill:hover,
+html:not(.dark) .comp-item:hover,
+html:not(.dark) .metric:hover {
+  background: #ffffff !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.06) !important;
+}
+
+.dark .stat-pill,
+.dark .comp-item,
+.dark .metric {
+  background: var(--bg-deep) !important;
+  border: 1.5px solid var(--border-color) !important;
+}
+.dark .stat-pill:hover,
+.dark .comp-item:hover,
+.dark .metric:hover {
+  background: var(--bg-card) !important;
+  border-color: #ff7a00 !important;
+  box-shadow: 0 8px 20px rgba(255, 122, 0, 0.15) !important;
+}
+
+/* --- Labels in Pills/Metrics --- */
+html:not(.dark) .stat-label,
+html:not(.dark) .comp-label,
+html:not(.dark) .metric-label {
+  color: #64748b !important;
+}
+html:not(.dark) .stat-pill:hover .stat-label,
+html:not(.dark) .comp-item:hover .comp-label,
+html:not(.dark) .metric:hover .metric-label {
+  color: var(--color-primary-hover) !important;
+}
+
+.dark .stat-label,
+.dark .comp-label,
+.dark .metric-label {
+  color: var(--text-secondary) !important;
+}
+.dark .stat-pill:hover .stat-label {
+  color: #fdba74 !important;
+}
+.dark .comp-item:hover .comp-label {
+  color: #a5b4fc !important;
+}
+
+/* --- Values in Pills/Metrics --- */
+html:not(.dark) .stat-value,
+html:not(.dark) .comp-val {
+  color: #1e293b !important;
+}
+html:not(.dark) .stat-pill:hover .stat-value,
+html:not(.dark) .comp-item:hover .comp-val {
+  color: #000000 !important;
+}
+html:not(.dark) .stat-value.highlight {
+  color: var(--color-primary) !important;
+}
+
+.dark .stat-value,
+.dark .comp-val {
+  color: var(--text-primary) !important;
+}
+.dark .stat-pill:hover .stat-value,
+.dark .comp-item:hover .comp-val {
+  color: #ffffff !important;
+}
+.dark .stat-value.highlight {
+  color: #ff7a00 !important;
+}
+
+/* --- Legend Buttons --- */
+html:not(.dark) .legend-btn {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+html:not(.dark) .legend-btn:hover {
+  background: color-mix(in srgb, var(--series-color) 8%, #ffffff) !important;
+  border-color: var(--series-color) !important;
+}
+
+.dark .legend-btn {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.dark .legend-btn:hover {
+  background: color-mix(in srgb, var(--series-color) 10%, var(--bg-deep)) !important;
+  border-color: var(--series-color) !important;
+}
+
+/* --- Table Rows, Comparison Items List & Details --- */
+html:not(.dark) .payment-item,
+html:not(.dark) .table-row,
+html:not(.dark) .comparison-item {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+html:not(.dark) .payment-item:hover,
+html:not(.dark) .table-row:hover,
+html:not(.dark) .comparison-item:hover {
+  border-color: #cbd5e1 !important;
+  background: #ffffff !important;
+}
+
+.dark .payment-item,
+.dark .table-row,
+.dark .comparison-item {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.dark .payment-item:hover,
+.dark .table-row:hover,
+.dark .comparison-item:hover {
+  border-color: #334155 !important;
+}
+
+/* --- Card Details Text Colors --- */
+html:not(.dark) .payment-label,
+html:not(.dark) .row-name,
+html:not(.dark) .item-name {
+  color: #334155 !important;
+}
+.dark .payment-label,
+.dark .row-name,
+.dark .item-name {
+  color: var(--text-primary) !important;
+}
+
+html:not(.dark) .payment-value,
+html:not(.dark) .row-unit,
+html:not(.dark) .item-qty {
+  color: #0f172a !important;
+}
+.dark .payment-value,
+.dark .row-unit,
+.dark .item-qty {
+  color: var(--text-primary) !important;
+}
+
+html:not(.dark) .comp-sub,
+html:not(.dark) .qty-label,
+html:not(.dark) .payment-count,
+html:not(.dark) .payment-pct,
+html:not(.dark) .row-revenue {
+  color: #64748b !important;
+}
+.dark .comp-sub,
+.dark .qty-label,
+.dark .payment-count,
+.dark .payment-pct,
+.dark .row-revenue {
+  color: var(--text-muted) !important;
+}
+
+/* --- Badges and Lists --- */
+html:not(.dark) .rank-badge,
+html:not(.dark) .item-rank {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+}
+.dark .rank-badge,
+.dark .item-rank {
+  background: #1e293b !important;
+  color: var(--text-secondary) !important;
+}
+
+html:not(.dark) .row-bar-wrap {
+  background: #e2e8f0 !important;
+}
+.dark .row-bar-wrap {
+  background: #1e293b !important;
+}
+
+html:not(.dark) .products-comparison-list {
+  border-top-color: #e2e8f0 !important;
+}
+.dark .products-comparison-list {
+  border-top-color: var(--border-color) !important;
+}
+
+/* ====================================================================
+   APEXCHARTS SVG GLOBAL SELECTOR THEME OVERRIDES
+   ==================================================================== */
+
+/* --- Gridlines --- */
+html:not(.dark) .apexcharts-gridline,
+html:not(.dark) .apexcharts-grid-borders line,
+html:not(.dark) .apexcharts-grid line {
+  stroke: #e2e8f0 !important;
+  opacity: 0.8 !important;
+}
+.dark .apexcharts-gridline,
+.dark .apexcharts-grid-borders line,
+.dark .apexcharts-grid line {
+  stroke: var(--border-color) !important;
+  opacity: 0.8 !important;
+}
+
+/* --- Axis & Legend Labels --- */
+html:not(.dark) .apexcharts-xaxis-label,
+html:not(.dark) .apexcharts-yaxis-label,
+html:not(.dark) .apexcharts-text,
+html:not(.dark) .apexcharts-legend-text {
+  fill: #64748b !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+.dark .apexcharts-xaxis-label,
+.dark .apexcharts-yaxis-label,
+.dark .apexcharts-text,
+.dark .apexcharts-legend-text {
+  fill: var(--text-secondary) !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* --- Donut Chart Inner Text Labels --- */
+html:not(.dark) .apexcharts-datalabel-label {
+  fill: #64748b !important;
+}
+.dark .apexcharts-datalabel-label {
+  fill: var(--text-muted) !important;
+}
+
+html:not(.dark) .apexcharts-datalabel-value {
+  fill: #0f172a !important;
+}
+.dark .apexcharts-datalabel-value {
+  fill: #ffffff !important;
+}
+
+/* --- Global Tooltips --- */
+html:not(.dark) .apexcharts-tooltip {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;
+}
+html:not(.dark) .apexcharts-tooltip-title {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+}
+html:not(.dark) .apexcharts-tooltip-series-group {
+  color: #334155 !important;
+}
+
+.dark .apexcharts-tooltip {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important;
+}
+.dark .apexcharts-tooltip-title {
+  background: var(--bg-deep) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+.dark .apexcharts-tooltip-series-group {
+  color: var(--text-primary) !important;
+}
+
