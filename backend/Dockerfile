@@ -1,7 +1,7 @@
 # ====================================================================
-# Larvel Backend Production Dockerfile (PHP 8.3-FPM)
+# Larvel Backend Production Dockerfile (PHP 8.3 CLI for Render)
 # ====================================================================
-FROM php:8.3-fpm-alpine
+FROM php:8.3-alpine
 
 # Set working directory
 WORKDIR /var/www/html
@@ -37,7 +37,8 @@ RUN composer install --no-interaction --optimize-autoloader
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose PHP-FPM port
-EXPOSE 9000
+# Expose port 8000 for HTTP traffic
+EXPOSE 8000
 
-CMD ["php-fpm"]
+# Start Laravel built-in server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
