@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xl mx-auto space-y-6">
+  <div class="max-w-3xl mx-auto space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -10,8 +10,17 @@
       </div>
     </div>
 
-    <!-- Container -->
+    <!-- Waterfall Chart -->
+    <GrossProfitWaterfall />
+
+    <!-- Detail Breakdown Table -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <span class="inline-block w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+          Detail Ringkasan
+        </h3>
+      </div>
       <div v-if="loading" class="p-8 text-center text-sm text-slate-400 dark:text-slate-500">
         Memuat data laporan...
       </div>
@@ -46,6 +55,7 @@
 import { ref, onMounted } from 'vue'
 import type { DashboardStats } from '@/types'
 import { laporanService } from '@/services'
+import GrossProfitWaterfall from '@/components/charts/GrossProfitWaterfall.vue'
 
 const loading = ref(true)
 const stats = ref<DashboardStats>({ penjualan_bulan_ini: 0, pembelian_bulan_ini: 0, laba_bersih: 0, total_transaksi: 0, kerugian_inventaris: 0 })
