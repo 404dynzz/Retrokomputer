@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "framework": null,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.3"
+    }
+  },
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/public/favicon.ico"
+    },
+    {
+      "src": "/storage/(.*)",
+      "dest": "/public/storage/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
+  ],
+  "outputDirectory": "public",
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "true",
+    "APP_KEY": "base64:+jyW3JvVv/9sqd7SLeKs4rQuPP6mX/2ZcFk5ZT+emSQ=",
+    "DB_CONNECTION": "mysql",
+    "DB_HOST": "mysql-30101d94-aldinojulianto137-2e34.g.aivencloud.com",
+    "DB_PORT": "28644",
+    "DB_DATABASE": "defaultdb",
+    "DB_USERNAME": "avnadmin",
+    "DB_PASSWORD_BASE64": "QVZOU19MVmhCekptTmlVNUhXbVAxajhD",
+    "SANCTUM_STATEFUL_DOMAINS": "retrokomputer.vercel.app,retrokomputer-ejitdhoha-404dynzzs-projects.vercel.app",
+    "SESSION_DOMAIN": ".vercel.app",
+    "VIEW_COMPILED_PATH": "/tmp",
+    "CACHE_DRIVER": "array",
+    "SESSION_DRIVER": "cookie",
+    "LOG_CHANNEL": "stderr"
+  }
+}
