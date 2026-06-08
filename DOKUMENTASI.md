@@ -60,6 +60,12 @@ Desain warna disesuaikan langsung dengan **Logo Retro Komputer** resmi yang mema
 *   **Aksen Dominan (Logo Swirl):** `#1D4ED8` (Royal Blue Retro) — Dipakai untuk branding dan elemen interaktif sekunder.
 *   **Highlight Utama (Huruf 'R' Logo):** Gradasi Oranye-Kuning (`#FF7A00` ke `#FFC857`) — Digunakan pada tombol utama, hover, status aktif, dan indikator penting.
 
+### Tombol Pengalih Tema Neumorfik (Theme Switch)
+Sistem ini menggunakan tombol pengalih tema (Dark/Light mode) bertema **Neumorphism** yang premium dan konsisten di halaman login serta header dashboard untuk seluruh peran pengguna (Admin, Owner, Kasir):
+- **Mode Terang (Light Mode):** Tombol capsule berwarna off-white (`#eef0f3`) dengan bayangan inset yang memberi efek cekung ke dalam background. Kenop/slider berbentuk lingkaran menonjol keluar (outset) di sisi kiri dengan ikon matahari.
+- **Mode Gelap (Dark Mode):** Tombol capsule berwarna gelap (`#252932`) dengan bayangan inset. Kenop lingkaran bergeser mulus ke sisi kanan dengan warna abu-abu kebiruan (`#4b5263`) dan memiliki ikon bulan beserta bintang.
+- **Efek Transisi:** Dilengkapi efek hover, klik aktif, dan gesekan kenop yang halus menggunakan CSS transitions dan transforms.
+
 ### Kustomisasi Logo yang Fleksibel
 Melalui menu **Pengaturan Sistem**, Admin dapat menyesuaikan logo:
 1.  **Logo Teks:** Menampilkan karakter terminal retro pixel/font monospaced (`>_ Retro Komputer`).
