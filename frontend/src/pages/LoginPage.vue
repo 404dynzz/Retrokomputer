@@ -40,7 +40,7 @@
 
         <form @submit.prevent="handleLogin" class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Username Atau Gmail</label>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Username atau Gmail</label>
             <input
               id="login-username"
               v-model="username"
