@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <h2 class="text-base font-bold text-slate-800 text-center mb-5">Masuk ke Sistem</h2>
+        <h2 class="text-base font-bold text-retro-orange text-center mb-5">Masuk ke Sistem</h2>
 
         <div v-if="authStore.error" class="mb-4 p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">
           {{ authStore.error }}
