@@ -46,3 +46,9 @@ dist-ssr/
 build/
 public/storage/settings/*
 public/storage/products/*
+
+# Vercel Serverless Backend configurations (Local hosting only)
+backend/api/
+backend/vercel.json
+backend/.vercelignore
+
