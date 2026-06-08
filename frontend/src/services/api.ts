@@ -2,16 +2,9 @@ import axios from 'axios'
 
 // Determine API base URL based on environment
 function getBaseURL(): string {
-  const isProduction = import.meta.env.MODE === 'production'
-
-  if (isProduction) {
-    // Production: use relative path (backend served on same domain)
-    return '/api'
-  } else {
-    // Development: use Vite proxy (works for all devices: localhost, mobile, network)
-    // Vite proxy forwards /api to http://localhost:8000 automatically
-    return '/api'
-  }
+  // Use VITE_API_URL environment variable if set (for different domains in production/development)
+  // Otherwise, default to '/api' (Vite proxy in dev, or same domain in prod)
+  return import.meta.env.VITE_API_URL || '/api'
 }
 
 const api = axios.create({

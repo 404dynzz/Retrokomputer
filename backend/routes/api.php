@@ -18,6 +18,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/settings/active', [SettingController::class, 'active']);
 Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel']);
 
+Route::options('{any}', function (\Illuminate\Http\Request $request) {
+    $origin = $request->header('Origin');
+    if ($origin && (str_ends_with($origin, '.vercel.app') || str_contains($origin, 'localhost') || str_contains($origin, '127.0.0.1') || str_contains($origin, '192.168.') || str_contains($origin, '10.'))) {
+        return response('', 200)
+            ->header('Access-Control-Allow-Origin', $origin)
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH')
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-Token, X-Token')
+            ->header('Access-Control-Allow-Credentials', 'true');
+    }
+    return response('', 200);
+})->where('any', '.*');
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
