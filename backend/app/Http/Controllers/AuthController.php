@@ -15,13 +15,20 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (!Auth::attempt($request->only('username', 'password'))) {
+        $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $credentials = [
+            $loginField => $request->username,
+            'password' => $request->password,
+        ];
+
+        if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Username atau password salah'
+                'message' => 'Username/Email atau password salah'
             ], 401);
         }
 
-        $user = User::where('username', $request->username)->firstOrFail();
+        $user = User::where($loginField, $request->username)->firstOrFail();
 
         if (!$user->is_active) {
             return response()->json([
